@@ -13,8 +13,8 @@ var levelSelectors = [
                    {shortId: 'M', longId:'world-m' },
                    {shortId: 'YI', longId:'world-yi' } // Really, we need to automate this
                  ];
-var Utils = {},
-    Vector2D = {
+var util = {},
+    vec2 = {
         'make': function(_0x9b9cda, _0x4101d1) {
             return {
                 'x': _0x9b9cda,
@@ -22,7 +22,7 @@ var Utils = {},
             };
         },
         'random': function() {
-            return Vector2D.normalize({
+            return vec2.normalize({
                 'x': 0x2 * Math.random() - 0x1,
                 'y': 0x2 * Math.random() - 0x1
             });
@@ -67,7 +67,7 @@ var Utils = {},
             return Math.sqrt(_0xbb06f8.x * _0xbb06f8.x + _0xbb06f8.y * _0xbb06f8.y);
         },
         'normalize': function(_0x95577d) {
-            var _0x345de2 = Vector2D.magnitude(_0x95577d);
+            var _0x345de2 = vec2.magnitude(_0x95577d);
             return 0x0 !== _0x345de2 ? {
                 'x': _0x95577d.x / _0x345de2,
                 'y': _0x95577d.y / _0x345de2
@@ -77,7 +77,7 @@ var Utils = {},
             };
         },
         'distance': function(_0x438721, _0x20692a) {
-            return Vector2D.magnitude(Vector2D.subtract(_0x438721, _0x20692a));
+            return vec2.magnitude(vec2.subtract(_0x438721, _0x20692a));
         },
         'dot': function(_0x1a1c3f, _0x5d048a) {
             return _0x1a1c3f.x * _0x5d048a.x + _0x1a1c3f.y * _0x5d048a.y;
@@ -89,7 +89,7 @@ var Utils = {},
             };
         },
         'lerp': function(_0x449c3f, _0x9a844a, _0x47869e) {
-            return Vector2D.add(Vector2D.scale(_0x449c3f, 0x1 - _0x47869e), Vector2D.scale(_0x9a844a, _0x47869e));
+            return vec2.add(vec2.scale(_0x449c3f, 0x1 - _0x47869e), vec2.scale(_0x9a844a, _0x47869e));
         },
         'rotate': function(_0x5177b0, _0x45a0e4) {
             var _0x315ef4 = Math.cos(_0x45a0e4);
@@ -100,15 +100,15 @@ var Utils = {},
             };
         },
         'angle': function(_0x3f22f3, _0x362da6) {
-            var _0x3138d2 = Vector2D.dot(_0x3f22f3, _0x362da6);
+            var _0x3138d2 = vec2.dot(_0x3f22f3, _0x362da6);
             return Math.acos(_0x3138d2 / (Math.sqrt(_0x3f22f3.x * _0x3f22f3.x + _0x3f22f3.y * _0x3f22f3.y) * Math.sqrt(_0x362da6.x * _0x362da6.x + _0x362da6.y * _0x362da6.y)));
         },
         'average': function(_0x8aecc1) {
-            for (var _0x506ec6 = Vector2D.create(), _0x466cf6 = 0x0; _0x466cf6 < _0x8aecc1.length; _0x466cf6++) _0x506ec6 = Vector2D.add(_0x506ec6, _0x8aecc1[_0x466cf6]);
-            return Vector2D.scale(_0x506ec6, 0x1 / _0x8aecc1.length);
+            for (var _0x506ec6 = vec2.create(), _0x466cf6 = 0x0; _0x466cf6 < _0x8aecc1.length; _0x466cf6++) _0x506ec6 = vec2.add(_0x506ec6, _0x8aecc1[_0x466cf6]);
+            return vec2.scale(_0x506ec6, 0x1 / _0x8aecc1.length);
         },
         'chop': function(_0x4413bf) {
-            return Vector2D.make(parseInt(_0x4413bf.x), parseInt(_0x4413bf.y));
+            return vec2.make(parseInt(_0x4413bf.x), parseInt(_0x4413bf.y));
         },
         'equals': function(_0x102b7d, _0x20a20c) {
             return _0x102b7d.x === _0x20a20c.x && _0x102b7d.y === _0x20a20c.y;
@@ -117,8 +117,8 @@ var Utils = {},
             return [_0xfa2c05.x, _0xfa2c05.y];
         }
     },
-    _0x4c74f9 = {};
-_0x4c74f9.make = function(_0x352992, _0x589705, _0x474312, _0x28bc34) {
+    vec4 = {};
+vec4.make = function(_0x352992, _0x589705, _0x474312, _0x28bc34) {
     return {
         x: _0x352992,
         y: _0x589705,
@@ -126,7 +126,7 @@ _0x4c74f9.make = function(_0x352992, _0x589705, _0x474312, _0x28bc34) {
         w: _0x28bc34
     };
 };
-_0x4c74f9.copy = function(_0x26ffa4) {
+vec4.copy = function(_0x26ffa4) {
     return {
         x: _0x26ffa4.x,
         y: _0x26ffa4.y,
@@ -134,7 +134,7 @@ _0x4c74f9.copy = function(_0x26ffa4) {
         w: _0x26ffa4.w
     };
 };
-_0x4c74f9.add = function(_0x5453a6, _0x3ad8f6) {
+vec4.add = function(_0x5453a6, _0x3ad8f6) {
     return {
         x: _0x5453a6.x + _0x3ad8f6.x,
         y: _0x5453a6.y + _0x3ad8f6.y,
@@ -142,7 +142,7 @@ _0x4c74f9.add = function(_0x5453a6, _0x3ad8f6) {
         w: _0x5453a6.w + _0x3ad8f6.w
     };
 };
-_0x4c74f9.subtract = function(_0xdcb7eb, _0x309cab) {
+vec4.subtract = function(_0xdcb7eb, _0x309cab) {
     return {
         x: _0xdcb7eb.x - _0x309cab.x,
         y: _0xdcb7eb.y - _0x309cab.y,
@@ -150,7 +150,7 @@ _0x4c74f9.subtract = function(_0xdcb7eb, _0x309cab) {
         w: _0xdcb7eb.w - _0x309cab.w
     };
 };
-_0x4c74f9.scale = function(_0x1413b9, _0x48339f) {
+vec4.scale = function(_0x1413b9, _0x48339f) {
     return {
         x: _0x1413b9.x * _0x48339f,
         y: _0x1413b9.y * _0x48339f,
@@ -158,7 +158,7 @@ _0x4c74f9.scale = function(_0x1413b9, _0x48339f) {
         w: _0x1413b9.w * _0x48339f
     };
 };
-_0x4c74f9.multiply = function(_0x181caa, _0x1d5e43) {
+vec4.multiply = function(_0x181caa, _0x1d5e43) {
     return {
         x: _0x181caa.x * _0x1d5e43.x,
         y: _0x181caa.y * _0x1d5e43.y,
@@ -166,33 +166,33 @@ _0x4c74f9.multiply = function(_0x181caa, _0x1d5e43) {
         w: _0x181caa.w * _0x1d5e43.w
     };
 };
-_0x4c74f9.lerp = function(_0x98c2ee, _0x2014a1, _0x21e83c) {
-    return _0x4c74f9.add(_0x4c74f9.scale(_0x98c2ee, 0x1 - _0x21e83c), _0x4c74f9.scale(_0x2014a1, _0x21e83c));
+vec4.lerp = function(_0x98c2ee, _0x2014a1, _0x21e83c) {
+    return vec4.add(vec4.scale(_0x98c2ee, 0x1 - _0x21e83c), vec4.scale(_0x2014a1, _0x21e83c));
 };
-_0x4c74f9.toArray = function(_0x583eb8) {
+vec4.toArray = function(_0x583eb8) {
     return [_0x583eb8.x, _0x583eb8.y, _0x583eb8.z, _0x583eb8.w];
 };
-Utils.line2 = {};
-Utils.intersection = {};
-Utils.time = {};
-Utils.sprite = {};
-Utils.line2.normal = function(_0x542843) {
-    return Vector2D.normalize({
+util.line2 = {};
+util.intersection = {};
+util.time = {};
+util.sprite = {};
+util.line2.normal = function(_0x542843) {
+    return vec2.normalize({
         'x': _0x542843.b.y - _0x542843.a.y,
         'y': -0x1 * (_0x542843.b.x - _0x542843.a.x)
     });
 };
-Utils.intersection.pointRectangle = function(_0x1f2e5d, _0x4fb4f3, _0x195e9a) {
+util.intersection.pointRectangle = function(_0x1f2e5d, _0x4fb4f3, _0x195e9a) {
     return _0x4fb4f3.x <= _0x1f2e5d.x && _0x4fb4f3.x + _0x195e9a.x > _0x1f2e5d.x && _0x4fb4f3.y <= _0x1f2e5d.y && _0x4fb4f3.y + _0x195e9a.y > _0x1f2e5d.y;
 };
-Utils.intersection.pointPoly = function(_0x3050fe, _0x3fb4ac) {
+util.intersection.pointPoly = function(_0x3050fe, _0x3fb4ac) {
     var _0x315951, _0x3d41ed, _0x3833a5 = !0x1,
         _0x33ce75 = _0x3fb4ac.length;
     _0x315951 = 0x0;
     for (_0x3d41ed = _0x33ce75 - 0x1; _0x315951 < _0x33ce75; _0x3d41ed = _0x315951++) _0x3fb4ac[_0x315951].y > _0x3050fe.y !== _0x3fb4ac[_0x3d41ed].y > _0x3050fe.y && _0x3050fe.x < (_0x3fb4ac[_0x3d41ed].x - _0x3fb4ac[_0x315951].x) * (_0x3050fe.y - _0x3fb4ac[_0x315951].y) / (_0x3fb4ac[_0x3d41ed].y - _0x3fb4ac[_0x315951].y) + _0x3fb4ac[_0x315951].x && (_0x3833a5 = !_0x3833a5);
     return _0x3833a5;
 };
-Utils.intersection.lineLine = function(_0x19d86f, _0x3c89c8) {
+util.intersection.lineLine = function(_0x19d86f, _0x3c89c8) {
     var _0x1f1a11, _0x5c28c9, _0x2b1fa9, _0x9c8117;
     _0x1f1a11 = _0x19d86f.b.x - _0x19d86f.a.x;
     _0x5c28c9 = _0x19d86f.b.y - _0x19d86f.a.y;
@@ -201,48 +201,48 @@ Utils.intersection.lineLine = function(_0x19d86f, _0x3c89c8) {
     var _0x5c5c20;
     _0x5c5c20 = (-_0x5c28c9 * (_0x19d86f.a.x - _0x3c89c8.a.x) + _0x1f1a11 * (_0x19d86f.a.y - _0x3c89c8.a.y)) / (-_0x2b1fa9 * _0x5c28c9 + _0x1f1a11 * _0x9c8117);
     _0x2b1fa9 = (_0x2b1fa9 * (_0x19d86f.a.y - _0x3c89c8.a.y) - _0x9c8117 * (_0x19d86f.a.x - _0x3c89c8.a.x)) / (-_0x2b1fa9 * _0x5c28c9 + _0x1f1a11 * _0x9c8117);
-    if (0x0 <= _0x5c5c20 && 0x1 >= _0x5c5c20 && 0x0 <= _0x2b1fa9 && 0x1 >= _0x2b1fa9) return _0x1f1a11 = _0x19d86f.a.x + _0x2b1fa9 * _0x1f1a11, _0x5c28c9 = _0x19d86f.a.y + _0x2b1fa9 * _0x5c28c9, _0x5c28c9 = {}, _0x3c89c8 = Utils.line2.normal(_0x3c89c8), {
+    if (0x0 <= _0x5c5c20 && 0x1 >= _0x5c5c20 && 0x0 <= _0x2b1fa9 && 0x1 >= _0x2b1fa9) return _0x1f1a11 = _0x19d86f.a.x + _0x2b1fa9 * _0x1f1a11, _0x5c28c9 = _0x19d86f.a.y + _0x2b1fa9 * _0x5c28c9, _0x5c28c9 = {}, _0x3c89c8 = util.line2.normal(_0x3c89c8), {
         'intersection': _0x5c28c9,
         'normal': _0x3c89c8,
-        'distance': Vector2D.distance(_0x5c28c9, _0x19d86f.a)
+        'distance': vec2.distance(_0x5c28c9, _0x19d86f.a)
     };
     _0x5c28c9.x = _0x1f1a11;
     _0x5c28c9.y = _0x5c28c9;
 };
-Utils.intersection.lineCircle = function(_0x23b739, _0x52f453, _0x25831c) {
-    var _0x4f1d7f = Utils.intersection.lineNearestPoint(_0x23b739, _0x52f453);
-    if (Vector2D.equals(_0x4f1d7f, _0x52f453.a)) {
-        var _0x1ab3a2 = Vector2D.subtract(_0x23b739, _0x52f453.a);
-        _0x23b739 = Vector2D.magnitude(_0x1ab3a2);
-        if (!(_0x23b739 >= _0x25831c)) return _0x25831c = Vector2D.normalize(_0x1ab3a2), {
+util.intersection.lineCircle = function(_0x23b739, _0x52f453, _0x25831c) {
+    var _0x4f1d7f = util.intersection.lineNearestPoint(_0x23b739, _0x52f453);
+    if (vec2.equals(_0x4f1d7f, _0x52f453.a)) {
+        var _0x1ab3a2 = vec2.subtract(_0x23b739, _0x52f453.a);
+        _0x23b739 = vec2.magnitude(_0x1ab3a2);
+        if (!(_0x23b739 >= _0x25831c)) return _0x25831c = vec2.normalize(_0x1ab3a2), {
             'intersection': _0x52f453.a,
             'normal': _0x25831c,
             'dist': _0x23b739
         };
     } else {
-        if (Vector2D.equals(_0x4f1d7f, _0x52f453.b)) {
-            _0x1ab3a2 = Vector2D.subtract(_0x23b739, _0x52f453.b);
-            _0x23b739 = Vector2D.magnitude(_0x1ab3a2);
+        if (vec2.equals(_0x4f1d7f, _0x52f453.b)) {
+            _0x1ab3a2 = vec2.subtract(_0x23b739, _0x52f453.b);
+            _0x23b739 = vec2.magnitude(_0x1ab3a2);
             if (_0x23b739 >= _0x25831c) return;
-            _0x25831c = Vector2D.normalize(_0x1ab3a2);
+            _0x25831c = vec2.normalize(_0x1ab3a2);
             return {
                 'intersection': _0x52f453.b,
                 'normal': _0x25831c,
                 'distance': _0x23b739
             };
         }
-        _0x1ab3a2 = Vector2D.subtract(_0x23b739, _0x4f1d7f);
-        _0x23b739 = Vector2D.magnitude(_0x1ab3a2);
-        if (!(_0x23b739 >= _0x25831c)) return _0x25831c = Vector2D.normalize(_0x1ab3a2), {
+        _0x1ab3a2 = vec2.subtract(_0x23b739, _0x4f1d7f);
+        _0x23b739 = vec2.magnitude(_0x1ab3a2);
+        if (!(_0x23b739 >= _0x25831c)) return _0x25831c = vec2.normalize(_0x1ab3a2), {
             'intersection': _0x4f1d7f,
             'normal': _0x25831c,
             'distance': _0x23b739
         };
     }
 };
-Utils.intersection.polygonLine = function(_0x35e9bb, _0x180ded) {
+util.intersection.polygonLine = function(_0x35e9bb, _0x180ded) {
     for (var _0x361de = [], _0x2d1537 = 0x0; _0x2d1537 < _0x180ded.v.length; _0x2d1537++) {
-        var _0xaeb880 = Utils.intersection.lineLine(_0x35e9bb, {
+        var _0xaeb880 = util.intersection.lineLine(_0x35e9bb, {
             'a': _0x180ded.v[_0x2d1537],
             'b': _0x180ded.v[_0x2d1537 + 0x1 < _0x180ded.v.length ? _0x2d1537 + 0x1 : 0x0]
         });
@@ -254,9 +254,9 @@ Utils.intersection.polygonLine = function(_0x35e9bb, _0x180ded) {
         return _0x35e9bb;
     }
 };
-Utils.intersection.polygonCircle = function(_0x26d962, _0x358ffa, _0x2921d5) {
+util.intersection.polygonCircle = function(_0x26d962, _0x358ffa, _0x2921d5) {
     for (var _0x40a38a = [], _0x26257e = 0x0; _0x26257e < _0x358ffa.v.length; _0x26257e++) {
-        var _0x5eeed2 = Utils.intersection.lineCircle(_0x26d962, {
+        var _0x5eeed2 = util.intersection.lineCircle(_0x26d962, {
             'a': _0x358ffa.v[_0x26257e],
             'b': _0x358ffa.v[_0x26257e + 0x1 < _0x358ffa.v.length ? _0x26257e + 0x1 : 0x0]
         }, _0x2921d5);
@@ -268,18 +268,18 @@ Utils.intersection.polygonCircle = function(_0x26d962, _0x358ffa, _0x2921d5) {
         return _0x26d962;
     }
 };
-Utils.intersection.lineNearestPoint = function(_0x5a6af6, _0x4deaa7) {
-    var _0x5842b2 = Vector2D.subtract(_0x4deaa7.b, _0x4deaa7.a);
-    _0x5a6af6 = Vector2D.subtract(_0x5a6af6, _0x4deaa7.a);
-    _0x5a6af6 = Vector2D.dot(_0x5a6af6, _0x5842b2);
+util.intersection.lineNearestPoint = function(_0x5a6af6, _0x4deaa7) {
+    var _0x5842b2 = vec2.subtract(_0x4deaa7.b, _0x4deaa7.a);
+    _0x5a6af6 = vec2.subtract(_0x5a6af6, _0x4deaa7.a);
+    _0x5a6af6 = vec2.dot(_0x5a6af6, _0x5842b2);
     if (0x0 >= _0x5a6af6) return _0x4deaa7.a;
-    var _0x5e06d3 = Vector2D.dot(_0x5842b2, _0x5842b2);
-    return _0x5e06d3 <= _0x5a6af6 ? _0x4deaa7.b : Vector2D.add(_0x4deaa7.a, Vector2D.scale(_0x5842b2, _0x5a6af6 / _0x5e06d3));
+    var _0x5e06d3 = vec2.dot(_0x5842b2, _0x5842b2);
+    return _0x5e06d3 <= _0x5a6af6 ? _0x4deaa7.b : vec2.add(_0x4deaa7.a, vec2.scale(_0x5842b2, _0x5a6af6 / _0x5e06d3));
 };
-Utils.time.now = function() {
+util.time.now = function() {
     return Date.now();
 };
-Utils.sprite.getSprite = function(_0xcf938f, _0x3feac1) {
+util.sprite.getSprite = function(_0xcf938f, _0x3feac1) {
     var _0x3f655d = _0xcf938f.width;
     _0xcf938f = _0xcf938f.height;
     _0x3feac1 *= Display.TEXRES;
@@ -338,15 +338,15 @@ shor2.encode = function(_0x16c11e, _0x249cd7) {
     return 0x0 | parseInt(_0x16c11e) & 0xffff | parseInt(_0x249cd7) << 0x10 & 0xffff0000;
 };
 shor2.decode = function(_0x397dd5) {
-    return Vector2D.make(_0x397dd5 & 0xffff, _0x397dd5 >> 0x10 & 0xffff);
+    return vec2.make(_0x397dd5 & 0xffff, _0x397dd5 >> 0x10 & 0xffff);
 };
 shor2.asArray = function(_0x5c2f23) {
     return [_0x5c2f23 & 0xffff, _0x5c2f23 >> 0x10 & 0xffff];
 };
 _0x41f345.GEN_FUNC.BUMP = function(_0x3c91bc, _0x897be, _0x5d48f2, _0x43ba2c, _0x4d3e0f, _0x3ff6e1, _0x444def, _0x6654d3) {
     _0x3c91bc.world.getZone(_0x43ba2c, _0x4d3e0f).bump(_0x3ff6e1, _0x444def);
-    _0x5d48f2 = Vector2D.make(0x1, 0.15);
-    _0x3ff6e1 = Vector2D.make(_0x3ff6e1, _0x444def + 0x1);
+    _0x5d48f2 = vec2.make(0x1, 0.15);
+    _0x3ff6e1 = vec2.make(_0x3ff6e1, _0x444def + 0x1);
     for (_0x444def = 0x0; _0x444def < _0x3c91bc.objects.length; _0x444def++) 
         _0x6654d3 = _0x3c91bc.objects[_0x444def],
         !_0x6654d3.dead && 
@@ -367,8 +367,8 @@ _0x41f345.GEN_FUNC.BUMP = function(_0x3c91bc, _0x897be, _0x5d48f2, _0x43ba2c, _0
 };
 _0x41f345.GEN_FUNC.BREAK = function(_0x166b7e, _0x53ef4a, _0x4e42f0, _0x7eb58b, _0x3ebd05, _0x3d616e, _0x3a0031, _0x197b34) {
     _0x166b7e.world.getZone(_0x7eb58b, _0x3ebd05).break(_0x3d616e, _0x3a0031, 0x1e);
-    _0x4e42f0 = Vector2D.make(0x1, 0.15);
-    _0x3d616e = Vector2D.make(_0x3d616e, _0x3a0031 + 0x1);
+    _0x4e42f0 = vec2.make(0x1, 0.15);
+    _0x3d616e = vec2.make(_0x3d616e, _0x3a0031 + 0x1);
     for (_0x3a0031 = 0x0; _0x3a0031 < _0x166b7e.objects.length; _0x3a0031++)
         _0x197b34 = _0x166b7e.objects[_0x3a0031], 
         !_0x197b34.dead && 
@@ -445,12 +445,12 @@ _0x41f345.TILE_PROPERTIES = {
                     _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, shor2.encode(_0x1bedc7, _0x216f2e), _0x96116d));
                     var _0x4d5415 = 0x1801b;
                     _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415);
-                    _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, Vector2D.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]);
+                    _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, vec2.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]);
                     _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d);
                     _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
                     break;
                 case 0x11:
-                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, shor2.encode(_0x1bedc7, _0x216f2e), _0x96116d)), _0x4d5415 = 0x1801b, _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415), _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, Vector2D.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]), _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d), _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
+                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, shor2.encode(_0x1bedc7, _0x216f2e), _0x96116d)), _0x4d5415 = 0x1801b, _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415), _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, vec2.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]), _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d), _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
             }
         }
     },
@@ -526,12 +526,12 @@ _0x41f345.TILE_PROPERTIES = {
                     _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, shor2.encode(_0x44da88, _0x24e427), _0x45ddff));
                     var _0x3ae8a1 = 0x1801b;
                     _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1);
-                    _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, Vector2D.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]);
+                    _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, vec2.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]);
                     _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff);
                     _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
                     break;
                 case 0x11:
-                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, shor2.encode(_0x44da88, _0x24e427), _0x45ddff)), _0x3ae8a1 = 0x1801b, _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1), _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, Vector2D.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]), _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff), _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
+                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, shor2.encode(_0x44da88, _0x24e427), _0x45ddff)), _0x3ae8a1 = 0x1801b, _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1), _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, vec2.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]), _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff), _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
             }
         }
     },
@@ -576,8 +576,8 @@ _0x41f345.TILE_PROPERTIES = {
                 case 0x1:
                     if (_0x33b9c9.pid === _0x1aa909) {
                         _0x1aa909 = _0x33b9c9.getPlayer();
-                        _0x42a534 = _0x33b9c9.world.getZone(_0x2ec993, _0x4346f5).getTile(Vector2D.make(_0x531e8f - 0x1, _0x459a7d));
-                        _0x33b9c9 = _0x33b9c9.world.getZone(_0x2ec993, _0x4346f5).getTile(Vector2D.make(_0x531e8f + 0x1, _0x459a7d));
+                        _0x42a534 = _0x33b9c9.world.getZone(_0x2ec993, _0x4346f5).getTile(vec2.make(_0x531e8f - 0x1, _0x459a7d));
+                        _0x33b9c9 = _0x33b9c9.world.getZone(_0x2ec993, _0x4346f5).getTile(vec2.make(_0x531e8f + 0x1, _0x459a7d));
                         if (_0x42a534.definition !== this)
                             if (_0x33b9c9.definition === this) _0x531e8f += 0x1;
                             else break;
@@ -608,8 +608,8 @@ _0x41f345.TILE_PROPERTIES = {
                 case 0x1:
                     if (_0x47a8a6.pid === _0x35bf48) {
                         _0x35bf48 = _0x47a8a6.getPlayer();
-                        _0x4f3822 = _0x47a8a6.world.getZone(_0x2d00a0, _0x504ce8).getTile(Vector2D.make(_0x125071 - 0x1, _0x4c94f9));
-                        _0x47a8a6 = _0x47a8a6.world.getZone(_0x2d00a0, _0x504ce8).getTile(Vector2D.make(_0x125071 + 0x1, _0x4c94f9));
+                        _0x4f3822 = _0x47a8a6.world.getZone(_0x2d00a0, _0x504ce8).getTile(vec2.make(_0x125071 - 0x1, _0x4c94f9));
+                        _0x47a8a6 = _0x47a8a6.world.getZone(_0x2d00a0, _0x504ce8).getTile(vec2.make(_0x125071 + 0x1, _0x4c94f9));
                         if (_0x4f3822.definition !== this)
                             if (_0x47a8a6.definition === this) _0x125071 += 0x1;
                             else break;
@@ -650,7 +650,7 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x59976b, _0x31e137, _0x4b42d8, _0xc56f80, _0x1036c6, _0x592649, _0x51f8a9, _0x4ac35a) {
             switch (_0x4ac35a) {
                 case 0x0:
-                    _0x59976b.pid === _0x31e137 && (_0x59976b = _0x59976b.getPlayer(), _0x59976b.pos.x >= _0x592649 && _0x59976b.pole(Vector2D.make(_0x592649, _0x51f8a9)));
+                    _0x59976b.pid === _0x31e137 && (_0x59976b = _0x59976b.getPlayer(), _0x59976b.pos.x >= _0x592649 && _0x59976b.pole(vec2.make(_0x592649, _0x51f8a9)));
             }
         }
     },
@@ -662,7 +662,7 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0xbc2513, _0x4cf103, _0x4204b2, _0x13be17, _0x2b4eb4, _0x5da513, _0x3169d1, _0x50b1db) {
             switch (_0x50b1db) {
                 case 0x0:
-                    _0xbc2513.pid === _0x4cf103 && (_0xbc2513 = _0xbc2513.getPlayer(), _0xbc2513.pos.x >= _0x5da513 && _0xbc2513.pos.x <= _0x5da513 + 0x1 && _0xbc2513.vine(Vector2D.make(_0x5da513, _0x3169d1), _0x4204b2.data));
+                    _0xbc2513.pid === _0x4cf103 && (_0xbc2513 = _0xbc2513.getPlayer(), _0xbc2513.pos.x >= _0x5da513 && _0xbc2513.pos.x <= _0x5da513 + 0x1 && _0xbc2513.vine(vec2.make(_0x5da513, _0x3169d1), _0x4204b2.data));
             }
         }
     },
@@ -679,13 +679,13 @@ _0x41f345.TILE_PROPERTIES = {
                     });
                     var _0x28753a = 0x1801b;
                     _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a);
-                    _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, Vector2D.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]);
+                    _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, vec2.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]);
                     _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
                     break;
                 case 0x11:
                     _0x3a425b.pid === _0x142e63 && _0x3a425b.send({
                         'type': "g50"
-                    }), _0x28753a = 0x1801b, _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a), _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, Vector2D.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]), _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
+                    }), _0x28753a = 0x1801b, _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a), _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, vec2.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]), _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
             }
         }
     }
@@ -750,7 +750,7 @@ var NETX = {},
                 'pid': _0x12700f[0x1] & 0xff | _0x12700f[0x0] << 0x8 & 0xff00,
                 'level': _0x12700f[0x2],
                 'zone': _0x12700f[0x3],
-                'pos': Vector2D.make(_0x55dcf2.getFloat32(0x0), _0x2d37d7.getFloat32(0x0)),
+                'pos': vec2.make(_0x55dcf2.getFloat32(0x0), _0x2d37d7.getFloat32(0x0)),
                 'sprite': _0x12700f[0xc],
                 'reverse': 0x0 !== _0x12700f[0xd]
             };
@@ -1516,19 +1516,19 @@ GameScren.prototype.onBack = function() {
 };
 "use strict";
 
-function Net() {
+function Network() {
     this.pendingArgs = [];
 }
-Net.CONNECTTYPE = {};
-Net.CONNECTTYPE.GUEST = 0;
-Net.CONNECTTYPE.LOGIN = 1;
-Net.CONNECTTYPE.REQ_CAPTCHA = 2;
-Net.CONNECTTYPE.REGISTER = 3;
-Net.CONNECTTYPE.RESUME = 4;
-Net.prototype.connected = function() {
+Network.CONNECTTYPE = {};
+Network.CONNECTTYPE.GUEST = 0;
+Network.CONNECTTYPE.LOGIN = 1;
+Network.CONNECTTYPE.REQ_CAPTCHA = 2;
+Network.CONNECTTYPE.REGISTER = 3;
+Network.CONNECTTYPE.RESUME = 4;
+Network.prototype.connected = function() {
     return undefined !== this.webSocket && this.webSocket.readyState !== WebSocket.CLOSED;
 };
-Net.prototype.openWs = function(args) {
+Network.prototype.openWs = function(args) {
     var net = this;
     if (this.connected()) {
         app.menu.error.show("Connection already open. State error.");
@@ -1549,7 +1549,7 @@ Net.prototype.openWs = function(args) {
     };
 };
 //connectType, name, team, priv, skin
-Net.prototype.connect = function(args) {
+Network.prototype.connect = function(args) {
     var conn = this.connected();
     this.pendingArgs = [];
     if (0 == args.length) {
@@ -1561,7 +1561,7 @@ Net.prototype.connect = function(args) {
         return;
     }
     connectType = args[0];
-    if (connectType == Net.CONNECTTYPE.GUEST) {
+    if (connectType == Network.CONNECTTYPE.GUEST) {
         var name = args[1];
         var team = args[2];
         var priv = args[3];
@@ -1577,7 +1577,7 @@ Net.prototype.connect = function(args) {
             'private': this.isPrivate,
             'skin': this.skin
         });
-    } else if (connectType == Net.CONNECTTYPE.LOGIN) {
+    } else if (connectType == Network.CONNECTTYPE.LOGIN) {
         var username = args[1];
         this.username = username;
         this.send({
@@ -1585,11 +1585,11 @@ Net.prototype.connect = function(args) {
             'username': this.username,
             'password': args[2]
         });
-    } else if (connectType == Net.CONNECTTYPE.REQ_CAPTCHA) {
+    } else if (connectType == Network.CONNECTTYPE.REQ_CAPTCHA) {
         this.send({
             'type': "lrc"
         });
-    } else if (connectType == Net.CONNECTTYPE.REGISTER) {
+    } else if (connectType == Network.CONNECTTYPE.REGISTER) {
         var username = args[1];
         this.username = username;
         this.send({
@@ -1598,7 +1598,7 @@ Net.prototype.connect = function(args) {
             'password': args[2],
             'captcha': args[3]
         });
-    } else if (connectType == Net.CONNECTTYPE.RESUME) {
+    } else if (connectType == Network.CONNECTTYPE.RESUME) {
         var session = args[1];
         this.session = session;
         this.send({
@@ -1610,7 +1610,7 @@ Net.prototype.connect = function(args) {
         app.menu.error.show("Assert failed in Net.connect");
     }
 };
-Net.prototype.handlePacket = function(data) {
+Network.prototype.handlePacket = function(data) {
     if (undefined === this.state || !this.state.handlePacket(data)) switch (data.type) {
         case "s00":
             this.setState(data.state);
@@ -1630,17 +1630,17 @@ Net.prototype.handlePacket = function(data) {
             app.menu.error.show("Recieved invalid packet type: " + data.type, JSON.stringify(data));
     }
 };
-Net.prototype.handleBinary = function(data) {
+Network.prototype.handleBinary = function(data) {
     this.state.handleBinary(data);
 };
-Net.prototype.handleBlob = function(packets) {
+Network.prototype.handleBlob = function(packets) {
     for (var i = 0x0; i < packets.length; i++) this.handlePacket(packets[i]);
 };
-Net.prototype.setState = function(newState) {
+Network.prototype.setState = function(newState) {
     undefined !== this.state && this.state.destroy();
     switch (newState) {
         case 'l':
-            this.state = new LobbyState(this.pendingArgs);
+            this.state = new InputState(this.pendingArgs);
             break;
         case 'g':
             this.state = new GameState();
@@ -1651,22 +1651,22 @@ Net.prototype.setState = function(newState) {
     }
     this.state.ready();
 };
-Net.prototype.send = function(_0x2756bb) {
+Network.prototype.send = function(_0x2756bb) {
     this.webSocket.send(JSON.stringify(_0x2756bb));
 };
-Net.prototype.sendBinary = function(_0x25450f) {
+Network.prototype.sendBinary = function(_0x25450f) {
     this.webSocket.send(_0x25450f.buffer);
 };
-Net.prototype.close = function() {
+Network.prototype.close = function() {
     undefined !== this.webSocket && this.webSocket.close();
     app.ingame() && app.game.destroy();
 };
 "use strict";
 
-function LobbyState(pendingArgs) {
+function InputState(pendingArgs) {
     this.pendingArgs = pendingArgs;
 }
-LobbyState.prototype.handlePacket = function(data) {
+InputState.prototype.handlePacket = function(data) {
     switch (data.type) {
         case "l01":
             return this.loggedIn(data), !0x0;
@@ -1684,22 +1684,22 @@ LobbyState.prototype.handlePacket = function(data) {
             return !0x1;
     }
 };
-LobbyState.prototype.handleBinary = function(data) {
+InputState.prototype.handleBinary = function(data) {
     app.menu.warn.show("Recieved unexpected binary data!");
 };
-LobbyState.prototype.ready = function() {
+InputState.prototype.ready = function() {
     app.net.connect(app.net.pendingArgs);
 };
-LobbyState.prototype.loggedIn = function(data) {
+InputState.prototype.loggedIn = function(data) {
     app.net.name = data.name;
     console.log("Logged in: " + data.name + " :: " + data.team);
 };
-LobbyState.prototype.handleLogoutResult = function(data) {
+InputState.prototype.handleLogoutResult = function(data) {
     Cookies.remove("session");
     Cookies.remove("go_to_lobby");
     location.reload();
 };
-LobbyState.prototype.handleLoginResult = function(data) {
+InputState.prototype.handleLoginResult = function(data) {
     if (data.status) {
         app.stopMainScreenUpdates();
         app.menu.mainAsMember.show(data.msg);
@@ -1709,7 +1709,7 @@ LobbyState.prototype.handleLoginResult = function(data) {
         app.menu.login.reportError(data.msg);
     }
 };
-LobbyState.prototype.handleRequestCaptcha = function(data) {
+InputState.prototype.handleRequestCaptcha = function(data) {
     if (data.data) {
         var img = document.getElementById("register-captcha");
         img.src = "data:image/png;base64, " + data.data;
@@ -1718,7 +1718,7 @@ LobbyState.prototype.handleRequestCaptcha = function(data) {
     }
     app.menu.register.show();
 };
-LobbyState.prototype.handleRegisterResult = function(data) {
+InputState.prototype.handleRegisterResult = function(data) {
     if (data.status) {
         app.stopMainScreenUpdates();
         app.menu.mainAsMember.show(data.msg);
@@ -1727,13 +1727,13 @@ LobbyState.prototype.handleRegisterResult = function(data) {
         app.menu.register.reportError(data.msg);
     }
 };
-LobbyState.prototype.send = function(data) {
+InputState.prototype.send = function(data) {
     app.net.send(data);
 };
-LobbyState.prototype.type = function() {
+InputState.prototype.type = function() {
     return 'l';
 };
-LobbyState.prototype.destroy = function() {};
+InputState.prototype.destroy = function() {};
 "use strict";
 
 function GameState() {
@@ -1792,14 +1792,14 @@ GameState.prototype.globalWarn = function(_0xba301c) {
     app.menu.warn.show(_0xba301c.message);
 };
 GameState.prototype.sendPing = function() {
-    var _0x1ac5e9 = Utils.time.now();
+    var _0x1ac5e9 = util.time.now();
     this.pingOut && 0x3e7 > this.pingLast - _0x1ac5e9 || (this.pingOut && (app.net.ping = 0x3e7), this.send({
         'type': "g21",
         'delta': _0x1ac5e9
     }), this.pingOut = !0x0);
 };
 GameState.prototype.recievePing = function(_0x5bdfa8) {
-    var _0x3162e8 = Utils.time.now();
+    var _0x3162e8 = util.time.now();
     app.net.ping = _0x3162e8 - _0x5bdfa8.delta;
     this.pingOut = !0x1;
 };
@@ -1880,7 +1880,7 @@ function PlayerObject(game, level, zone, pos, pid, skin) {
     this.reverse = !0x1;
     this.deadTimer = this.deadFreezeTimer = this.arrowFade = 0x0;
     this.lastPos = this.pos;
-    this.dim = Vector2D.make(0x1, 0x1);
+    this.dim = vec2.make(0x1, 0x1);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.jumping = -0x1;
     this.grounded = this.isSpring = this.isBounce = !0x1;
@@ -1906,7 +1906,7 @@ PlayerObject.ASYNC = !0x1;
 PlayerObject.ID = 0x1;
 PlayerObject.NAME = "PLAYER";
 PlayerObject.ANIMATION_RATE = 0x3;
-PlayerObject.DIM_OFFSET = Vector2D.make(-0.05, 0x0);
+PlayerObject.DIM_OFFSET = vec2.make(-0.05, 0x0);
 PlayerObject.DEAD_FREEZE_TIME = 0x7;
 PlayerObject.DEAD_TIME = 0x46;
 PlayerObject.DEAD_UP_FORCE = 0.65;
@@ -1932,31 +1932,31 @@ PlayerObject.DAMAGE_TIME = 0x2d;
 PlayerObject.TRANSFORM_TIME = 0x12;
 PlayerObject.TRANSFORM_ANIMATION_RATE = 0x2;
 PlayerObject.STAR_LENGTH = 380;
-PlayerObject.PROJ_OFFSET = Vector2D.make(0.7, 1.1);
+PlayerObject.PROJ_OFFSET = vec2.make(0.7, 1.1);
 PlayerObject.MAX_CHARGE = 0x3c;
 PlayerObject.ATTACK_DELAY = 0x7;
 PlayerObject.ATTACK_CHARGE = 0x19;
 PlayerObject.ATTACK_ANIM_LENGTH = 0x3;
 PlayerObject.PIPE_TIME = 0x1e;
 PlayerObject.PIPE_SPEED = 0.06;
-PlayerObject.PIPE_EXT_OFFSET = Vector2D.make(0.5, 0x0);
+PlayerObject.PIPE_EXT_OFFSET = vec2.make(0.5, 0x0);
 PlayerObject.WEED_EAT_RADIUS = 0x3;
 PlayerObject.POLE_DELAY = 0xf;
 PlayerObject.POLE_SLIDE_SPEED = 0.15;
-PlayerObject.LEVEL_END_MOVE_OFF = Vector2D.make(0xa, 0x0);
+PlayerObject.LEVEL_END_MOVE_OFF = vec2.make(0xa, 0x0);
 PlayerObject.CLIMB_SPEED = 0.125;
 PlayerObject.PLATFORM_SNAP_DIST = 0.15;
 PlayerObject.ARROW_SPRITE = 0xfd;
 PlayerObject.ARROW_TEXT = "YOU";
-PlayerObject.ARROW_OFFSET = Vector2D.make(0x0, 0.1);
-PlayerObject.TEXT_OFFSET = Vector2D.make(0x0, 0.55);
+PlayerObject.ARROW_OFFSET = vec2.make(0x0, 0.1);
+PlayerObject.TEXT_OFFSET = vec2.make(0x0, 0.55);
 PlayerObject.TEXT_SIZE = 0.65;
 PlayerObject.TEXT_COLOR = "#FFFFFF";
 PlayerObject.ARROW_RAD_IN = 0x3;
 PlayerObject.ARROW_RAD_OUT = 0x7;
 PlayerObject.ARROW_THRESHOLD_MIN = 0x4;
 PlayerObject.ARROW_THRESHOLD_MAX = 0x6;
-PlayerObject.TEAM_OFFSET = Vector2D.make(0x0, 0x0);
+PlayerObject.TEAM_OFFSET = vec2.make(0x0, 0x0);
 PlayerObject.TEAM_SIZE = 0.3;
 PlayerObject.TEAM_COLOR = "rgba(255,255,255,0.75)";
 PlayerObject.SPRITE = {};
@@ -2163,8 +2163,8 @@ PlayerObject.SNAME.DEAD = "DEAD";
 PlayerObject.SNAME.HIDE = "HIDE";
 PlayerObject.SNAME.GHOST = "GHOST";
 PlayerObject.SNAME.DEADGHOST = "DEADGHOST";
-var _0x4a74c1 = Vector2D.make(0.9, 0.95),
-    _0x124f5a = Vector2D.make(0.9, 1.9);
+var _0x4a74c1 = vec2.make(0.9, 0.95),
+    _0x124f5a = vec2.make(0.9, 1.9);
 PlayerObject.STATE = [{
     'NAME': PlayerObject.SNAME.STAND,
     'ID': 0x0,
@@ -2334,14 +2334,14 @@ PlayerObject.prototype.step = function() {
                 if (!this.poleWait)
                     if (0x0 >= this.poleTimer && this.autoTarget) this.setState(PlayerObject.SNAME.STAND);
                     else {
-                        for (var _0x4d4e5b = Vector2D.add(this.pos, Vector2D.make(0x0, -0.25)), _0x280236 = Vector2D.make(this.pos.x, this.pos.y - 0.25), _0x191ffc = Vector2D.make(this.dim.x, this.dim.y + 0.25), _0x280236 = this.game.world.getZone(this.level, this.zone).getTiles(_0x280236, _0x191ffc), _0x191ffc = Vector2D.make(0x1, 0x1), _0x1f539b = !0x1, _0x5a99db = 0x0; _0x5a99db < _0x280236.length; _0x5a99db++) {
+                        for (var _0x4d4e5b = vec2.add(this.pos, vec2.make(0x0, -0.25)), _0x280236 = vec2.make(this.pos.x, this.pos.y - 0.25), _0x191ffc = vec2.make(this.dim.x, this.dim.y + 0.25), _0x280236 = this.game.world.getZone(this.level, this.zone).getTiles(_0x280236, _0x191ffc), _0x191ffc = vec2.make(0x1, 0x1), _0x1f539b = !0x1, _0x5a99db = 0x0; _0x5a99db < _0x280236.length; _0x5a99db++) {
                             var _0x4eb640 = _0x280236[_0x5a99db];
                             if (_0x1badb6.intersection(_0x4eb640.pos, _0x191ffc, _0x4d4e5b, this.dim) && _0x4eb640.definition.COLLIDE) {
                                 _0x1f539b = !0x0;
                                 break;
                             }
                         }
-                        _0x1f539b ? (this.poleTimer = 0xf, this.autoTarget = Vector2D.add(_0x4d4e5b, PlayerObject.LEVEL_END_MOVE_OFF), this.poleWait = !0x0) : this.pos = _0x4d4e5b;
+                        _0x1f539b ? (this.poleTimer = 0xf, this.autoTarget = vec2.add(_0x4d4e5b, PlayerObject.LEVEL_END_MOVE_OFF), this.poleWait = !0x0) : this.pos = _0x4d4e5b;
                     } _0x4d4e5b = this.game.getFlag(this.level, this.zone);
                 _0x4d4e5b.pos.y - 0.25 >= this.pos.y ? _0x4d4e5b.pos.y -= 0.25 : (_0x4d4e5b.pos.y = this.pos.y, this.poleWait = !0x1);
             }
@@ -2383,12 +2383,12 @@ PlayerObject.prototype.step = function() {
                 case 0x1:
                     this.pos.y -= 1.74;
                     this.setState(PlayerObject.SNAME.STAND);
-                    this.pos = Vector2D.add(this.pos, PlayerObject.PIPE_EXT_OFFSET);
+                    this.pos = vec2.add(this.pos, PlayerObject.PIPE_EXT_OFFSET);
                     break;
                 case 0x2:
                     this.pos.y += 1.74;
                     this.setState(PlayerObject.SNAME.STAND);
-                    this.pos = Vector2D.add(this.pos, PlayerObject.PIPE_EXT_OFFSET);
+                    this.pos = vec2.add(this.pos, PlayerObject.PIPE_EXT_OFFSET);
                     break;
                 case 0x3:
                     this.pos.x -= 1.74;
@@ -2432,14 +2432,14 @@ PlayerObject.prototype.control = function() {
 };
 PlayerObject.prototype.physics = function() {
     -0x1 !== this.jumping ? (this.fallSpeed = 0.45 - 0.005 * this.jumping, this.jumping++, this.grounded = !0x1) : (this.isSpring = this.isBounce = !0x1, this.grounded && (this.fallSpeed = 0x0), this.fallSpeed = Math.max(this.fallSpeed - 0.085, -0.45));
-    for (var _0x57b791 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), _0x513d1f = Vector2D.make(this.pos.x + Math.min(0x0, this.moveSpeed), this.pos.y + Math.min(0x0, this.fallSpeed)), _0x208a75 = Vector2D.make(this.dim.x + Math.max(0x0, this.moveSpeed), this.dim.y + Math.max(0x0, this.fallSpeed)), _0x513d1f = this.game.world.getZone(this.level, this.zone).getTiles(_0x513d1f, _0x208a75), _0x20e6e6 = this.game.getPlatforms(), _0x208a75 = Vector2D.make(0x1, 0x1), _0x58342b = !0x1, _0x27521c = [], _0x27c16e = [], _0x346d1d = [], _0x50b7b9 = [], _0x535e81 = [], _0x3f505e, _0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) {
+    for (var _0x57b791 = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), _0x513d1f = vec2.make(this.pos.x + Math.min(0x0, this.moveSpeed), this.pos.y + Math.min(0x0, this.fallSpeed)), _0x208a75 = vec2.make(this.dim.x + Math.max(0x0, this.moveSpeed), this.dim.y + Math.max(0x0, this.fallSpeed)), _0x513d1f = this.game.world.getZone(this.level, this.zone).getTiles(_0x513d1f, _0x208a75), _0x20e6e6 = this.game.getPlatforms(), _0x208a75 = vec2.make(0x1, 0x1), _0x58342b = !0x1, _0x27521c = [], _0x27c16e = [], _0x346d1d = [], _0x50b7b9 = [], _0x535e81 = [], _0x3f505e, _0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) {
         var _0x28e288 = _0x513d1f[_0x5b32b0];
         if (_0x28e288.definition.COLLIDE)
             if (_0x28e288.definition.HIDDEN) _0x27521c.push(_0x28e288);
             else if (_0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) || _0x1badb6.intersection(_0x28e288.pos, _0x208a75, this.pos, this.dim)) 0.01 < Math.abs(this.moveSpeed) && this.grounded && this.pos.y <= _0x28e288.pos.y && _0x346d1d.push(_0x28e288), _0x27521c.push(_0x28e288);
     }
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x20e6e6.length; _0x5b32b0++) _0x28e288 = _0x20e6e6[_0x5b32b0], _0x1badb6.intersection(_0x28e288.pos, _0x28e288.dim, _0x57b791, this.dim) && _0x535e81.push(_0x28e288);
-    _0x20e6e6 = Vector2D.make(_0x57b791.x, this.pos.y);
+    _0x20e6e6 = vec2.make(_0x57b791.x, this.pos.y);
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], !_0x28e288.definition.HIDDEN && _0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x20e6e6, this.dim) && (_0x20e6e6.x = _0x20e6e6.x + 0.5 * this.dim.x < _0x28e288.pos.x + 0.5 * _0x208a75.x ? _0x28e288.pos.x - this.dim.x : _0x28e288.pos.x + _0x208a75.x, this.moveSpeed *= 0.33);
     _0x57b791.x = _0x20e6e6.x;
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], _0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && (this.fallSpeed > PlayerObject.BLOCK_BUMP_THRESHOLD && _0x50b7b9.push(_0x28e288), 0x0 > this.fallSpeed && this.pos.y >= _0x28e288.pos.y && _0x27c16e.push(_0x28e288));
@@ -2461,7 +2461,7 @@ PlayerObject.prototype.physics = function() {
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x50b7b9.length; _0x5b32b0++) _0x28e288 = _0x50b7b9[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, 0x0 < this.power ? _0x41f345.TRIGGER.TYPE.BIG_BUMP : _0x41f345.TRIGGER.TYPE.SMALL_BUMP), this.jumping = -0x1, this.fallSpeed = -PlayerObject.BLOCK_BUMP_THRESHOLD;
 };
 PlayerObject.prototype.collisionTest = function(_0x569425, _0x1323bb) {
-    for (var _0x4dc291 = Vector2D.make(0x1, 0x1), _0x471838 = this.game.world.getZone(this.level, this.zone).getTiles(_0x569425, _0x1323bb), _0x426d64 = 0x0; _0x426d64 < _0x471838.length; _0x426d64++) {
+    for (var _0x4dc291 = vec2.make(0x1, 0x1), _0x471838 = this.game.world.getZone(this.level, this.zone).getTiles(_0x569425, _0x1323bb), _0x426d64 = 0x0; _0x426d64 < _0x471838.length; _0x426d64++) {
         var _0x2faa4b = _0x471838[_0x426d64];
         if (_0x2faa4b.definition.COLLIDE && _0x1badb6.intersection(_0x2faa4b.pos, _0x4dc291, _0x569425, _0x1323bb)) return !0x0;
     }
@@ -2476,7 +2476,7 @@ PlayerObject.prototype.interaction = function() {
 PlayerObject.prototype.arrow = function() {
     for (var _0x37a11c = 0x0, _0x389b03 = 0x0; _0x389b03 < this.game.objects.length; _0x389b03++) {
         var _0x2c4088 = this.game.objects[_0x389b03];
-        _0x2c4088 !== this && _0x2c4088 instanceof PlayerObject && _0x2c4088.level === this.level && _0x2c4088.zone === this.zone && (_0x37a11c += 0x1 - Math.min(PlayerObject.ARROW_RAD_OUT, Math.max(0x0, Vector2D.distance(this.pos, _0x2c4088.pos) - PlayerObject.ARROW_RAD_IN)) / PlayerObject.ARROW_RAD_OUT);
+        _0x2c4088 !== this && _0x2c4088 instanceof PlayerObject && _0x2c4088.level === this.level && _0x2c4088.zone === this.zone && (_0x37a11c += 0x1 - Math.min(PlayerObject.ARROW_RAD_OUT, Math.max(0x0, vec2.distance(this.pos, _0x2c4088.pos) - PlayerObject.ARROW_RAD_IN)) / PlayerObject.ARROW_RAD_OUT);
     }
     this.arrowFade = Math.min(PlayerObject.ARROW_THRESHOLD_MAX, Math.max(0x0, _0x37a11c - PlayerObject.ARROW_THRESHOLD_MIN)) / PlayerObject.ARROW_THRESHOLD_MAX;
 };
@@ -2484,7 +2484,7 @@ PlayerObject.prototype.sound = GameObject.prototype.sound;
 PlayerObject.prototype.attack = function() {
     this.attackTimer = PlayerObject.ATTACK_DELAY;
     this.attackCharge -= PlayerObject.ATTACK_CHARGE;
-    var _0x328458 = this.reverse ? Vector2D.add(this.pos, PlayerObject.PROJ_OFFSET) : Vector2D.add(this.pos, Vector2D.multiply(PlayerObject.PROJ_OFFSET, Vector2D.make(-0x1, 0x1)));
+    var _0x328458 = this.reverse ? vec2.add(this.pos, PlayerObject.PROJ_OFFSET) : vec2.add(this.pos, vec2.multiply(PlayerObject.PROJ_OFFSET, vec2.make(-0x1, 0x1)));
     this.game.createObject(_0x6c6f53.ID, this.level, this.zone, _0x328458, [this.reverse, this.pid]);
     this.play("sfx/fireball.wav", 0x1, 0.04);
 };
@@ -2504,7 +2504,7 @@ PlayerObject.prototype.powerup = function(_0x316532) {
 PlayerObject.prototype.axe = function(_0x5050d5) {
     (_0x5050d5 = this.game.getText(this.level, this.zone, _0x5050d5.toString())) || (_0x5050d5 = this.game.getText(this.level, this.zone, "too bad"));
     var axe = this.game.getAxe(this.level, this.zone);
-    _0x5050d5 && (this.moveSpeed = 0, this.pos = Vector2D.copy(axe.pos), this.autoTarget = Vector2D.add(_0x5050d5.pos, Vector2D.make(0x0, -1.6)));
+    _0x5050d5 && (this.moveSpeed = 0, this.pos = vec2.copy(axe.pos), this.autoTarget = vec2.add(_0x5050d5.pos, vec2.make(0x0, -1.6)));
 };
 PlayerObject.prototype.star = function() {
     this.starMusic && (this.starMusic.stop(), this.starMusic = undefined);
@@ -2532,7 +2532,7 @@ PlayerObject.prototype.pipe = function(_0x157842, _0x266382, _0x3f3ba4) {
 PlayerObject.prototype.weedeat = function() {
     for (var _0x5cc521 = 0x0; _0x5cc521 < this.game.objects.length; _0x5cc521++) {
         var _0x526625 = this.game.objects[_0x5cc521];
-        _0x526625 instanceof _0xa70071 && !_0x526625.dead && Vector2D.distance(this.pos, _0x526625.pos) < PlayerObject.WEED_EAT_RADIUS && _0x526625.destroy();
+        _0x526625 instanceof _0xa70071 && !_0x526625.dead && vec2.distance(this.pos, _0x526625.pos) < PlayerObject.WEED_EAT_RADIUS && _0x526625.destroy();
     }
 };
 PlayerObject.prototype.pole = function(_0x4a8021) {
@@ -2600,33 +2600,33 @@ PlayerObject.prototype.draw = function(spriteList) {
         if (this.sprite.INDEX instanceof Array)
             for (var _0x5814e0 = this.sprite.INDEX, _0x3f6b38 = 0x0; _0x3f6b38 < _0x5814e0.length; _0x3f6b38++)
                 for (var _0x13a17a = 0x0; _0x13a17a < _0x5814e0[_0x3f6b38].length; _0x13a17a++) 0x2 === _0x5c9425 && spriteList.push({
-                    'pos': Vector2D.add(Vector2D.add(this.pos, PlayerObject.DIM_OFFSET), Vector2D.make(this.reverse ? _0x13a17a : -_0x13a17a, _0x3f6b38)),
+                    'pos': vec2.add(vec2.add(this.pos, PlayerObject.DIM_OFFSET), vec2.make(this.reverse ? _0x13a17a : -_0x13a17a, _0x3f6b38)),
                     'reverse': this.reverse,
                     'index': _0x5814e0[_0x3f6b38][_0x13a17a],
                     'skin': this.skin,
                     'mode': 0x0
                 }), spriteList.push({
-                    'pos': Vector2D.add(Vector2D.add(this.pos, PlayerObject.DIM_OFFSET), Vector2D.make(this.reverse ? _0x13a17a : -_0x13a17a, _0x3f6b38)),
+                    'pos': vec2.add(vec2.add(this.pos, PlayerObject.DIM_OFFSET), vec2.make(this.reverse ? _0x13a17a : -_0x13a17a, _0x3f6b38)),
                     'reverse': this.reverse,
                     'index': _0x5814e0[_0x3f6b38][_0x13a17a],
                     'skin': this.skin,
                     'mode': _0x5c9425
                 });
         else 0x2 === _0x5c9425 && spriteList.push({
-            'pos': Vector2D.add(this.pos, PlayerObject.DIM_OFFSET),
+            'pos': vec2.add(this.pos, PlayerObject.DIM_OFFSET),
             'reverse': this.reverse,
             'index': this.sprite.INDEX,
             'skin': this.skin,
             'mode': 0x0
         }), spriteList.push({
-            'pos': Vector2D.add(this.pos, PlayerObject.DIM_OFFSET),
+            'pos': vec2.add(this.pos, PlayerObject.DIM_OFFSET),
             'reverse': this.reverse,
             'index': this.sprite.INDEX,
             'skin': this.skin,
             'mode': _0x5c9425
         });
         0x0 < this.arrowFade && (_0x5c9425 = 0xa0 + parseInt(0x20 * this.arrowFade), spriteList.push({
-            'pos': Vector2D.add(Vector2D.add(this.pos, Vector2D.make(0x0, this.dim.y)), PlayerObject.ARROW_OFFSET),
+            'pos': vec2.add(vec2.add(this.pos, vec2.make(0x0, this.dim.y)), PlayerObject.ARROW_OFFSET),
             'reverse': !0x1,
             'index': PlayerObject.ARROW_SPRITE,
             'mode': _0x5c9425
@@ -2635,12 +2635,12 @@ PlayerObject.prototype.draw = function(spriteList) {
 };
 PlayerObject.prototype.write = function(_0x239cf4) {
     0x0 < this.arrowFade ? _0x239cf4.push({
-        'pos': Vector2D.add(Vector2D.add(this.pos, Vector2D.make(0x0, this.dim.y)), PlayerObject.TEXT_OFFSET),
+        'pos': vec2.add(vec2.add(this.pos, vec2.make(0x0, this.dim.y)), PlayerObject.TEXT_OFFSET),
         'size': PlayerObject.TEXT_SIZE,
         'color': "rgba(255,255,255," + this.arrowFade + ')',
         'text': PlayerObject.ARROW_TEXT
     }) : this.name && _0x239cf4.push({
-        'pos': Vector2D.add(Vector2D.add(this.pos, Vector2D.make(0x0, this.sprite.INDEX instanceof Array ? 0x2 : 0x1)), PlayerObject.TEAM_OFFSET),
+        'pos': vec2.add(vec2.add(this.pos, vec2.make(0x0, this.sprite.INDEX instanceof Array ? 0x2 : 0x1)), PlayerObject.TEAM_OFFSET),
         'size': PlayerObject.TEAM_SIZE,
         'color': PlayerObject.TEAM_COLOR,
         'text': this.name
@@ -2656,7 +2656,7 @@ function _0x2040e7(_0x1e60b3, _0x4473d2, _0x446473, _0x318ba1, _0x37471f, _0xa2b
     this.variant = isNaN(parseInt(_0xa2b306)) ? 0x0 : parseInt(_0xa2b306);
     this.setState(_0x2040e7.STATE.RUN);
     this.bonkTimer = this.deadTimer = this.anim = 0x0;
-    this.dim = Vector2D.make(0x1, 0x1);
+    this.dim = vec2.make(0x1, 0x1);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.disabled = this.grounded = !0x1;
     this.disabledTimer = 0x0;
@@ -2673,7 +2673,7 @@ _0x2040e7.ENABLE_FADE_TIME = 0xf;
 _0x2040e7.ENABLE_DIST = 0x1a;
 _0x2040e7.DEAD_TIME = 0x3c;
 _0x2040e7.BONK_TIME = 0x5a;
-_0x2040e7.BONK_IMP = Vector2D.make(0.25, 0.4);
+_0x2040e7.BONK_IMP = vec2.make(0.25, 0.4);
 _0x2040e7.BONK_DECEL = 0.925;
 _0x2040e7.BONK_FALL_SPEED = 0.5;
 _0x2040e7.MOVE_SPEED_MAX = 0.075;
@@ -2730,7 +2730,7 @@ _0x2040e7.prototype.update = function(_0x30228e) {
     }
 };
 _0x2040e7.prototype.step = function() {
-    this.disabled ? this.proximity() : (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x2040e7.STATE.BONK ? this.bonkTimer++ > _0x2040e7.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x2040e7.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x2040e7.FALL_SPEED_ACCEL, -_0x2040e7.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x2040e7.ANIMATION_RATE) % this.state.SPRITE.length], this.state === _0x2040e7.STATE.DEAD ? this.deadTimer++ < _0x2040e7.DEAD_TIME || this.destroy() : (this.control(), this.physics(), this.sound(), 0x0 > this.pos.y && this.destroy())));
+    this.disabled ? this.proximity() : (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x2040e7.STATE.BONK ? this.bonkTimer++ > _0x2040e7.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x2040e7.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x2040e7.FALL_SPEED_ACCEL, -_0x2040e7.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x2040e7.ANIMATION_RATE) % this.state.SPRITE.length], this.state === _0x2040e7.STATE.DEAD ? this.deadTimer++ < _0x2040e7.DEAD_TIME || this.destroy() : (this.control(), this.physics(), this.sound(), 0x0 > this.pos.y && this.destroy())));
 };
 _0x2040e7.prototype.control = function() {
     this.moveSpeed = this.dir ? -_0x2040e7.MOVE_SPEED_MAX : _0x2040e7.MOVE_SPEED_MAX;
@@ -2739,12 +2739,12 @@ _0x2040e7.prototype.control = function() {
 _0x2040e7.prototype.physics = function() {
     this.grounded && (this.fallSpeed = 0x0);
     this.fallSpeed = Math.max(this.fallSpeed - _0x2040e7.FALL_SPEED_ACCEL, -_0x2040e7.FALL_SPEED_MAX);
-    var _0x482f3b = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, 0x0)),
-        _0x443a52 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)),
-        _0x44dd07 = Vector2D.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
-        _0x39b88d = Vector2D.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
+    var _0x482f3b = vec2.add(this.pos, vec2.make(this.moveSpeed, 0x0)),
+        _0x443a52 = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)),
+        _0x44dd07 = vec2.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
+        _0x39b88d = vec2.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
         _0x44dd07 = this.game.world.getZone(this.level, this.zone).getTiles(_0x44dd07, _0x39b88d),
-        _0x39b88d = Vector2D.make(0x1, 0x1),
+        _0x39b88d = vec2.make(0x1, 0x1),
         _0x5c888e = !0x1;
     this.grounded = !0x1;
     for (var _0x3c302a = 0x0; _0x3c302a < _0x44dd07.length; _0x3c302a++) {
@@ -2752,13 +2752,13 @@ _0x2040e7.prototype.physics = function() {
         _0x1a430b.definition.COLLIDE && _0x1badb6.intersection(_0x1a430b.pos, _0x39b88d, _0x482f3b, this.dim) && (this.pos.x <= _0x482f3b.x && _0x482f3b.x + this.dim.x > _0x1a430b.pos.x ? (_0x482f3b.x = _0x1a430b.pos.x - this.dim.x, _0x443a52.x = _0x482f3b.x, this.moveSpeed = 0x0, _0x5c888e = !0x0) : this.pos.x >= _0x482f3b.x && _0x482f3b.x < _0x1a430b.pos.x + _0x39b88d.x && (_0x482f3b.x = _0x1a430b.pos.x + _0x39b88d.x, _0x443a52.x = _0x482f3b.x, this.moveSpeed = 0x0, _0x5c888e = !0x0));
     }
     for (_0x3c302a = 0x0; _0x3c302a < _0x44dd07.length; _0x3c302a++) _0x1a430b = _0x44dd07[_0x3c302a], _0x1a430b.definition.COLLIDE && _0x1badb6.intersection(_0x1a430b.pos, _0x39b88d, _0x443a52, this.dim) && (this.pos.y >= _0x443a52.y && _0x443a52.y < _0x1a430b.pos.y + _0x39b88d.y ? (_0x443a52.y = _0x1a430b.pos.y + _0x39b88d.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y <= _0x443a52.y && _0x443a52.y + this.dim.y > _0x1a430b.pos.y && (_0x443a52.y = _0x1a430b.pos.y - this.dim.y, this.fallSpeed = 0x0));
-    this.pos = Vector2D.make(_0x482f3b.x, _0x443a52.y);
+    this.pos = vec2.make(_0x482f3b.x, _0x443a52.y);
     _0x5c888e && (this.dir = !this.dir);
 };
 _0x2040e7.prototype.sound = GameObject.prototype.sound;
 _0x2040e7.prototype.proximity = function() {
     var _0xc67304 = this.game.getPlayer();
-    _0xc67304 && !_0xc67304.dead && _0xc67304.level === this.level && _0xc67304.zone === this.zone && !this.proxHit && Vector2D.distance(_0xc67304.pos, this.pos) < _0x2040e7.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
+    _0xc67304 && !_0xc67304.dead && _0xc67304.level === this.level && _0xc67304.zone === this.zone && !this.proxHit && vec2.distance(_0xc67304.pos, this.pos) < _0x2040e7.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
 };
 _0x2040e7.prototype.enable = function() {
     this.disabled && (this.disabled = !0x1, this.disabledTimer = _0x2040e7.ENABLE_FADE_TIME);
@@ -2804,7 +2804,7 @@ _0x2040e7.prototype.draw = function(_0xa69c24) {
                             _0x14ac9a += _0x2040e7.VARIANT_OFFSET;
                     }
                     _0xa69c24.push({
-                        'pos': Vector2D.add(this.pos, Vector2D.make(_0x28feb8, _0x2e81c8)),
+                        'pos': vec2.add(this.pos, vec2.make(_0x28feb8, _0x2e81c8)),
                         'reverse': !this.dir,
                         'index': _0x14ac9a,
                         'mode': _0x57b370
@@ -2834,7 +2834,7 @@ function _0xafe583(_0xa97c33, _0x554349, _0x3fb5a3, _0x1fe726, _0xe543eb, _0x547
     this.variant = isNaN(parseInt(_0xdab7ae)) ? 0x0 : parseInt(_0xdab7ae);
     this.setState(parseInt(_0x547d60) ? _0xafe583.STATE.FLY : _0xafe583.STATE.RUN);
     this.bonkTimer = this.anim = 0x0;
-    this.dim = Vector2D.make(0x1, 0x1);
+    this.dim = vec2.make(0x1, 0x1);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.grounded = !0x1;
     this.jump = -0x1;
@@ -2853,7 +2853,7 @@ _0xafe583.VARIANT_OFFSET = 0x20;
 _0xafe583.ENABLE_FADE_TIME = 0xf;
 _0xafe583.ENABLE_DIST = 0x1a;
 _0xafe583.BONK_TIME = 0x5a;
-_0xafe583.BONK_IMP = Vector2D.make(0.25, 0.4);
+_0xafe583.BONK_IMP = vec2.make(0.25, 0.4);
 _0xafe583.BONK_DECEL = 0.925;
 _0xafe583.BONK_FALL_SPEED = 0.5;
 _0xafe583.PLAYER_IMMUNE_TIME = 0x6;
@@ -2948,7 +2948,7 @@ _0xafe583.prototype.update = function(_0x432173) {
 };
 _0xafe583.prototype.step = function() {
     if (this.disabled) this.proximity();
-    else if (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0xafe583.STATE.BONK) this.bonkTimer++ > _0xafe583.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0xafe583.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0xafe583.FALL_SPEED_ACCEL, -_0xafe583.BONK_FALL_SPEED));
+    else if (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0xafe583.STATE.BONK) this.bonkTimer++ > _0xafe583.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0xafe583.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0xafe583.FALL_SPEED_ACCEL, -_0xafe583.BONK_FALL_SPEED));
     else {
         this.anim++;
         this.sprite = this.state.SPRITE[parseInt(this.anim / _0xafe583.ANIMATION_RATE) % this.state.SPRITE.length];
@@ -2972,12 +2972,12 @@ _0xafe583.prototype.physics = function() {
     -0x1 !== this.jump ? (this.fallSpeed = _0xafe583.FALL_SPEED_MAX - this.jump * _0xafe583.JUMP_DECEL, this.jump++, this.grounded = !0x1) : (this.grounded && (this.fallSpeed = 0x0), this.fallSpeed = Math.max(this.fallSpeed - _0xafe583.FALL_SPEED_ACCEL, -_0xafe583.FALL_SPEED_MAX));
     this.grounded && (this.fallSpeed = 0x0);
     this.fallSpeed = Math.max(this.fallSpeed - _0xafe583.FALL_SPEED_ACCEL, -_0xafe583.FALL_SPEED_MAX);
-    var _0x228c79 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, 0x0)),
-        _0xa7c94d = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)),
-        _0x186c6d = Vector2D.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
-        _0x1f400c = Vector2D.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
+    var _0x228c79 = vec2.add(this.pos, vec2.make(this.moveSpeed, 0x0)),
+        _0xa7c94d = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)),
+        _0x186c6d = vec2.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
+        _0x1f400c = vec2.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
         _0x186c6d = this.game.world.getZone(this.level, this.zone).getTiles(_0x186c6d, _0x1f400c),
-        _0x1f400c = Vector2D.make(0x1, 0x1),
+        _0x1f400c = vec2.make(0x1, 0x1),
         _0x350f0e = !0x1;
     this.grounded = !0x1;
     for (var _0x277a15 = 0x0; _0x277a15 < _0x186c6d.length; _0x277a15++) {
@@ -2985,7 +2985,7 @@ _0xafe583.prototype.physics = function() {
         _0xb496d.definition.COLLIDE && _0x1badb6.intersection(_0xb496d.pos, _0x1f400c, _0x228c79, this.dim) && (this.pos.x + this.dim.x <= _0xb496d.pos.x && _0x228c79.x + this.dim.x > _0xb496d.pos.x ? (_0x228c79.x = _0xb496d.pos.x - this.dim.x, _0xa7c94d.x = _0x228c79.x, this.moveSpeed = 0x0, _0x350f0e = !0x0) : this.pos.x >= _0xb496d.pos.x + _0x1f400c.x && _0x228c79.x < _0xb496d.pos.x + _0x1f400c.x && (_0x228c79.x = _0xb496d.pos.x + _0x1f400c.x, _0xa7c94d.x = _0x228c79.x, this.moveSpeed = 0x0, _0x350f0e = !0x0));
     }
     for (_0x277a15 = 0x0; _0x277a15 < _0x186c6d.length; _0x277a15++) _0xb496d = _0x186c6d[_0x277a15], _0xb496d.definition.COLLIDE && _0x1badb6.intersection(_0xb496d.pos, _0x1f400c, _0xa7c94d, this.dim) && (this.pos.y >= _0xb496d.pos.y + _0x1f400c.y && _0xa7c94d.y < _0xb496d.pos.y + _0x1f400c.y ? (_0xa7c94d.y = _0xb496d.pos.y + _0x1f400c.y, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0xb496d.pos.y && _0xa7c94d.y + this.dim.y > _0xb496d.pos.y && (_0xa7c94d.y = _0xb496d.pos.y - this.dim.y, this.jump = -0x1, this.fallSpeed = 0x0));
-    this.pos = Vector2D.make(_0x228c79.x, _0xa7c94d.y);
+    this.pos = vec2.make(_0x228c79.x, _0xa7c94d.y);
     _0x350f0e && (this.dir = !this.dir);
 };
 _0xafe583.prototype.interaction = function() {
@@ -2997,7 +2997,7 @@ _0xafe583.prototype.interaction = function() {
 };
 _0xafe583.prototype.proximity = function() {
     var _0x12bcf2 = this.game.getPlayer();
-    _0x12bcf2 && !_0x12bcf2.dead && _0x12bcf2.level === this.level && _0x12bcf2.zone === this.zone && !this.proxHit && Vector2D.distance(_0x12bcf2.pos, this.pos) < _0xafe583.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
+    _0x12bcf2 && !_0x12bcf2.dead && _0x12bcf2.level === this.level && _0x12bcf2.zone === this.zone && !this.proxHit && vec2.distance(_0x12bcf2.pos, this.pos) < _0xafe583.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
 };
 _0xafe583.prototype.sound = GameObject.prototype.sound;
 _0xafe583.prototype.enable = function() {
@@ -3053,7 +3053,7 @@ _0xafe583.prototype.draw = function(_0x43f21f) {
                             _0x3b8db1 += _0xafe583.VARIANT_OFFSET;
                     }
                     _0x43f21f.push({
-                        'pos': Vector2D.add(this.pos, Vector2D.make(_0x3f41db, _0x98a94)),
+                        'pos': vec2.add(this.pos, vec2.make(_0x3f41db, _0x98a94)),
                         'reverse': !this.dir,
                         'index': _0x3b8db1,
                         'mode': _0x345a76
@@ -3084,7 +3084,7 @@ function _0x5e412e(_0x20fee6, _0x2e48c2, _0x2b82bb, _0x254183, _0xc898a6, _0x35c
     this.setState(parseInt(_0x35c708) ? _0x5e412e.STATE.FLY : _0x5e412e.STATE.RUN);
     this.bonkTimer = this.anim = 0x0;
     this.loc = [this.pos.y + 0.5 * _0x5e412e.FLY_DISTANCE, this.pos.y - 0.5 * _0x5e412e.FLY_DISTANCE];
-    this.dim = Vector2D.make(0x1, 0x1);
+    this.dim = vec2.make(0x1, 0x1);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.disabled = this.grounded = !0x1;
     this.disabledTimer = 0x0;
@@ -3170,7 +3170,7 @@ for (_0x1bec55 = 0x0; _0x1bec55 < _0x5e412e.STATE_LIST.length; _0x1bec55++) _0x5
 _0x5e412e.prototype.update = _0xafe583.prototype.update;
 _0x5e412e.prototype.step = function() {
     if (this.disabled) this.proximity();
-    else if (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x5e412e.STATE.BONK) this.bonkTimer++ > _0xafe583.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0xafe583.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0xafe583.FALL_SPEED_ACCEL, -_0xafe583.BONK_FALL_SPEED));
+    else if (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x5e412e.STATE.BONK) this.bonkTimer++ > _0xafe583.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0xafe583.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0xafe583.FALL_SPEED_ACCEL, -_0xafe583.BONK_FALL_SPEED));
     else {
         this.anim++;
         this.sprite = this.state.SPRITE[parseInt(this.anim / _0xafe583.ANIMATION_RATE) % this.state.SPRITE.length];
@@ -3194,12 +3194,12 @@ _0x5e412e.prototype.physics = function() {
     else {
         this.grounded && (this.fallSpeed = 0x0);
         this.fallSpeed = Math.max(this.fallSpeed - _0xafe583.FALL_SPEED_ACCEL, -_0xafe583.FALL_SPEED_MAX);
-        var _0x487bc8 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, 0x0)),
-            _0x41141f = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)),
-            _0x26638d = Vector2D.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
-            _0x2160ce = Vector2D.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
+        var _0x487bc8 = vec2.add(this.pos, vec2.make(this.moveSpeed, 0x0)),
+            _0x41141f = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)),
+            _0x26638d = vec2.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
+            _0x2160ce = vec2.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
             _0x26638d = this.game.world.getZone(this.level, this.zone).getTiles(_0x26638d, _0x2160ce),
-            _0x2160ce = Vector2D.make(0x1, 0x1),
+            _0x2160ce = vec2.make(0x1, 0x1),
             _0x58fc4d = !0x1;
         this.grounded = !0x1;
         for (var _0x36c036 = 0x0; _0x36c036 < _0x26638d.length; _0x36c036++) {
@@ -3207,7 +3207,7 @@ _0x5e412e.prototype.physics = function() {
             _0x46e9db.definition.COLLIDE && _0x1badb6.intersection(_0x46e9db.pos, _0x2160ce, _0x487bc8, this.dim) && (this.pos.x + this.dim.x <= _0x46e9db.pos.x && _0x487bc8.x + this.dim.x > _0x46e9db.pos.x ? (_0x487bc8.x = _0x46e9db.pos.x - this.dim.x, _0x41141f.x = _0x487bc8.x, this.moveSpeed = 0x0, _0x58fc4d = !0x0) : this.pos.x >= _0x46e9db.pos.x + _0x2160ce.x && _0x487bc8.x < _0x46e9db.pos.x + _0x2160ce.x && (_0x487bc8.x = _0x46e9db.pos.x + _0x2160ce.x, _0x41141f.x = _0x487bc8.x, this.moveSpeed = 0x0, _0x58fc4d = !0x0));
         }
         for (_0x36c036 = 0x0; _0x36c036 < _0x26638d.length; _0x36c036++) _0x46e9db = _0x26638d[_0x36c036], _0x46e9db.definition.COLLIDE && _0x1badb6.intersection(_0x46e9db.pos, _0x2160ce, _0x41141f, this.dim) && (this.pos.y >= _0x46e9db.pos.y + _0x2160ce.y && _0x41141f.y < _0x46e9db.pos.y + _0x2160ce.y ? (_0x41141f.y = _0x46e9db.pos.y + _0x2160ce.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x46e9db.pos.y && _0x41141f.y + this.dim.y > _0x46e9db.pos.y && (_0x41141f.y = _0x46e9db.pos.y - this.dim.y, this.fallSpeed = 0x0));
-        this.pos = Vector2D.make(_0x487bc8.x, _0x41141f.y);
+        this.pos = vec2.make(_0x487bc8.x, _0x41141f.y);
         _0x58fc4d && (this.dir = !this.dir);
     }
 };
@@ -3220,7 +3220,7 @@ _0x5e412e.prototype.interaction = function() {
 };
 _0x5e412e.prototype.sound = GameObject.prototype.sound;
 _0x5e412e.prototype.checkGround = function() {
-    var _0x1e7bcc = this.dir ? Vector2D.add(this.pos, Vector2D.make(-_0x5e412e.CHECK_DIST, 0x0)) : Vector2D.add(this.pos, Vector2D.make(_0x5e412e.CHECK_DIST + this.dim.x, 0x0));
+    var _0x1e7bcc = this.dir ? vec2.add(this.pos, vec2.make(-_0x5e412e.CHECK_DIST, 0x0)) : vec2.add(this.pos, vec2.make(_0x5e412e.CHECK_DIST + this.dim.x, 0x0));
     _0x1e7bcc.y -= 1.5;
     return this.game.world.getZone(this.level, this.zone).getTile(_0x1e7bcc).definition.COLLIDE;
 };
@@ -3260,7 +3260,7 @@ _0x5e412e.prototype.draw = function(_0x6357b4) {
                             _0x1d1e23 += _0xafe583.VARIANT_OFFSET;
                     }
                     _0x6357b4.push({
-                        'pos': Vector2D.add(this.pos, Vector2D.make(_0x55c5a9, _0x331f7c)),
+                        'pos': vec2.add(this.pos, vec2.make(_0x55c5a9, _0x331f7c)),
                         'reverse': !this.dir,
                         'index': _0x1d1e23,
                         'mode': _0x249e88
@@ -3285,13 +3285,13 @@ GameObject.REGISTER_OBJECT(_0x5e412e);
 "use strict";
 
 function _0xa70071(_0x2b798e, _0x51f029, _0x309b8b, _0x6b74f, _0x5cdcce, _0x3c9788) {
-    GameObject.call(this, _0x2b798e, _0x51f029, _0x309b8b, Vector2D.add(_0x6b74f, Vector2D.make(0.6, 0x0)));
+    GameObject.call(this, _0x2b798e, _0x51f029, _0x309b8b, vec2.add(_0x6b74f, vec2.make(0.6, 0x0)));
     this.oid = _0x5cdcce;
     this.variant = isNaN(parseInt(_0x3c9788)) ? 0x0 : parseInt(_0x3c9788);
     this.setState(_0xa70071.STATE.IDLE);
     this.bonkTimer = this.anim = 0x0;
-    this.loc = [Vector2D.copy(this.pos), Vector2D.add(this.pos, Vector2D.make(0x0, -1.5))];
-    this.dim = Vector2D.make(0.8, 0x1);
+    this.loc = [vec2.copy(this.pos), vec2.add(this.pos, vec2.make(0x0, -1.5))];
+    this.dim = vec2.make(0.8, 0x1);
     this.dir = this.fallSpeed = this.moveSpeed = 0x0;
 }
 _0xa70071.ASYNC = !0x1;
@@ -3299,9 +3299,9 @@ _0xa70071.ID = 0x16;
 _0xa70071.NAME = "UNSPELLABLE PLANT";
 _0xa70071.ANIMATION_RATE = 0x3;
 _0xa70071.VARIANT_OFFSET = 0x20;
-_0xa70071.SOFFSET = Vector2D.make(-0.1, 0x0);
+_0xa70071.SOFFSET = vec2.make(-0.1, 0x0);
 _0xa70071.BONK_TIME = 0x5a;
-_0xa70071.BONK_IMP = Vector2D.make(0.25, 0.4);
+_0xa70071.BONK_IMP = vec2.make(0.25, 0.4);
 _0xa70071.BONK_DECEL = 0.925;
 _0xa70071.BONK_FALL_SPEED = 0.5;
 _0xa70071.FALL_SPEED_ACCEL = 0.085;
@@ -3342,12 +3342,12 @@ _0xa70071.prototype.update = function(_0x5c481f) {
     }
 };
 _0xa70071.prototype.step = function() {
-    this.state === _0xa70071.STATE.BONK ? this.bonkTimer++ > _0xa70071.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0xa70071.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0xa70071.FALL_SPEED_ACCEL, -_0xa70071.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0xa70071.ANIMATION_RATE) % this.state.SPRITE.length], 0x0 < --this.waitTimer || (this.control(), this.physics(), this.sound()));
+    this.state === _0xa70071.STATE.BONK ? this.bonkTimer++ > _0xa70071.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0xa70071.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0xa70071.FALL_SPEED_ACCEL, -_0xa70071.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0xa70071.ANIMATION_RATE) % this.state.SPRITE.length], 0x0 < --this.waitTimer || (this.control(), this.physics(), this.sound()));
 };
 _0xa70071.prototype.control = function() {};
 _0xa70071.prototype.physics = function() {
     var _0x3e7dc7 = this.loc[this.dir ? 0x0 : 0x1];
-    Vector2D.distance(this.pos, _0x3e7dc7) <= _0xa70071.TRAVEL_SPEED ? (this.pos = _0x3e7dc7, this.dir = !this.dir, this.waitTimer = _0xa70071.WAIT_TIME) : this.pos = Vector2D.add(this.pos, Vector2D.scale(Vector2D.normalize(Vector2D.subtract(_0x3e7dc7, this.pos)), _0xa70071.TRAVEL_SPEED));
+    vec2.distance(this.pos, _0x3e7dc7) <= _0xa70071.TRAVEL_SPEED ? (this.pos = _0x3e7dc7, this.dir = !this.dir, this.waitTimer = _0xa70071.WAIT_TIME) : this.pos = vec2.add(this.pos, vec2.scale(vec2.normalize(vec2.subtract(_0x3e7dc7, this.pos)), _0xa70071.TRAVEL_SPEED));
 };
 _0xa70071.prototype.sound = GameObject.prototype.sound;
 _0xa70071.prototype.damage = function(_0x508a32) {
@@ -3383,7 +3383,7 @@ _0xa70071.prototype.draw = function(_0x18fbd3) {
                         _0x29f699 += _0xa70071.VARIANT_OFFSET;
                 }
                 _0x18fbd3.push({
-                    'pos': Vector2D.add(Vector2D.add(this.pos, Vector2D.make(_0x3c8e54, _0x4bdd3b)), _0xa70071.SOFFSET),
+                    'pos': vec2.add(vec2.add(this.pos, vec2.make(_0x3c8e54, _0x4bdd3b)), _0xa70071.SOFFSET),
                     'reverse': !this.dir,
                     'index': _0x29f699,
                     'mode': _0x1227df
@@ -3395,7 +3395,7 @@ _0xa70071.prototype.draw = function(_0x18fbd3) {
                         _0x29f699 += _0xa70071.VARIANT_OFFSET;
                 }
                 _0x18fbd3.push({
-                    'pos': Vector2D.add(this.pos, _0xa70071.SOFFSET),
+                    'pos': vec2.add(this.pos, _0xa70071.SOFFSET),
                     'reverse': !this.dir,
                     'index': _0x29f699,
                     'mode': _0x1227df
@@ -3417,9 +3417,9 @@ function _0x25ddce(_0x171be9, _0x49adc1, _0x3c512b, _0xf8ff83, _0x140a9f, _0x26d
     this.delayTimer = this.delay;
     this.bonkTimer = 0x0;
     this.pos.x += _0x25ddce.SOFFSET.x;
-    this.loc = Vector2D.copy(this.pos);
+    this.loc = vec2.copy(this.pos);
     this.moveSpeed = this.fallSpeed = 0x0;
-    this.dim = Vector2D.make(0.7, 0.7);
+    this.dim = vec2.make(0.7, 0.7);
     this.dir = !0x0;
 }
 _0x25ddce.ASYNC = !0x1;
@@ -3427,15 +3427,15 @@ _0x25ddce.ID = 0x15;
 _0x25ddce.NAME = "FLYING FISH";
 _0x25ddce.ANIMATION_RATE = 0x3;
 _0x25ddce.BONK_TIME = 0x5a;
-_0x25ddce.BONK_IMP = Vector2D.make(0.25, 0.4);
+_0x25ddce.BONK_IMP = vec2.make(0.25, 0.4);
 _0x25ddce.BONK_DECEL = 0.925;
 _0x25ddce.BONK_FALL_SPEED = 0.5;
 _0x25ddce.BONK_FALL_ACCEL = 0.085;
 _0x25ddce.DELAY_DEFAULT = 0x96;
-_0x25ddce.IMPULSE = Vector2D.make(0.225, 0.335);
+_0x25ddce.IMPULSE = vec2.make(0.225, 0.335);
 _0x25ddce.DRAG = 0.996;
 _0x25ddce.FALL_SPEED_ACCEL = 0.0055;
-_0x25ddce.SOFFSET = Vector2D.make(0.15, 0.15);
+_0x25ddce.SOFFSET = vec2.make(0.15, 0.15);
 _0x25ddce.SPRITE = {};
 _0x25ddce.SPRITE_LIST = [{
     'NAME': "IDLE0",
@@ -3465,7 +3465,7 @@ _0x25ddce.prototype.update = function(_0x31e5a7) {
     }
 };
 _0x25ddce.prototype.step = function() {
-    this.state === _0x25ddce.STATE.BONK ? this.bonkTimer++ > _0x25ddce.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x25ddce.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x25ddce.BONK_FALL_ACCEL, -_0x25ddce.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x25ddce.ANIMATION_RATE) % this.state.SPRITE.length], 0x0 < this.delayTimer ? this.delayTimer-- : this.jump(), this.physics(), this.sound());
+    this.state === _0x25ddce.STATE.BONK ? this.bonkTimer++ > _0x25ddce.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x25ddce.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x25ddce.BONK_FALL_ACCEL, -_0x25ddce.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x25ddce.ANIMATION_RATE) % this.state.SPRITE.length], 0x0 < this.delayTimer ? this.delayTimer-- : this.jump(), this.physics(), this.sound());
 };
 _0x25ddce.prototype.physics = function() {
     this.pos.y > this.loc.y || 0x0 < this.fallSpeed ? (this.fallSpeed = (this.fallSpeed - _0x25ddce.FALL_SPEED_ACCEL) * _0x25ddce.DRAG, this.pos.x += this.moveSpeed * _0x25ddce.DRAG, this.pos.y += this.fallSpeed) : this.disable();
@@ -3473,7 +3473,7 @@ _0x25ddce.prototype.physics = function() {
 _0x25ddce.prototype.sound = GameObject.prototype.sound;
 _0x25ddce.prototype.jump = function() {
     this.enable();
-    this.pos = Vector2D.copy(this.loc);
+    this.pos = vec2.copy(this.loc);
     this.fallSpeed = _0x25ddce.IMPULSE.y * this.impulse;
     this.moveSpeed = _0x25ddce.IMPULSE.x * this.impulse;
     this.delayTimer = this.delay;
@@ -3510,7 +3510,7 @@ _0x25ddce.prototype.draw = function(_0x45125b) {
         var _0x455f65;
         _0x455f65 = this.state === _0x25ddce.STATE.BONK ? 0x3 : 0x0;
         _0x45125b.push({
-            'pos': Vector2D.subtract(this.pos, _0x25ddce.SOFFSET),
+            'pos': vec2.subtract(this.pos, _0x25ddce.SOFFSET),
             'reverse': this.dir,
             'index': this.sprite.INDEX,
             'mode': _0x455f65
@@ -3526,7 +3526,7 @@ function _0x1f4abb(_0x25bac6, _0xab1441, _0x1bd210, _0xd7b1a8, _0x55466e, _0xde9
     this.oid = _0x55466e;
     this.setState(_0x1f4abb.STATE.IDLE);
     this.bonkTimer = this.anim = 0x0;
-    this.dim = Vector2D.make(0x1, 1.5);
+    this.dim = vec2.make(0x1, 1.5);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.disabled = this.grounded = !0x1;
     this.disabledTimer = 0x0;
@@ -3546,7 +3546,7 @@ _0x1f4abb.ANIMATION_RATE = 0x5;
 _0x1f4abb.ENABLE_FADE_TIME = 0xf;
 _0x1f4abb.ENABLE_DIST = 0x21;
 _0x1f4abb.BONK_TIME = 0x5a;
-_0x1f4abb.BONK_IMP = Vector2D.make(0.25, 0.4);
+_0x1f4abb.BONK_IMP = vec2.make(0.25, 0.4);
 _0x1f4abb.BONK_DECEL = 0.925;
 _0x1f4abb.BONK_FALL_SPEED = 0.5;
 _0x1f4abb.MOVE_SPEED_MAX = 0.095;
@@ -3557,7 +3557,7 @@ _0x1f4abb.JUMP_DECEL = 0.009;
 _0x1f4abb.ATTACK_DELAY = 0x4b;
 _0x1f4abb.DOUBLE_RATE = 0x5;
 _0x1f4abb.ATTACK_ANIM_LENGTH = 0xd;
-_0x1f4abb.PROJ_OFFSET = Vector2D.make(0.5, 1.25);
+_0x1f4abb.PROJ_OFFSET = vec2.make(0.5, 1.25);
 _0x1f4abb.FALL_SPEED_MAX = 0.3;
 _0x1f4abb.FALL_SPEED_ACCEL = 0.085;
 _0x1f4abb.SPRITE = {};
@@ -3613,7 +3613,7 @@ _0x1f4abb.prototype.update = function(_0x3402c2) {
     }
 };
 _0x1f4abb.prototype.step = function() {
-    this.disabled ? this.proximity() : (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x1f4abb.STATE.BONK ? this.bonkTimer++ > _0x1f4abb.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x1f4abb.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x1f4abb.FALL_SPEED_ACCEL, -_0x1f4abb.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x1f4abb.ANIMATION_RATE) % this.state.SPRITE.length], this.face(), this.control(), this.physics(), this.sound(), 0x0 < this.attackAnimTimer ? (this.setState(_0x1f4abb.STATE.ATTACK), this.attach(), this.attackAnimTimer--) : this.attackTimer++ > _0x1f4abb.ATTACK_DELAY ? this.attack() : this.hammer = undefined, 0x0 > this.pos.y && this.destroy()));
+    this.disabled ? this.proximity() : (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x1f4abb.STATE.BONK ? this.bonkTimer++ > _0x1f4abb.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x1f4abb.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x1f4abb.FALL_SPEED_ACCEL, -_0x1f4abb.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x1f4abb.ANIMATION_RATE) % this.state.SPRITE.length], this.face(), this.control(), this.physics(), this.sound(), 0x0 < this.attackAnimTimer ? (this.setState(_0x1f4abb.STATE.ATTACK), this.attach(), this.attackAnimTimer--) : this.attackTimer++ > _0x1f4abb.ATTACK_DELAY ? this.attack() : this.hammer = undefined, 0x0 > this.pos.y && this.destroy()));
 };
 _0x1f4abb.prototype.control = function() {
     this.grounded ? (_0x1f4abb.JUMP_DELAY < this.groundTimer++ && (this.groundTimer = this.jumpTimer = 0x0), this.pos.x > this.loc[0x0] ? this.reverse = !0x0 : this.pos.x < this.loc[0x1] && (this.reverse = !0x1)) : this.jumpTimer > _0x1f4abb.JUMP_LENGTH && (this.jumpTimer = -0x1);
@@ -3622,28 +3622,28 @@ _0x1f4abb.prototype.control = function() {
 };
 _0x1f4abb.prototype.physics = function() {
     -0x1 !== this.jumpTimer ? (this.fallSpeed = _0x1f4abb.FALL_SPEED_MAX - this.jumpTimer * _0x1f4abb.JUMP_DECEL, this.jumpTimer++, this.grounded = !0x1) : (this.grounded && (this.fallSpeed = 0x0), this.fallSpeed = Math.max(this.fallSpeed - _0x1f4abb.FALL_SPEED_ACCEL, -_0x1f4abb.FALL_SPEED_MAX));
-    var _0x12b803 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, 0x0)),
-        _0x176893 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)),
-        _0x27250d = Vector2D.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
-        _0xfe9df8 = Vector2D.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
+    var _0x12b803 = vec2.add(this.pos, vec2.make(this.moveSpeed, 0x0)),
+        _0x176893 = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)),
+        _0x27250d = vec2.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
+        _0xfe9df8 = vec2.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
         _0x27250d = this.game.world.getZone(this.level, this.zone).getTiles(_0x27250d, _0xfe9df8),
-        _0xfe9df8 = Vector2D.make(0x1, 0x1);
+        _0xfe9df8 = vec2.make(0x1, 0x1);
     this.grounded = !0x1;
     for (var _0xac132f = 0x0; _0xac132f < _0x27250d.length; _0xac132f++) {
         var _0x44201c = _0x27250d[_0xac132f];
         _0x44201c.definition.COLLIDE && _0x1badb6.intersection(_0x44201c.pos, _0xfe9df8, _0x12b803, this.dim) && (this.pos.x + this.dim.x <= _0x44201c.pos.x && _0x12b803.x + this.dim.x > _0x44201c.pos.x ? (_0x12b803.x = _0x44201c.pos.x - this.dim.x, _0x176893.x = _0x12b803.x, this.moveSpeed = 0x0) : this.pos.x >= _0x44201c.pos.x + _0xfe9df8.x && _0x12b803.x < _0x44201c.pos.x + _0xfe9df8.x && (_0x12b803.x = _0x44201c.pos.x + _0xfe9df8.x, _0x176893.x = _0x12b803.x, this.moveSpeed = 0x0));
     }
     for (_0xac132f = 0x0; _0xac132f < _0x27250d.length; _0xac132f++) _0x44201c = _0x27250d[_0xac132f], _0x44201c.definition.COLLIDE && _0x1badb6.intersection(_0x44201c.pos, _0xfe9df8, _0x176893, this.dim) && (this.pos.y >= _0x44201c.pos.y + _0xfe9df8.y && _0x176893.y < _0x44201c.pos.y + _0xfe9df8.y ? (_0x176893.y = _0x44201c.pos.y + _0xfe9df8.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x44201c.pos.y && _0x176893.y + this.dim.y > _0x44201c.pos.y && (_0x176893.y = _0x44201c.pos.y - this.dim.y, this.jumpTimer = -0x1, this.fallSpeed = 0x0));
-    this.pos = Vector2D.make(_0x12b803.x, _0x176893.y);
+    this.pos = vec2.make(_0x12b803.x, _0x176893.y);
 };
 _0x1f4abb.prototype.proximity = function() {
     var _0x2e2202 = this.game.getPlayer();
-    _0x2e2202 && !_0x2e2202.dead && _0x2e2202.level === this.level && _0x2e2202.zone === this.zone && !this.proxHit && Vector2D.distance(_0x2e2202.pos, this.pos) < _0x1f4abb.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
+    _0x2e2202 && !_0x2e2202.dead && _0x2e2202.level === this.level && _0x2e2202.zone === this.zone && !this.proxHit && vec2.distance(_0x2e2202.pos, this.pos) < _0x1f4abb.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
 };
 _0x1f4abb.prototype.face = function() {
     for (var _0xe75dbb, _0x338971 = 0x0; _0x338971 < this.game.objects.length; _0x338971++) {
         var _0x345c5d = this.game.objects[_0x338971];
-        _0x345c5d instanceof PlayerObject && _0x345c5d.level === this.level && _0x345c5d.zone === this.zone && _0x345c5d.isTangible() && (!_0xe75dbb || Math.abs(_0xe75dbb) > Vector2D.distance(_0x345c5d.pos, this.pos)) && (_0xe75dbb = _0x345c5d.pos.x - this.pos.x);
+        _0x345c5d instanceof PlayerObject && _0x345c5d.level === this.level && _0x345c5d.zone === this.zone && _0x345c5d.isTangible() && (!_0xe75dbb || Math.abs(_0xe75dbb) > vec2.distance(_0x345c5d.pos, this.pos)) && (_0xe75dbb = _0x345c5d.pos.x - this.pos.x);
     }
     this.dir = _0xe75dbb ? 0x0 > _0xe75dbb : !0x0;
 };
@@ -3657,11 +3657,11 @@ _0x1f4abb.prototype.disable = function() {
 _0x1f4abb.prototype.attack = function() {
     this.attackAnimTimer = _0x1f4abb.ATTACK_ANIM_LENGTH;
     this.attackTimer = 0x0;
-    this.hammer = this.game.createObject(_0x1bc0ed.ID, this.level, this.zone, Vector2D.add(this.pos, _0x1f4abb.PROJ_OFFSET), [this]);
+    this.hammer = this.game.createObject(_0x1bc0ed.ID, this.level, this.zone, vec2.add(this.pos, _0x1f4abb.PROJ_OFFSET), [this]);
     ++this.double > _0x1f4abb.DOUBLE_RATE && (this.double = 0x0, this.attackTimer = _0x1f4abb.ATTACK_DELAY);
 };
 _0x1f4abb.prototype.attach = function() {
-    this.hammer && (this.hammer.pos = Vector2D.add(this.pos, _0x1f4abb.PROJ_OFFSET), this.hammer.dir = !this.dir);
+    this.hammer && (this.hammer.pos = vec2.add(this.pos, _0x1f4abb.PROJ_OFFSET), this.hammer.dir = !this.dir);
 };
 _0x1f4abb.prototype.playerCollide = function(_0x4b48ff) {
     this.dead || this.garbage || _0x4b48ff.damage(this);
@@ -3689,7 +3689,7 @@ _0x1f4abb.prototype.draw = function(_0x4d458c) {
         if (this.sprite.INDEX instanceof Array)
             for (var _0x571330 = this.sprite.INDEX, _0x3d1c2f = 0x0; _0x3d1c2f < _0x571330.length; _0x3d1c2f++)
                 for (var _0x35bd43 = 0x0; _0x35bd43 < _0x571330[_0x3d1c2f].length; _0x35bd43++) _0x4d458c.push({
-                    'pos': Vector2D.add(this.pos, Vector2D.make(_0x35bd43, _0x3d1c2f)),
+                    'pos': vec2.add(this.pos, vec2.make(_0x35bd43, _0x3d1c2f)),
                     'reverse': !this.dir,
                     'index': _0x571330[0x3 !== _0x534d18 ? _0x3d1c2f : _0x571330.length - 0x1 - _0x3d1c2f][_0x35bd43],
                     'mode': _0x534d18
@@ -3714,7 +3714,7 @@ function BowserObject(_0x296e51, _0xaf6db9, _0x35a12d, _0x5dd1db, _0x1c5ca6) {
     this.anim = 0x0;
     this.health = BowserObject.HEALTH;
     this.bonkTimer = 0x0;
-    this.dim = Vector2D.make(0x2, 0x2);
+    this.dim = vec2.make(0x2, 0x2);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.grounded = !0x1;
     this.loc = [this.pos.x, this.pos.x - BowserObject.MOVE_AREA];
@@ -3729,7 +3729,7 @@ BowserObject.NAME = "BOWSER";
 BowserObject.ANIMATION_RATE = 0x5;
 BowserObject.HEALTH = 0x5;
 BowserObject.BONK_TIME = 0x5a;
-BowserObject.BONK_IMP = Vector2D.make(0.25, 0.4);
+BowserObject.BONK_IMP = vec2.make(0.25, 0.4);
 BowserObject.BONK_DECEL = 0.925;
 BowserObject.BONK_FALL_SPEED = 0.5;
 BowserObject.MOVE_SPEED_MAX = 0.095;
@@ -3739,7 +3739,7 @@ BowserObject.JUMP_LENGTH = 0x6;
 BowserObject.JUMP_DECEL = 0.009;
 BowserObject.ATTACK_DELAY = 0x4b;
 BowserObject.ATTACK_ANIM_LENGTH = 0xf;
-BowserObject.PROJ_OFFSET = Vector2D.make(-0.25, 0.25);
+BowserObject.PROJ_OFFSET = vec2.make(-0.25, 0.25);
 BowserObject.FALL_SPEED_MAX = 0.3;
 BowserObject.FALL_SPEED_ACCEL = 0.085;
 BowserObject.SPRITE = {};
@@ -3790,7 +3790,7 @@ BowserObject.STATE_LIST = [{
 for (_0x1bec55 = 0x0; _0x1bec55 < BowserObject.STATE_LIST.length; _0x1bec55++) BowserObject.STATE[BowserObject.STATE_LIST[_0x1bec55].NAME] = BowserObject.STATE_LIST[_0x1bec55], BowserObject.STATE[BowserObject.STATE_LIST[_0x1bec55].ID] = BowserObject.STATE_LIST[_0x1bec55];
 BowserObject.prototype.update = function(_0x45393d) {};
 BowserObject.prototype.step = function() {
-    this.state === BowserObject.STATE.BONK ? this.bonkTimer++ > BowserObject.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= BowserObject.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - BowserObject.FALL_SPEED_ACCEL, -BowserObject.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / BowserObject.ANIMATION_RATE) % this.state.SPRITE.length], this.control(), this.physics(), this.sound(), this.attackTimer++ > BowserObject.ATTACK_DELAY && this.attack(), 0x0 < this.attackAnimTimer ? (this.setState(BowserObject.STATE.ATTACK), this.attackAnimTimer--) : this.setState(BowserObject.STATE.RUN), 0x0 > this.pos.y && this.destroy());
+    this.state === BowserObject.STATE.BONK ? this.bonkTimer++ > BowserObject.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= BowserObject.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - BowserObject.FALL_SPEED_ACCEL, -BowserObject.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / BowserObject.ANIMATION_RATE) % this.state.SPRITE.length], this.control(), this.physics(), this.sound(), this.attackTimer++ > BowserObject.ATTACK_DELAY && this.attack(), 0x0 < this.attackAnimTimer ? (this.setState(BowserObject.STATE.ATTACK), this.attackAnimTimer--) : this.setState(BowserObject.STATE.RUN), 0x0 > this.pos.y && this.destroy());
 };
 BowserObject.prototype.control = function() {
     this.grounded ? (BowserObject.JUMP_DELAY < this.groundTimer++ && (this.groundTimer = this.jumpTimer = 0x0), this.pos.x > this.loc[0x0] ? this.reverse = !0x0 : this.pos.x < this.loc[0x1] && (this.reverse = !0x1)) : this.jumpTimer > BowserObject.JUMP_LENGTH && (this.jumpTimer = -0x1);
@@ -3798,25 +3798,25 @@ BowserObject.prototype.control = function() {
 };
 BowserObject.prototype.physics = function() {
     -0x1 !== this.jumpTimer ? (this.fallSpeed = BowserObject.FALL_SPEED_MAX - this.jumpTimer * BowserObject.JUMP_DECEL, this.jumpTimer++, this.grounded = !0x1) : (this.grounded && (this.fallSpeed = 0x0), this.fallSpeed = Math.max(this.fallSpeed - BowserObject.FALL_SPEED_ACCEL, -BowserObject.FALL_SPEED_MAX));
-    var _0x85d755 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, 0x0)),
-        _0x471885 = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)),
-        _0x3ec375 = Vector2D.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
-        _0x486f5e = Vector2D.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
+    var _0x85d755 = vec2.add(this.pos, vec2.make(this.moveSpeed, 0x0)),
+        _0x471885 = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)),
+        _0x3ec375 = vec2.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
+        _0x486f5e = vec2.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
         _0x3ec375 = this.game.world.getZone(this.level, this.zone).getTiles(_0x3ec375, _0x486f5e),
-        _0x486f5e = Vector2D.make(0x1, 0x1);
+        _0x486f5e = vec2.make(0x1, 0x1);
     this.grounded = !0x1;
     for (var _0x2d6663 = 0x0; _0x2d6663 < _0x3ec375.length; _0x2d6663++) {
         var _0x50845a = _0x3ec375[_0x2d6663];
         _0x50845a.definition.COLLIDE && _0x1badb6.intersection(_0x50845a.pos, _0x486f5e, _0x85d755, this.dim) && (this.pos.x + this.dim.x <= _0x50845a.pos.x && _0x85d755.x + this.dim.x > _0x50845a.pos.x ? (_0x85d755.x = _0x50845a.pos.x - this.dim.x, _0x471885.x = _0x85d755.x, this.moveSpeed = 0x0) : this.pos.x >= _0x50845a.pos.x + _0x486f5e.x && _0x85d755.x < _0x50845a.pos.x + _0x486f5e.x && (_0x85d755.x = _0x50845a.pos.x + _0x486f5e.x, _0x471885.x = _0x85d755.x, this.moveSpeed = 0x0));
     }
     for (_0x2d6663 = 0x0; _0x2d6663 < _0x3ec375.length; _0x2d6663++) _0x50845a = _0x3ec375[_0x2d6663], _0x50845a.definition.COLLIDE && _0x1badb6.intersection(_0x50845a.pos, _0x486f5e, _0x471885, this.dim) && (this.pos.y >= _0x50845a.pos.y + _0x486f5e.y && _0x471885.y < _0x50845a.pos.y + _0x486f5e.y ? (_0x471885.y = _0x50845a.pos.y + _0x486f5e.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x50845a.pos.y && _0x471885.y + this.dim.y > _0x50845a.pos.y && (_0x471885.y = _0x50845a.pos.y - this.dim.y, this.jumpTimer = -0x1, this.fallSpeed = 0x0));
-    this.pos = Vector2D.make(_0x85d755.x, _0x471885.y);
+    this.pos = vec2.make(_0x85d755.x, _0x471885.y);
 };
 BowserObject.prototype.sound = GameObject.prototype.sound;
 BowserObject.prototype.attack = function() {
     this.attackAnimTimer = BowserObject.ATTACK_ANIM_LENGTH;
     this.attackTimer = 0x0;
-    this.game.createObject(_0x1899b7.ID, this.level, this.zone, Vector2D.add(this.pos, BowserObject.PROJ_OFFSET), []);
+    this.game.createObject(_0x1899b7.ID, this.level, this.zone, vec2.add(this.pos, BowserObject.PROJ_OFFSET), []);
     this.play("sfx/breath.wav", 1.5, 0.04);
 };
 BowserObject.prototype.playerCollide = function(_0x30ea43) {
@@ -3842,7 +3842,7 @@ BowserObject.prototype.draw = function(_0xdf4ab3) {
     if (this.sprite.INDEX instanceof Array)
         for (var _0x132286 = this.sprite.INDEX, _0x1479b4 = 0x0; _0x1479b4 < _0x132286.length; _0x1479b4++)
             for (var _0x58ee5e = 0x0; _0x58ee5e < _0x132286[_0x1479b4].length; _0x58ee5e++) _0xdf4ab3.push({
-                'pos': Vector2D.add(this.pos, Vector2D.make(_0x58ee5e, _0x1479b4)),
+                'pos': vec2.add(this.pos, vec2.make(_0x58ee5e, _0x1479b4)),
                 'reverse': !this.dir,
                 'index': _0x132286[_0x21f360 ? _0x132286.length - 0x1 - _0x1479b4 : _0x1479b4][_0x58ee5e],
                 'mode': _0x21f360
@@ -3862,9 +3862,9 @@ function _0x5bbb5e(_0x38f9a7, _0x27f352, _0x55bfab, _0x551362, _0x61ea43, _0x1b0
     GameObject.call(this, _0x38f9a7, _0x27f352, _0x55bfab, _0x551362);
     this.oid = _0x61ea43;
     this.setState(_0x5bbb5e.STATE.IDLE);
-    this.loc = 0x0 === parseInt(_0x57f60d) ? [_0x551362, Vector2D.add(_0x551362, Vector2D.make(parseInt(_0x1d905f), parseInt(_0x54af71)))] : [Vector2D.add(_0x551362, Vector2D.make(parseInt(_0x1d905f), parseInt(_0x54af71))), _0x551362];
+    this.loc = 0x0 === parseInt(_0x57f60d) ? [_0x551362, vec2.add(_0x551362, vec2.make(parseInt(_0x1d905f), parseInt(_0x54af71)))] : [vec2.add(_0x551362, vec2.make(parseInt(_0x1d905f), parseInt(_0x54af71))), _0x551362];
     this.anim = 0x0;
-    this.dim = Vector2D.make(parseInt(_0x1b085a), 0.5);
+    this.dim = vec2.make(parseInt(_0x1b085a), 0.5);
     this.speed = parseFloat(_0x46cdb7);
     this.riders = [];
     this.dir = !0x1;
@@ -3894,19 +3894,19 @@ _0x5bbb5e.prototype.step = function() {
     0x0 < this.delay-- || (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x5bbb5e.ANIMATION_RATE) % this.state.SPRITE.length], this.physics());
 };
 _0x5bbb5e.prototype.physics = function() {
-    var _0x4f56e4 = Vector2D.normalize(Vector2D.subtract(this.loc[this.dir ? 0x0 : 0x1], this.pos)),
-        _0xa92877 = Vector2D.distance(this.pos, this.loc[this.dir ? 0x0 : 0x1]);
+    var _0x4f56e4 = vec2.normalize(vec2.subtract(this.loc[this.dir ? 0x0 : 0x1], this.pos)),
+        _0xa92877 = vec2.distance(this.pos, this.loc[this.dir ? 0x0 : 0x1]);
     if (_0xa92877 < this.speed)
         if (this.loop) this.dir = !this.dir;
         else {
             this.pos = this.loc[0x0];
             this.riders = [];
             return;
-        } _0x4f56e4 = Vector2D.scale(_0x4f56e4, Math.min(this.speed, _0xa92877));
-    this.pos = Vector2D.add(this.pos, _0x4f56e4);
+        } _0x4f56e4 = vec2.scale(_0x4f56e4, Math.min(this.speed, _0xa92877));
+    this.pos = vec2.add(this.pos, _0x4f56e4);
     for (_0xa92877 = 0x0; _0xa92877 < this.riders.length; _0xa92877++) {
         var _0x24c795 = this.riders[0x0];
-        _0x24c795.pos = Vector2D.add(_0x24c795.pos, _0x4f56e4);
+        _0x24c795.pos = vec2.add(_0x24c795.pos, _0x4f56e4);
     }
     this.riders = [];
 };
@@ -3922,7 +3922,7 @@ _0x5bbb5e.prototype.setState = function(_0x1d8cb4) {
 _0x5bbb5e.prototype.draw = function(_0x3a5658) {
     if (!(0x0 < this.delay))
         for (var _0x3f7f2b = 0x0; _0x3f7f2b < this.dim.x; _0x3f7f2b++) _0x3a5658.push({
-            'pos': Vector2D.add(this.pos, Vector2D.make(_0x3f7f2b, 0x0)),
+            'pos': vec2.add(this.pos, vec2.make(_0x3f7f2b, 0x0)),
             'reverse': this.reverse,
             'index': this.sprite.INDEX,
             'mode': 0x0
@@ -3935,9 +3935,9 @@ function _0x4b6e2c(_0x1d4931, _0xe3dc6, _0x10f6a5, _0x3813e7, _0x1e87d2, _0x1f93
     GameObject.call(this, _0x1d4931, _0xe3dc6, _0x10f6a5, _0x3813e7);
     this.oid = _0x1e87d2;
     this.setState(_0x4b6e2c.STATE.IDLE);
-    this.loc = [_0x3813e7, Vector2D.add(_0x3813e7, Vector2D.make(parseInt(_0x31e281), parseInt(_0x3347d6)))];
+    this.loc = [_0x3813e7, vec2.add(_0x3813e7, vec2.make(parseInt(_0x31e281), parseInt(_0x3347d6)))];
     this.anim = 0x0;
-    this.dim = Vector2D.make(parseInt(_0x1f931e), 0.5);
+    this.dim = vec2.make(parseInt(_0x1f931e), 0.5);
     this.speed = parseFloat(_0x53c646);
     this.riders = [];
     this.dir = this.go = !0x1;
@@ -3973,13 +3973,13 @@ _0x4b6e2c.prototype.step = function() {
 };
 _0x4b6e2c.prototype.physics = function() {
     if (this.go) {
-        var _0x48a68f = Vector2D.normalize(Vector2D.subtract(this.loc[this.dir ? 0x0 : 0x1], this.pos)),
-            _0x2b99c6 = Vector2D.distance(this.pos, this.loc[this.dir ? 0x0 : 0x1]),
-            _0x48a68f = Vector2D.scale(_0x48a68f, Math.min(this.speed, _0x2b99c6));
-        this.pos = Vector2D.add(this.pos, _0x48a68f);
+        var _0x48a68f = vec2.normalize(vec2.subtract(this.loc[this.dir ? 0x0 : 0x1], this.pos)),
+            _0x2b99c6 = vec2.distance(this.pos, this.loc[this.dir ? 0x0 : 0x1]),
+            _0x48a68f = vec2.scale(_0x48a68f, Math.min(this.speed, _0x2b99c6));
+        this.pos = vec2.add(this.pos, _0x48a68f);
         for (_0x2b99c6 = 0x0; _0x2b99c6 < this.riders.length; _0x2b99c6++) {
             var _0x565fcd = this.riders[0x0];
-            _0x565fcd.pos = Vector2D.add(_0x565fcd.pos, _0x48a68f);
+            _0x565fcd.pos = vec2.add(_0x565fcd.pos, _0x48a68f);
         }
     }
     this.riders = [];
@@ -4000,7 +4000,7 @@ _0x4b6e2c.prototype.setState = function(_0x2cdc10) {
 _0x4b6e2c.prototype.draw = function(_0x53d78c) {
     if (!(0x0 < this.delay))
         for (var _0x3ce6ce = 0x0; _0x3ce6ce < this.dim.x; _0x3ce6ce++) _0x53d78c.push({
-            'pos': Vector2D.add(this.pos, Vector2D.make(_0x3ce6ce, 0x0)),
+            'pos': vec2.add(this.pos, vec2.make(_0x3ce6ce, 0x0)),
             'reverse': this.reverse,
             'index': this.sprite.INDEX,
             'mode': 0x0
@@ -4014,14 +4014,14 @@ function SpringObject(_0x9d9b10, _0x5d6af4, _0x14b8a1, _0x25d330, _0x2899a3) {
     this.oid = _0x2899a3;
     this.setState(SpringObject.STATE.EXTEND);
     this.anim = 0x0;
-    this.pos = Vector2D.add(this.pos, SpringObject.SOFFSET);
-    this.dim = Vector2D.make(0.8, 0x2);
+    this.pos = vec2.add(this.pos, SpringObject.SOFFSET);
+    this.dim = vec2.make(0.8, 0x2);
 }
 SpringObject.ASYNC = !0x0;
 SpringObject.ID = 0x95;
 SpringObject.NAME = "SPRING";
 SpringObject.ANIMATION_RATE = 0x3;
-SpringObject.SOFFSET = Vector2D.make(0.1, 0x0);
+SpringObject.SOFFSET = vec2.make(0.1, 0x0);
 SpringObject.THRESHOLD = [0x1, 0.5];
 SpringObject.POWER = 0.45;
 SpringObject.SPRITE = {};
@@ -4088,12 +4088,12 @@ SpringObject.prototype.draw = function(_0x132bc0) {
     if (this.sprite.INDEX instanceof Array)
         for (var _0x3191ef = this.sprite.INDEX, _0x4714a0 = 0x0; _0x4714a0 < _0x3191ef.length; _0x4714a0++)
             for (var _0x507d31 = 0x0; _0x507d31 < _0x3191ef[_0x4714a0].length; _0x507d31++) _0x132bc0.push({
-                'pos': Vector2D.subtract(Vector2D.add(this.pos, Vector2D.make(_0x507d31, _0x4714a0)), SpringObject.SOFFSET),
+                'pos': vec2.subtract(vec2.add(this.pos, vec2.make(_0x507d31, _0x4714a0)), SpringObject.SOFFSET),
                 'reverse': !0x1,
                 'index': _0x3191ef[_0x4714a0][_0x507d31]
             });
     else _0x132bc0.push({
-        'pos': Vector2D.subtract(this.pos, SpringObject.SOFFSET),
+        'pos': vec2.subtract(this.pos, SpringObject.SOFFSET),
         'reverse': !0x1,
         'index': this.sprite.INDEX,
         'mode': 0x0
@@ -4112,7 +4112,7 @@ FlagpoleObject.ASYNC = !0x0;
 FlagpoleObject.ID = 0xb1;
 FlagpoleObject.NAME = "FLAG";
 FlagpoleObject.ANIMATION_RATE = 0x3;
-FlagpoleObject.OFFSET = Vector2D.make(-0.5, 0x0);
+FlagpoleObject.OFFSET = vec2.make(-0.5, 0x0);
 FlagpoleObject.SPRITE = {};
 FlagpoleObject.SPRITE_LIST = [{
     'NAME': "IDLE",
@@ -4140,7 +4140,7 @@ FlagpoleObject.prototype.setState = function(_0x2d7e00) {
 };
 FlagpoleObject.prototype.draw = function(_0x33d2c9) {
     _0x33d2c9.push({
-        'pos': Vector2D.add(this.pos, FlagpoleObject.OFFSET),
+        'pos': vec2.add(this.pos, FlagpoleObject.OFFSET),
         'reverse': !0x1,
         'index': this.sprite.INDEX,
         'mode': 0x0
@@ -4155,14 +4155,14 @@ function _0x35ddf4(_0x5067e9, _0x471c11, _0x4c3d45, _0x5b45aa, _0x5f9e08, _0x62b
     this.state = _0x35ddf4.STATE.IDLE;
     this.sprite = this.state.SPRITE[0x0];
     this.anim = 0x1 === parseInt(_0x62b44d) ? 0x2 * _0x35ddf4.SPIN_RATE : 0x0;
-    this.dim = Vector2D.make(0.5, 0.5);
+    this.dim = vec2.make(0.5, 0.5);
     this.size = isNaN(parseInt(_0x119674)) ? _0x35ddf4.PARTS : parseInt(_0x119674);
 }
 _0x35ddf4.ASYNC = !0x0;
 _0x35ddf4.ID = 0x21;
 _0x35ddf4.NAME = "FIRE TRAP";
 _0x35ddf4.ANIMATION_RATE = 0x2;
-_0x35ddf4.OFFSET = Vector2D.make(0.25, 0.25);
+_0x35ddf4.OFFSET = vec2.make(0.25, 0.25);
 _0x35ddf4.PARTS = 0x6;
 _0x35ddf4.SPACING = 0.5;
 _0x35ddf4.SPIN_RATE = 0x17;
@@ -4203,11 +4203,11 @@ _0x35ddf4.prototype.control = function() {
     this.rot += _0x35ddf4.SPIN_RATE;
 };
 _0x35ddf4.prototype.interaction = function() {
-    var _0x7617b0 = Vector2D.normalize(Vector2D.make(Math.sin(-this.anim / _0x35ddf4.SPIN_RATE), Math.cos(-this.anim / _0x35ddf4.SPIN_RATE))),
+    var _0x7617b0 = vec2.normalize(vec2.make(Math.sin(-this.anim / _0x35ddf4.SPIN_RATE), Math.cos(-this.anim / _0x35ddf4.SPIN_RATE))),
         _0x258ff9 = this.game.getPlayer();
     if (_0x258ff9 && _0x258ff9.isTangible() && _0x258ff9.level === this.level && _0x258ff9.zone === this.zone)
         for (var _0x373060 = 0x0; _0x373060 < this.size; _0x373060++) {
-            var _0x2ff265 = Vector2D.add(Vector2D.add(this.pos, _0x35ddf4.OFFSET), Vector2D.scale(_0x7617b0, _0x35ddf4.SPACING * _0x373060));
+            var _0x2ff265 = vec2.add(vec2.add(this.pos, _0x35ddf4.OFFSET), vec2.scale(_0x7617b0, _0x35ddf4.SPACING * _0x373060));
             _0x1badb6.intersection(_0x258ff9.pos, _0x258ff9.dim, _0x2ff265, this.dim) && _0x258ff9.damage(this);
         }
 };
@@ -4221,8 +4221,8 @@ _0x35ddf4.prototype.setState = function(_0xaf8a26) {
     _0xaf8a26 !== this.state && (this.state = _0xaf8a26, this.sprite = _0xaf8a26.SPRITE[0x0], this.anim = 0x0);
 };
 _0x35ddf4.prototype.draw = function(_0x4e240c) {
-    for (var _0x40d21a = Vector2D.normalize(Vector2D.make(Math.sin(-this.anim / _0x35ddf4.SPIN_RATE), Math.cos(-this.anim / _0x35ddf4.SPIN_RATE))), _0x4e0952 = 0x0; _0x4e0952 < this.size; _0x4e0952++) _0x4e240c.push({
-        'pos': Vector2D.add(this.pos, Vector2D.scale(_0x40d21a, _0x35ddf4.SPACING * _0x4e0952)),
+    for (var _0x40d21a = vec2.normalize(vec2.make(Math.sin(-this.anim / _0x35ddf4.SPIN_RATE), Math.cos(-this.anim / _0x35ddf4.SPIN_RATE))), _0x4e0952 = 0x0; _0x4e0952 < this.size; _0x4e0952++) _0x4e240c.push({
+        'pos': vec2.add(this.pos, vec2.scale(_0x40d21a, _0x35ddf4.SPACING * _0x4e0952)),
         'reverse': !0x1,
         'index': this.sprite.INDEX,
         'mode': 0x0
@@ -4240,9 +4240,9 @@ function _0x4a8773(_0x23df7f, _0x31f095, _0x2a1fe9, _0x53aba8, _0x3d90ca, _0x213
     this.anim = 0x0;
     this.delayTimer = this.delay;
     this.pos.x += _0x4a8773.SOFFSET.x;
-    this.loc = Vector2D.copy(this.pos);
+    this.loc = vec2.copy(this.pos);
     this.fallSpeed = 0x0;
-    this.dim = Vector2D.make(0.7, 0.7);
+    this.dim = vec2.make(0.7, 0.7);
 }
 _0x4a8773.ASYNC = !0x0;
 _0x4a8773.ID = 0x22;
@@ -4252,7 +4252,7 @@ _0x4a8773.DELAY_DEFAULT = 0x5a;
 _0x4a8773.IMPULSE = 1.35;
 _0x4a8773.DRAG = 0.95;
 _0x4a8773.FALL_SPEED_ACCEL = 0.055;
-_0x4a8773.SOFFSET = Vector2D.make(0.15, 0.15);
+_0x4a8773.SOFFSET = vec2.make(0.15, 0.15);
 _0x4a8773.SPRITE = {};
 _0x4a8773.SPRITE_LIST = [{
     'NAME': "IDLE",
@@ -4278,7 +4278,7 @@ _0x4a8773.prototype.physics = function() {
     if (this.pos.y > this.loc.y || 0x0 < this.fallSpeed) this.fallSpeed = (this.fallSpeed - _0x4a8773.FALL_SPEED_ACCEL) * _0x4a8773.DRAG, this.pos.y += this.fallSpeed;
 };
 _0x4a8773.prototype.blast = function() {
-    this.pos = Vector2D.copy(this.loc);
+    this.pos = vec2.copy(this.loc);
     this.fallSpeed = _0x4a8773.IMPULSE * this.impulse;
     this.delayTimer = this.delay;
 };
@@ -4300,7 +4300,7 @@ _0x4a8773.prototype.setState = function(_0x3a217a) {
 _0x4a8773.prototype.draw = function(_0x39c7cf) {
     var _0x5ecf74 = 0x0 <= this.fallSpeed ? 0x0 : 0x3;
     _0x39c7cf.push({
-        'pos': Vector2D.subtract(this.pos, _0x4a8773.SOFFSET),
+        'pos': vec2.subtract(this.pos, _0x4a8773.SOFFSET),
         'reverse': !0x1,
         'index': this.sprite.INDEX,
         'mode': _0x5ecf74
@@ -4343,7 +4343,7 @@ _0x458a57.prototype.step = function() {
 _0x458a57.prototype.sound = GameObject.prototype.sound;
 _0x458a57.prototype.fire = function() {
     this.fireTimer = 0x0;
-    this.game.createObject(_0x30df09.ID, this.level, this.zone, Vector2D.copy(this.pos), []);
+    this.game.createObject(_0x30df09.ID, this.level, this.zone, vec2.copy(this.pos), []);
     this.play("sfx/firework.wav", 0x1, 0.04);
 };
 _0x458a57.prototype.kill = function() {};
@@ -4362,7 +4362,7 @@ function _0x30df09(_0x3877d1, _0x3182b8, _0xa0e13f, _0xe81bce, _0x1d56a5) {
     this.oid = _0x1d56a5;
     this.setState(_0x30df09.STATE.IDLE);
     this.bonkTimer = this.anim = 0x0;
-    this.dim = Vector2D.make(0.8, 0.8);
+    this.dim = vec2.make(0.8, 0.8);
     this.fallSpeed = this.moveSpeed = 0x0;
 }
 _0x30df09.ASYNC = !0x0;
@@ -4371,15 +4371,15 @@ _0x30df09.NAME = "BULLET";
 _0x30df09.ANIMATION_RATE = 0x3;
 _0x30df09.SPEED = 0.215;
 _0x30df09.BONK_TIME = 0x5a;
-_0x30df09.BONK_IMP = Vector2D.make(0, 0.4);
+_0x30df09.BONK_IMP = vec2.make(0, 0.4);
 _0x30df09.BONK_DECEL = 0.925;
 _0x30df09.BONK_FALL_SPEED = 0.5;
 _0x30df09.BONK_FALL_ACCEL = 0.085;
 _0x30df09.DELAY_DEFAULT = 0x113;
-_0x30df09.IMPULSE = Vector2D.make(0.225, 0.335);
+_0x30df09.IMPULSE = vec2.make(0.225, 0.335);
 _0x30df09.DRAG = 0.996;
 _0x30df09.FALL_SPEED_ACCEL = 0.0055;
-_0x30df09.SOFFSET = Vector2D.make(0.15, 0.15);
+_0x30df09.SOFFSET = vec2.make(0.15, 0.15);
 _0x30df09.SPRITE = {};
 _0x30df09.SPRITE_LIST = [{
     'NAME': "IDLE",
@@ -4400,7 +4400,7 @@ _0x30df09.STATE_LIST = [{
 for (_0x1bec55 = 0x0; _0x1bec55 < _0x30df09.STATE_LIST.length; _0x1bec55++) _0x30df09.STATE[_0x30df09.STATE_LIST[_0x1bec55].NAME] = _0x30df09.STATE_LIST[_0x1bec55], _0x30df09.STATE[_0x30df09.STATE_LIST[_0x1bec55].ID] = _0x30df09.STATE_LIST[_0x1bec55];
 _0x30df09.prototype.update = function(_0xebda49) {};
 _0x30df09.prototype.step = function() {
-    this.state === _0x30df09.STATE.BONK ? this.bonkTimer++ > _0x30df09.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x30df09.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x30df09.BONK_FALL_ACCEL, -_0x30df09.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x30df09.ANIMATION_RATE) % this.state.SPRITE.length], this.physics(), this.sound());
+    this.state === _0x30df09.STATE.BONK ? this.bonkTimer++ > _0x30df09.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x30df09.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x30df09.BONK_FALL_ACCEL, -_0x30df09.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x30df09.ANIMATION_RATE) % this.state.SPRITE.length], this.physics(), this.sound());
 };
 _0x30df09.prototype.physics = function() {
     0x0 < this.pos.x ? this.pos.x -= _0x30df09.SPEED : this.destroy();
@@ -4435,7 +4435,7 @@ _0x30df09.prototype.draw = function(_0x3d4441) {
     var _0x15ff87;
     _0x15ff87 = this.state === _0x30df09.STATE.BONK ? 0x3 : 0x0;
     _0x3d4441.push({
-        'pos': Vector2D.subtract(this.pos, _0x30df09.SOFFSET),
+        'pos': vec2.subtract(this.pos, _0x30df09.SOFFSET),
         'reverse': !0x1,
         'index': this.sprite.INDEX,
         'mode': _0x15ff87
@@ -4451,7 +4451,7 @@ function _0x6c6f53(_0x36213e, _0xed9c2f, _0xdb3ba1, _0x192895, _0x145ee8, _0x367
     this.state = _0x6c6f53.STATE.IDLE;
     this.sprite = this.state.SPRITE[0x0];
     this.deadTimer = this.anim = 0x0;
-    this.dim = Vector2D.make(0.5, 0.5);
+    this.dim = vec2.make(0.5, 0.5);
     this.fallSpeed = -_0x6c6f53.FALL_SPEED_MAX;
     this.dir = _0x145ee8;
 }
@@ -4459,7 +4459,7 @@ _0x6c6f53.ASYNC = !0x0;
 _0x6c6f53.ID = 0xa1;
 _0x6c6f53.NAME = "FIREBALL PROJECTILE";
 _0x6c6f53.ANIMATION_RATE = 0x2;
-_0x6c6f53.SOFFSET = Vector2D.make(-0.25, -0.25);
+_0x6c6f53.SOFFSET = vec2.make(-0.25, -0.25);
 _0x6c6f53.DEAD_ANIM_LENGTH = 0x3;
 _0x6c6f53.SPEED = 0.475;
 _0x6c6f53.BOUNCE_SPEED = 0.375;
@@ -4515,11 +4515,11 @@ _0x6c6f53.prototype.control = function() {};
 _0x6c6f53.prototype.physics = function() {
     var _0x3236a4 = this.dir ? _0x6c6f53.SPEED : -_0x6c6f53.SPEED;
     this.fallSpeed = Math.max(this.fallSpeed - _0x6c6f53.FALL_SPEED_ACCEL, -_0x6c6f53.FALL_SPEED_MAX);
-    for (var _0x129f7c = Vector2D.add(this.pos, Vector2D.make(_0x3236a4, this.fallSpeed)), _0x42654a = Vector2D.make(this.pos.x + Math.min(0x0, _0x3236a4), this.pos.y + Math.min(0x0, this.fallSpeed)), _0x3236a4 = Vector2D.make(this.dim.x + Math.max(0x0, _0x3236a4), this.dim.y + Math.max(0x0, this.fallSpeed)), _0x10832b = this.game.world.getZone(this.level, this.zone).getTiles(_0x42654a, _0x3236a4), _0x42654a = Vector2D.make(0x1, 0x1), _0x3236a4 = [], _0x564789 = 0x0; _0x564789 < _0x10832b.length; _0x564789++) {
+    for (var _0x129f7c = vec2.add(this.pos, vec2.make(_0x3236a4, this.fallSpeed)), _0x42654a = vec2.make(this.pos.x + Math.min(0x0, _0x3236a4), this.pos.y + Math.min(0x0, this.fallSpeed)), _0x3236a4 = vec2.make(this.dim.x + Math.max(0x0, _0x3236a4), this.dim.y + Math.max(0x0, this.fallSpeed)), _0x10832b = this.game.world.getZone(this.level, this.zone).getTiles(_0x42654a, _0x3236a4), _0x42654a = vec2.make(0x1, 0x1), _0x3236a4 = [], _0x564789 = 0x0; _0x564789 < _0x10832b.length; _0x564789++) {
         var _0x1dc741 = _0x10832b[_0x564789];
         _0x1dc741.definition.COLLIDE && (_0x1badb6.intersection(_0x1dc741.pos, _0x42654a, _0x129f7c, this.dim) || _0x1badb6.intersection(_0x1dc741.pos, _0x42654a, this.pos, this.dim)) && _0x3236a4.push(_0x1dc741);
     }
-    _0x10832b = Vector2D.make(_0x129f7c.x, this.pos.y);
+    _0x10832b = vec2.make(_0x129f7c.x, this.pos.y);
     for (_0x564789 = 0x0; _0x564789 < _0x3236a4.length; _0x564789++) _0x1dc741 = _0x3236a4[_0x564789], _0x1badb6.intersection(_0x1dc741.pos, _0x42654a, _0x10832b, this.dim) && (_0x10832b.x = _0x10832b.x + 0.5 * this.dim.x < _0x1dc741.pos.x + 0.5 * _0x42654a.x ? _0x1dc741.pos.x - this.dim.x : _0x1dc741.pos.x + _0x42654a.x, this.kill());
     _0x129f7c.x = _0x10832b.x;
     for (_0x564789 = 0x0; _0x564789 < _0x3236a4.length; _0x564789++) _0x1dc741 = _0x3236a4[_0x564789], _0x1badb6.intersection(_0x1dc741.pos, _0x42654a, _0x129f7c, this.dim) && (this.pos.y >= _0x129f7c.y ? (_0x129f7c.y = _0x1dc741.pos.y + _0x42654a.y, this.fallSpeed = _0x6c6f53.BOUNCE_SPEED) : (_0x129f7c.y = _0x1dc741.pos.y - this.dim.y, this.fallSpeed = -_0x6c6f53.BOUNCE_SPEED));
@@ -4551,7 +4551,7 @@ _0x6c6f53.prototype.setState = function(_0x37987d) {
 };
 _0x6c6f53.prototype.draw = function(_0x12ec20) {
     _0x12ec20.push({
-        'pos': Vector2D.add(this.pos, _0x6c6f53.SOFFSET),
+        'pos': vec2.add(this.pos, _0x6c6f53.SOFFSET),
         'reverse': !0x1,
         'index': this.sprite.INDEX,
         'mode': 0x0
@@ -4568,13 +4568,13 @@ function _0x1899b7(_0x5b625c, _0x4b1c85, _0x5d2f9e, _0x337be8) {
     this.anim = 0x0;
     this.life = _0x1899b7.LIFE_MAX;
     this.deadTimer = 0x0;
-    this.dim = Vector2D.make(0x1, 0.5);
+    this.dim = vec2.make(0x1, 0.5);
 }
 _0x1899b7.ASYNC = !0x0;
 _0x1899b7.ID = 0xa2;
 _0x1899b7.NAME = "FIRE BREATH PROJECTILE";
 _0x1899b7.ANIMATION_RATE = 0x2;
-_0x1899b7.SOFFSET = Vector2D.make(-0.5, -0.25);
+_0x1899b7.SOFFSET = vec2.make(-0.5, -0.25);
 _0x1899b7.LIFE_MAX = 0xaf;
 _0x1899b7.DEAD_ANIM_LENGTH = 0x3;
 _0x1899b7.SPEED = 0.175;
@@ -4622,7 +4622,7 @@ _0x1899b7.prototype.step = function() {
 };
 _0x1899b7.prototype.control = function() {};
 _0x1899b7.prototype.physics = function() {
-    this.pos = Vector2D.add(this.pos, Vector2D.make(-_0x1899b7.SPEED, 0x0));
+    this.pos = vec2.add(this.pos, vec2.make(-_0x1899b7.SPEED, 0x0));
 };
 _0x1899b7.prototype.interaction = function() {
     for (var _0x554db7 = 0x0; _0x554db7 < this.game.objects.length; _0x554db7++) {
@@ -4650,12 +4650,12 @@ _0x1899b7.prototype.draw = function(_0x215d5f) {
     if (this.sprite.INDEX instanceof Array)
         for (var _0x22ac30 = this.sprite.INDEX, _0x1cb97d = 0x0; _0x1cb97d < _0x22ac30.length; _0x1cb97d++)
             for (var _0x5791f1 = 0x0; _0x5791f1 < _0x22ac30[_0x1cb97d].length; _0x5791f1++) _0x215d5f.push({
-                'pos': Vector2D.add(Vector2D.add(this.pos, _0x1899b7.SOFFSET), Vector2D.make(_0x5791f1, _0x1cb97d)),
+                'pos': vec2.add(vec2.add(this.pos, _0x1899b7.SOFFSET), vec2.make(_0x5791f1, _0x1cb97d)),
                 'reverse': !0x1,
                 'index': _0x22ac30[_0x1cb97d][_0x5791f1]
             });
     else _0x215d5f.push({
-        'pos': Vector2D.add(this.pos, _0x1899b7.SOFFSET),
+        'pos': vec2.add(this.pos, _0x1899b7.SOFFSET),
         'reverse': !0x1,
         'index': this.sprite.INDEX,
         'mode': 0x0
@@ -4671,15 +4671,15 @@ function _0x1bc0ed(_0x33b14c, _0x36a1c4, _0x148c3f, _0x54b3e0, _0x33ad79) {
     this.anim = 0x0;
     this.throwTimer = _0x1bc0ed.THROW_DELAY;
     this.dir = !0x1;
-    this.dim = Vector2D.make(0.5, 0.5);
+    this.dim = vec2.make(0.5, 0.5);
 }
 _0x1bc0ed.ASYNC = !0x0;
 _0x1bc0ed.ID = 0xa3;
 _0x1bc0ed.NAME = "HAMMER PROJECTILE";
 _0x1bc0ed.ANIMATION_RATE = 0x2;
-_0x1bc0ed.SOFFSET = Vector2D.make(-0.25, -0.25);
+_0x1bc0ed.SOFFSET = vec2.make(-0.25, -0.25);
 _0x1bc0ed.THROW_DELAY = 0xd;
-_0x1bc0ed.IMPULSE = Vector2D.make(0.48, 0.915);
+_0x1bc0ed.IMPULSE = vec2.make(0.48, 0.915);
 _0x1bc0ed.DRAG = 0.965;
 _0x1bc0ed.FALL_SPEED_MAX = 0.65;
 _0x1bc0ed.FALL_SPEED_ACCEL = 0.095;
@@ -4722,7 +4722,7 @@ _0x1bc0ed.prototype.step = function() {
 _0x1bc0ed.prototype.physics = function() {
     this.moveSpeed *= _0x1bc0ed.DRAG;
     this.fallSpeed = Math.max(this.fallSpeed - _0x1bc0ed.FALL_SPEED_ACCEL, -_0x1bc0ed.FALL_SPEED_MAX);
-    this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed));
+    this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed));
 };
 _0x1bc0ed.prototype.interaction = function() {
     if (this.state === _0x1bc0ed.STATE.THROW) {
@@ -4748,12 +4748,12 @@ _0x1bc0ed.prototype.draw = function(_0x4db511) {
     if (this.sprite.INDEX instanceof Array)
         for (var _0x452daa = this.sprite.INDEX, _0x4a6d8c = 0x0; _0x4a6d8c < _0x452daa.length; _0x4a6d8c++)
             for (var _0x3a08a0 = 0x0; _0x3a08a0 < _0x452daa[_0x4a6d8c].length; _0x3a08a0++) _0x4db511.push({
-                'pos': Vector2D.add(Vector2D.add(this.pos, _0x1bc0ed.SOFFSET), Vector2D.make(_0x3a08a0, _0x4a6d8c)),
+                'pos': vec2.add(vec2.add(this.pos, _0x1bc0ed.SOFFSET), vec2.make(_0x3a08a0, _0x4a6d8c)),
                 'reverse': !0x1,
                 'index': _0x452daa[_0x4a6d8c][_0x3a08a0]
             });
     else _0x4db511.push({
-        'pos': Vector2D.add(this.pos, _0x1bc0ed.SOFFSET),
+        'pos': vec2.add(this.pos, _0x1bc0ed.SOFFSET),
         'reverse': this.dir,
         'index': this.sprite.INDEX,
         'mode': 0x0
@@ -4766,10 +4766,10 @@ function _0x2e2bc3(_0x23b738, _0x46c7a3, _0x118fd6, _0xb55197, _0x48d8ac) {
     GameObject.call(this, _0x23b738, _0x46c7a3, _0x118fd6, _0xb55197);
     this.oid = _0x48d8ac;
     this.anim = 0x0;
-    this.dim = Vector2D.make(0x1, 0x1);
+    this.dim = vec2.make(0x1, 0x1);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.rise = this.grounded = !0x1;
-    _0x23b738 = Vector2D.make(0x1, 0x1);
+    _0x23b738 = vec2.make(0x1, 0x1);
     _0x46c7a3 = this.game.world.getZone(this.level, this.zone).getTiles(this.pos, this.dim);
     for (_0x118fd6 = 0x0; _0x118fd6 < _0x46c7a3.length; _0x118fd6++)
         if (_0x1badb6.intersection(_0x46c7a3[_0x118fd6].pos, _0x23b738, this.pos, this.dim)) {
@@ -4806,7 +4806,7 @@ _0x2e2bc3.prototype.control = function() {
 _0x2e2bc3.prototype.physics = function() {
     if (this.rise) {
         this.rise = !0x1;
-        for (var _0x2d4761 = Vector2D.make(0x1, 0x1), _0x48762f = this.game.world.getZone(this.level, this.zone).getTiles(this.pos, this.dim), _0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) {
+        for (var _0x2d4761 = vec2.make(0x1, 0x1), _0x48762f = this.game.world.getZone(this.level, this.zone).getTiles(this.pos, this.dim), _0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) {
             var _0x323720 = _0x48762f[_0xae67e5];
             if (_0x323720.definition.COLLIDE && _0x1badb6.intersection(_0x323720.pos, _0x2d4761, this.pos, this.dim)) {
                 this.rise = !0x0;
@@ -4816,17 +4816,17 @@ _0x2e2bc3.prototype.physics = function() {
         this.rise && (this.pos.y += _0x2e2bc3.RISE_RATE);
     } else {
         -0x1 !== this.jump ? (this.fallSpeed = _0x2e2bc3.FALL_SPEED_MAX - this.jump * _0x2e2bc3.JUMP_DECEL, this.jump++) : (this.grounded && (this.fallSpeed = 0x0), this.fallSpeed = Math.max(this.fallSpeed - _0x2e2bc3.FALL_SPEED_ACCEL, -_0x2e2bc3.FALL_SPEED_MAX));
-        var _0x17799f = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, 0x0)),
-            _0x7b593c = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)),
-            _0x2d4761 = Vector2D.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
-            _0x48762f = Vector2D.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
+        var _0x17799f = vec2.add(this.pos, vec2.make(this.moveSpeed, 0x0)),
+            _0x7b593c = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)),
+            _0x2d4761 = vec2.make(0x0 <= this.moveSpeed ? this.pos.x : this.pos.x + this.moveSpeed, 0x0 >= this.fallSpeed ? this.pos.y : this.pos.y + this.fallSpeed),
+            _0x48762f = vec2.make(this.dim.y + Math.abs(this.moveSpeed), this.dim.y + Math.abs(this.fallSpeed)),
             _0x48762f = this.game.world.getZone(this.level, this.zone).getTiles(_0x2d4761, _0x48762f),
-            _0x2d4761 = Vector2D.make(0x1, 0x1),
+            _0x2d4761 = vec2.make(0x1, 0x1),
             _0x32139c = !0x1;
         this.grounded = !0x1;
         for (_0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) _0x323720 = _0x48762f[_0xae67e5], _0x323720.definition.COLLIDE && _0x1badb6.intersection(_0x323720.pos, _0x2d4761, _0x17799f, this.dim) && (this.pos.x <= _0x17799f.x && _0x17799f.x + this.dim.x > _0x323720.pos.x ? (_0x17799f.x = _0x323720.pos.x - this.dim.x, _0x7b593c.x = _0x17799f.x, this.moveSpeed = 0x0, _0x32139c = !0x0) : this.pos.x >= _0x17799f.x && _0x17799f.x < _0x323720.pos.x + _0x2d4761.x && (_0x17799f.x = _0x323720.pos.x + _0x2d4761.x, _0x7b593c.x = _0x17799f.x, this.moveSpeed = 0x0, _0x32139c = !0x0));
         for (_0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) _0x323720 = _0x48762f[_0xae67e5], _0x323720.definition.COLLIDE && _0x1badb6.intersection(_0x323720.pos, _0x2d4761, _0x7b593c, this.dim) && (this.pos.y >= _0x7b593c.y && _0x7b593c.y < _0x323720.pos.y + _0x2d4761.y ? (_0x7b593c.y = _0x323720.pos.y + _0x2d4761.y, this.grounded = !0x0) : this.pos.y <= _0x7b593c.y && _0x7b593c.y + this.dim.y > _0x323720.pos.y && (_0x7b593c.y = _0x323720.pos.y - this.dim.y, this.jumping = -0x1, this.fallSpeed = 0x0));
-        this.pos = Vector2D.make(_0x17799f.x, _0x7b593c.y);
+        this.pos = vec2.make(_0x17799f.x, _0x7b593c.y);
         _0x32139c && (this.dir = !this.dir);
     }
 };
@@ -5104,7 +5104,7 @@ function AxeObject(_0x2e51a9, _0x26a37d, _0x357dfc, _0x5ac831, _0x5aad3e) {
     this.state = AxeObject.STATE.IDLE;
     this.sprite = this.state.SPRITE[0x0];
     this.used = !0x1;
-    this.dim = Vector2D.make(0x1, 0x3);
+    this.dim = vec2.make(0x1, 0x3);
 }
 AxeObject.ASYNC = !0x0;
 AxeObject.ID = 0x55;
@@ -5206,7 +5206,7 @@ function CoinObject(_0x52a861, _0x4a48fc, _0x331cc6, _0x11bbb6, _0x11c124) {
     this.state = CoinObject.STATE.IDLE;
     this.sprite = this.state.SPRITE[0x0];
     this.anim = 0x0;
-    this.dim = Vector2D.make(0x1, 0x1);
+    this.dim = vec2.make(0x1, 0x1);
 }
 CoinObject.ASYNC = !0x1;
 CoinObject.ID = 0x61;
@@ -5327,7 +5327,7 @@ function _0x3db18a(_0x289121, _0x27327c, _0x2b1dd0, _0x19f16d, _0x347488, _0xbb3
     GameObject.call(this, _0x289121, _0x27327c, _0x2b1dd0, _0x19f16d);
     this.oid = _0x347488;
     this.setState(_0x3db18a.STATE.IDLE);
-    this.offset = Vector2D.make(0x0, parseFloat(_0xbb37f7));
+    this.offset = vec2.make(0x0, parseFloat(_0xbb37f7));
     this.size = parseFloat(_0x23940a);
     this.color = _0x457c51;
     this.text = _0x10fe68;
@@ -5360,7 +5360,7 @@ _0x3db18a.prototype.setState = function(_0x507fea) {
 };
 _0x3db18a.prototype.write = function(_0x237c30) {
     _0x237c30.push({
-        'pos': Vector2D.add(this.pos, this.offset),
+        'pos': vec2.add(this.pos, this.offset),
         'size': this.size,
         'color': this.color,
         'text': this.text
@@ -5387,37 +5387,37 @@ function _0x5296e0(_0x4363a0, _0x2e3146) {
     this.sprite = _0x2e3146;
     this.life = 0x19;
     this.bits = [{
-        'pos': Vector2D.add(this.pos, Vector2D.make(0x0, 0x0)),
-        'vel': Vector2D.make(-0.24, 0.9),
+        'pos': vec2.add(this.pos, vec2.make(0x0, 0x0)),
+        'vel': vec2.make(-0.24, 0.9),
         'rot': 0x0,
         'ang': -0.3,
-        'sp': Vector2D.make(0x0, 0x0),
-        'ss': Vector2D.make(0.5, 0.5),
-        'so': Vector2D.make(0.25, 0.25)
+        'sp': vec2.make(0x0, 0x0),
+        'ss': vec2.make(0.5, 0.5),
+        'so': vec2.make(0.25, 0.25)
     }, {
-        'pos': Vector2D.add(this.pos, Vector2D.make(0.5, 0x0)),
-        'vel': Vector2D.make(0.24, 0.9),
+        'pos': vec2.add(this.pos, vec2.make(0.5, 0x0)),
+        'vel': vec2.make(0.24, 0.9),
         'rot': 0x0,
         'ang': 0.3,
-        'sp': Vector2D.make(0.5, 0x0),
-        'ss': Vector2D.make(0.5, 0.5),
-        'so': Vector2D.make(0.25, 0.25)
+        'sp': vec2.make(0.5, 0x0),
+        'ss': vec2.make(0.5, 0.5),
+        'so': vec2.make(0.25, 0.25)
     }, {
-        'pos': Vector2D.add(this.pos, Vector2D.make(0x0, -0.5)),
-        'vel': Vector2D.make(-0.3, 0.5),
+        'pos': vec2.add(this.pos, vec2.make(0x0, -0.5)),
+        'vel': vec2.make(-0.3, 0.5),
         'rot': 0x0,
         'ang': -0.33,
-        'sp': Vector2D.make(0x0, 0.5),
-        'ss': Vector2D.make(0.5, 0.5),
-        'so': Vector2D.make(0.25, 0.25)
+        'sp': vec2.make(0x0, 0.5),
+        'ss': vec2.make(0.5, 0.5),
+        'so': vec2.make(0.25, 0.25)
     }, {
-        'pos': Vector2D.add(this.pos, Vector2D.make(0.5, -0.5)),
-        'vel': Vector2D.make(0.3, 0.5),
+        'pos': vec2.add(this.pos, vec2.make(0.5, -0.5)),
+        'vel': vec2.make(0.3, 0.5),
         'rot': 0x0,
         'ang': 0.33,
-        'sp': Vector2D.make(0.5, 0.5),
-        'ss': Vector2D.make(0.5, 0.5),
-        'so': Vector2D.make(0.25, 0.25)
+        'sp': vec2.make(0.5, 0.5),
+        'ss': vec2.make(0.5, 0.5),
+        'so': vec2.make(0.25, 0.25)
     }];
 }
 _0x5296e0.FALL_SPEED = 0.0775;
@@ -5426,8 +5426,8 @@ _0x5296e0.prototype.step = function() {
     for (var _0x2eb1b1 = 0x0; _0x2eb1b1 < this.bits.length; _0x2eb1b1++) {
         var _0xa08f70 = this.bits[_0x2eb1b1];
         _0xa08f70.vel.y -= _0x5296e0.FALL_SPEED;
-        _0xa08f70.vel = Vector2D.scale(_0xa08f70.vel, _0x5296e0.DRAG);
-        _0xa08f70.pos = Vector2D.add(_0xa08f70.pos, _0xa08f70.vel);
+        _0xa08f70.vel = vec2.scale(_0xa08f70.vel, _0x5296e0.DRAG);
+        _0xa08f70.pos = vec2.add(_0xa08f70.pos, _0xa08f70.vel);
         _0xa08f70.ang *= _0x5296e0.DRAG;
         _0xa08f70.rot += _0xa08f70.ang;
     }
@@ -5455,10 +5455,10 @@ function _0x108200(_0x364c40) {
     this.life = _0x108200.UP_TIME + _0x108200.DOWN_TIME;
     this.anim = this.sprite = 0x0;
     this.bits = [{
-        'pos': Vector2D.add(this.pos, Vector2D.make(0x0, 0x0)),
-        'sp': Vector2D.make(0x0, 0x0),
-        'ss': Vector2D.make(0x1, 0x1),
-        'so': Vector2D.make(0x0, 0x0)
+        'pos': vec2.add(this.pos, vec2.make(0x0, 0x0)),
+        'sp': vec2.make(0x0, 0x0),
+        'ss': vec2.make(0x1, 0x1),
+        'so': vec2.make(0x0, 0x0)
     }];
 }
 _0x108200.SPRITE = [0xf4, 0xf5, 0xf6, 0xf7];
@@ -5530,7 +5530,7 @@ _0x2406bb.prototype.load=function(){
 };
 _0x2406bb.prototype.pad={};
 _0x2406bb.prototype.pad.pad=undefined;
-_0x2406bb.prototype.pad.ax=Vector2D.make(0x0,0x0);
+_0x2406bb.prototype.pad.ax=vec2.make(0x0,0x0);
 _0x2406bb.prototype.pad.update=function(){
     this.pad=navigator?navigator.getGamepads()[0x0]:undefined;
     this.analog();
@@ -5540,9 +5540,9 @@ _0x2406bb.prototype.pad.analog=function(){
         for(var _0x3e7abb=0x0;_0x3e7abb<this.pad.axes.length-0x1;_0x3e7abb++){
             var _0xe40132=this.pad.axes[_0x3e7abb],_0x5f2255=this.pad.axes[_0x3e7abb+0x1];
             if(!(0.25>Math.abs(_0xe40132)&&0.25>Math.abs(_0x5f2255))){
-                this.ax=Vector2D.make(_0xe40132,_0x5f2255);return;}
+                this.ax=vec2.make(_0xe40132,_0x5f2255);return;}
             }
-    this.ax=Vector2D.make(0x0,0x0);
+    this.ax=vec2.make(0x0,0x0);
 };
 _0x2406bb.prototype.pad.button=function(_0x2cedc3){
     return this.pad?this.pad.buttons[_0x2cedc3].pressed:!0x1;
@@ -5683,14 +5683,14 @@ Resource.prototype.ready=function(){
 "use strict";
 function Camera(_0x450620){
     this.display=_0x450620;
-    this.pos=Vector2D.make(0x0,0x0);
+    this.pos=vec2.make(0x0,0x0);
     this.scale=0x3;
 }Camera.MOVE_MULT=0.075;
 Camera.ZOOM_MULT=0.075;
 Camera.ZOOM_MAX=0x1;
 Camera.ZOOM_MIN=0x8;
 Camera.prototype.move=function(_0x1c8341){
-    this.pos=Vector2D.add(this.pos,Vector2D.scale(_0x1c8341,0x1/this .scale * Camera.MOVE_MULT));
+    this.pos=vec2.add(this.pos,vec2.scale(_0x1c8341,0x1/this .scale * Camera.MOVE_MULT));
 };
 Camera.prototype.zoom = function(_0x7daae4) {
     this.scale = Math.max(Camera.ZOOM_MAX, Math.min(Camera.ZOOM_MIN, this.scale + Camera.ZOOM_MULT * _0x7daae4));
@@ -5699,14 +5699,14 @@ Camera.prototype.position = function(_0xd2cd13) {
     this.pos = _0xd2cd13;
 };
 Camera.prototype.unproject = function(_0x23bf45) {
-    _0x23bf45 = Vector2D.add(_0x23bf45, Vector2D.make(0.5 * -this.display.canvas.width, 0.5 * -this.display.canvas.height));
-    _0x23bf45 = Vector2D.scale(_0x23bf45, 0x1 / this.scale);
-    _0x23bf45 = Vector2D.add(_0x23bf45, Vector2D.make(this.pos.x * Display.TEXRES, this.pos.y * Display.TEXRES));
-    return Vector2D.scale(_0x23bf45, 0.0625);
+    _0x23bf45 = vec2.add(_0x23bf45, vec2.make(0.5 * -this.display.canvas.width, 0.5 * -this.display.canvas.height));
+    _0x23bf45 = vec2.scale(_0x23bf45, 0x1 / this.scale);
+    _0x23bf45 = vec2.add(_0x23bf45, vec2.make(this.pos.x * Display.TEXRES, this.pos.y * Display.TEXRES));
+    return vec2.scale(_0x23bf45, 0.0625);
 };
 "use strict";
 
-function Sound(context, path) {
+function AudioData(context, path) {
     this.path = path;
     var sound = this,
         ajax = new XMLHttpRequest();
@@ -5717,17 +5717,17 @@ function Sound(context, path) {
     };
     ajax.send();
 }
-Sound.prototype.onload = function(ajax, context) {
+AudioData.prototype.onload = function(ajax, context) {
     var sound = this;
     context.decodeAudioData(ajax.response, function(buffer) {
         sound.buffer = buffer;
     }, sound.onError);
 };
-Sound.prototype.onError = function() {};
-Sound.prototype.ready = function() {
+AudioData.prototype.onError = function() {};
+AudioData.prototype.ready = function() {
     return undefined !== this.buffer;
 };
-Sound.prototype.destroy = function() {};
+AudioData.prototype.destroy = function() {};
 "use strict";
 
 function _0x415c3a(_0x180462, _0x8d00db, _0x52fdb8, _0x50d225, _0x2664ab, _0x57e822) {
@@ -5864,7 +5864,7 @@ Audio.prototype.updateVolume = function() {
         for (var _0x1f6806 = this.game.getZone(), _0x1bcd11 = this.game.getPlayer() ? this.game.getPlayer().pos : this.game.display.camera.pos, _0x4531dc = 0x3e7, _0x9aa837 = 0x0; _0x9aa837 < this.game.objects.length; _0x9aa837++) {
             var _0x21a62e = this.game.objects[_0x9aa837];
             if (_0x21a62e instanceof PlayerObject && _0x21a62e.level === _0x1f6806.level && _0x21a62e.zone === _0x1f6806.id && 0x0 < _0x21a62e.starTimer) {
-                var _0x214eed = Vector2D.distance(_0x1bcd11, _0x21a62e.pos);
+                var _0x214eed = vec2.distance(_0x1bcd11, _0x21a62e.pos);
                 _0x214eed < _0x4531dc && (_0x4531dc = _0x214eed);
             }
         }
@@ -5892,7 +5892,7 @@ Audio.prototype.stopMusic = function() {
     this.music && (this.music.stop(), this.music = undefined);
 };
 Audio.prototype.createAudio = function(path) {
-    sound = new Sound(this.context, path);
+    sound = new AudioData(this.context, path);
     this.sounds.push(sound);
     return !0x0;
 };
@@ -6013,9 +6013,9 @@ Display.prototype.drawMap = function(_0x5eea15) {
                 if (_0x2d62c4.index == 24 || _0x2d62c4.index == 90 || _0x2d62c4.index == 156 || _0x2d62c4.index == 288) {
                     var frame = parseInt((this.misteryAnim % 96) / 16);
                     frame = frame == 5 ? 0 : frame > 2 ? Math.abs(frame - 4) : frame;
-                    _0x59ebb0 = Utils.sprite.getSprite(_0x3a22b2, _0x2d62c4.index + frame);
+                    _0x59ebb0 = util.sprite.getSprite(_0x3a22b2, _0x2d62c4.index + frame);
                 } else
-                    _0x59ebb0 = Utils.sprite.getSprite(_0x3a22b2, _0x2d62c4.index);
+                    _0x59ebb0 = util.sprite.getSprite(_0x3a22b2, _0x2d62c4.index);
                 var _0x3acdc5 = 0x0,
                     _0x2d62c4 = Math.max(0x0, _0x2d62c4.bump - 0x7);
                 0x0 < _0x2d62c4 && (_0x3acdc5 = 0.22 * Math.sin((0x1 - (_0x2d62c4 - 0x2) / 0x8) * Math.PI));
@@ -6055,7 +6055,7 @@ Display.prototype.drawObject = function() {
     for (var i = 0x0; i < spriteList.length; i++) {
         var sprite = spriteList[i],
             currObjTexture = (sprite.skin != undefined) ? skinTextures[sprite.skin] : objTexture,
-            texture = Utils.sprite.getSprite(currObjTexture, sprite.index),
+            texture = util.sprite.getSprite(currObjTexture, sprite.index),
             reverse = !!sprite.reverse,
             upsideDown = !0x1,
             contextSaved = !0x1;
@@ -6111,7 +6111,7 @@ Display.prototype.drawEffect = function() {
             case "obj":
                 _0x168b34 = _0x29ce32;
         }
-        var _0x8bc3a5 = Utils.sprite.getSprite(_0x168b34, _0x3e945c.ind);
+        var _0x8bc3a5 = util.sprite.getSprite(_0x168b34, _0x3e945c.ind);
         _0x8bc3a5[0x0] = parseInt(_0x8bc3a5[0x0] + _0x3e945c.sp.x * Display.TEXRES);
         _0x8bc3a5[0x1] = parseInt(_0x8bc3a5[0x1] + _0x3e945c.sp.y * Display.TEXRES);
         _0x237ab1.save();
@@ -6194,11 +6194,11 @@ Display.prototype.drawUI = function() {
         context.font = "24px SmbWeb",
         context.textAlign = "left",
         context.fillText(playerInfo ? playerInfo.name : DEFAULT_PLAYER_NAME, 0x8, 0x20),
-        sprite = Utils.sprite.getSprite(objTexture, coinIconIndex),
+        sprite = util.sprite.getSprite(objTexture, coinIconIndex),
         txt = 'x' + (0x9 >= this.game.coins ? '0' + this.game.coins : this.game.coins),
         context.drawImage(objTexture, sprite[0x0], sprite[0x1], Display.TEXRES, Display.TEXRES, 0x4, 0x28, 0x18, 0x18),
         context.fillText(txt, 0x1e, 0x40),
-        sprite = Utils.sprite.getSprite(skinTexture, 0xd),
+        sprite = util.sprite.getSprite(skinTexture, 0xd),
         txtWidth = context.measureText(txt).width + 0x1e,
         context.drawImage(skinTexture, sprite[0x0], sprite[0x1], Display.TEXRES, Display.TEXRES, 0x4 + txtWidth + 0x10, 0x28, 0x18, 0x18),
         context.fillText('x' + (0x9 >= this.game.lives ? '0' + this.game.lives : this.game.lives), 0x4 + txtWidth + 0x10 + 0x1a, 0x40),
@@ -6214,14 +6214,14 @@ Display.prototype.drawUI = function() {
             txtWidth = context.measureText(txt).width,
             context.fillText(txt, canvasWidth - txtWidth - 0x8, 0x20)
         ), 
-        sprite = Utils.sprite.getSprite(objTexture, musicIconIndex[this.game.audio.muteMusic ? 0x1 : 0x0]),
+        sprite = util.sprite.getSprite(objTexture, musicIconIndex[this.game.audio.muteMusic ? 0x1 : 0x0]),
         context.drawImage(objTexture, sprite[0x0], sprite[0x1], Display.TEXRES, Display.TEXRES, canvasWidth - 0x18 - 0x8, 0x28, 0x18, 0x18),
-        sprite = Utils.sprite.getSprite(objTexture, soundIconIndex[this.game.audio.muteSound ? 0x1 : 0x0]),
+        sprite = util.sprite.getSprite(objTexture, soundIconIndex[this.game.audio.muteSound ? 0x1 : 0x0]),
         context.drawImage(objTexture, sprite[0x0], sprite[0x1], Display.TEXRES, Display.TEXRES, canvasWidth - 0x18 - 0x8 - 0x18 - 0x8, 0x28, 0x18, 0x18),
-        sprite = Utils.sprite.getSprite(objTexture, nameIconIndex[this.game.disableText ? 0x1 : 0x0]),
+        sprite = util.sprite.getSprite(objTexture, nameIconIndex[this.game.disableText ? 0x1 : 0x0]),
         context.drawImage(objTexture, sprite[0x0], sprite[0x1], Display.TEXRES, Display.TEXRES, canvasWidth - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28, 0x18, 0x18),
         this.game.input.pad.connected() && (
-            sprite = Utils.sprite.getSprite(objTexture, 0xf8),
+            sprite = util.sprite.getSprite(objTexture, 0xf8),
             context.drawImage(objTexture, sprite[0x0], sprite[0x1], Display.TEXRES, Display.TEXRES, canvasWidth - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28, 0x18, 0x18)
         )
     ));
@@ -6389,28 +6389,28 @@ _0x5e1ced.prototype.break = function(_0x4aded4, _0x3d82ec, _0x544718) {
     var _0x415636 = this.dimensions().y - 0x1 - _0x3d82ec,
         _0x1aa33b = _0x41f345.decode16(this.data[_0x415636][_0x4aded4]);
     this.data[_0x415636][_0x4aded4] = _0x544718;
-    this.effects.push(new _0x5296e0(Vector2D.make(_0x4aded4, _0x3d82ec), _0x1aa33b.index));
+    this.effects.push(new _0x5296e0(vec2.make(_0x4aded4, _0x3d82ec), _0x1aa33b.index));
     this.play(_0x4aded4, _0x3d82ec, "sfx/break.wav", 1.5, 0.04);
 };
 _0x5e1ced.prototype.coin = function(_0x18c8cf, _0x32068f) {
     this.dimensions();
-    this.effects.push(new _0x108200(Vector2D.make(_0x18c8cf, _0x32068f)));
+    this.effects.push(new _0x108200(vec2.make(_0x18c8cf, _0x32068f)));
 };
 _0x5e1ced.prototype.play = function(_0x2b2620, _0xc0aea9, _0x4929f8, _0x50094d, _0x1de44d) {
-    this.game.getZone() === this && (_0x4929f8 = this.game.audio.getSpatialAudio(_0x4929f8, _0x50094d, _0x1de44d, "effect"), _0x4929f8.play(Vector2D.make(_0x2b2620, _0xc0aea9)), this.sounds.push(_0x4929f8));
+    this.game.getZone() === this && (_0x4929f8 = this.game.audio.getSpatialAudio(_0x4929f8, _0x50094d, _0x1de44d, "effect"), _0x4929f8.play(vec2.make(_0x2b2620, _0xc0aea9)), this.sounds.push(_0x4929f8));
 };
 _0x5e1ced.prototype.dimensions = function() {
-    return Vector2D.make(this.data[0x0].length, this.data.length);
+    return vec2.make(this.data[0x0].length, this.data.length);
 };
 _0x5e1ced.prototype.getTile = function(_0x5712b7) {
     var _0x5eee6f = this.dimensions();
-    _0x5712b7 = Vector2D.copy(_0x5712b7);
+    _0x5712b7 = vec2.copy(_0x5712b7);
     _0x5712b7.y = _0x5eee6f.y - _0x5712b7.y - 0x1;
     return _0x41f345.decode(this.data[Math.max(0x0, Math.min(_0x5eee6f.y, Math.floor(_0x5712b7.y)))][Math.max(0x0, Math.min(_0x5eee6f.x, Math.floor(_0x5712b7.x)))]);
 };
 _0x5e1ced.prototype.getTiles = function(_0x3ce841, _0x4afc27) {
     var _0x525d97 = this.dimensions(),
-        _0x51d112 = Vector2D.copy(_0x3ce841);
+        _0x51d112 = vec2.copy(_0x3ce841);
     _0x51d112.y = _0x525d97.y - _0x51d112.y;
     _0x3ce841 = parseInt(Math.max(Math.min(Math.floor(_0x51d112.x) - 0x1, _0x525d97.x), 0x0));
     var _0x5daf64 = parseInt(Math.max(Math.min(Math.ceil(_0x51d112.x + _0x4afc27.x) + 0x1, _0x525d97.x), 0x0)),
@@ -6419,7 +6419,7 @@ _0x5e1ced.prototype.getTiles = function(_0x3ce841, _0x4afc27) {
     for (_0x51d112 = []; _0x5f4edb < _0x4afc27; _0x5f4edb++)
         for (var _0x5e6b1b = _0x3ce841; _0x5e6b1b < _0x5daf64; _0x5e6b1b++) {
             var _0x556c14 = _0x41f345.decode(this.data[_0x5f4edb][_0x5e6b1b]);
-            _0x556c14.pos = Vector2D.make(_0x5e6b1b, _0x525d97.y - 0x1 - _0x5f4edb);
+            _0x556c14.pos = vec2.make(_0x5e6b1b, _0x525d97.y - 0x1 - _0x5f4edb);
             _0x556c14.ind = [_0x5f4edb, _0x5e6b1b];
             _0x51d112.push(_0x556c14);
         }
@@ -6446,7 +6446,7 @@ function Game(data) {
     this.sounds = [];
     this.load(data);
     this.lastDraw = this.frame = 0x0;
-    this.delta = Utils.time.now();
+    this.delta = util.time.now();
     this.buffer = [
         [],
         []
@@ -6464,7 +6464,7 @@ function Game(data) {
     this.gameOverTimer = this.rate = 0x0;
     this.gameOver = !0x1;
     var zoneSize = this.getZone().dimensions();
-    this.display.camera.position(Vector2D.scale(zoneSize, 0.5));
+    this.display.camera.position(vec2.scale(zoneSize, 0.5));
     this.levelWarpTimer = 0x0;
     this.levelWarpId = undefined;
     this.gameoverReloading = false;
@@ -6540,7 +6540,7 @@ Game.prototype.updatePlayerList = function(packet) {
 Game.prototype.getGameTimer = function(compact) {
     if (this.gameTimerStopped !== null) return this.gameTimerStopped;
     if (this.startDelta === undefined) return compact ? "00:00" : "00:00:000";
-    var now = Utils.time.now() - this.poleTimes; // get the time now minus the poleTimes
+    var now = util.time.now() - this.poleTimes; // get the time now minus the poleTimes
     var diff = now - this.startDelta; // diff in seconds between now and start
     var m = Math.floor(diff / 60000); // get minutes value
     var s = Math.floor(diff / 1000) % 60; // get seconds value
@@ -6555,13 +6555,13 @@ Game.prototype.getGameTimer = function(compact) {
 Game.prototype.resumeGameTimer = function() {
     if (this.gameTimerStopped === null) return;
     this.gameTimerStopped = null;
-    this.poleTimes += Utils.time.now() - this.gameTimerStopTime;
+    this.poleTimes += util.time.now() - this.gameTimerStopTime;
 }
 
 Game.prototype.stopGameTimer = function() {
     if (this.gameTimerStopped !== null) return;
     this.gameTimerStopped = this.getGameTimer();
-    this.gameTimerStopTime = Utils.time.now();
+    this.gameTimerStopTime = util.time.now();
 }
 
 /* G13 */
@@ -6663,7 +6663,7 @@ Game.prototype.doNET018 = function(_0xb678cc) {
         var _0x11f856 = this.getGhost(_0xb678cc.pid);
         if (_0x11f856 && (_0x11f856 = this.getText(_0x11f856.level, _0x11f856.zone, _0xb678cc.result.toString()))) {
             var _0x36fadc = this.getPlayerInfo(_0xb678cc.pid).name;
-            this.createObject(_0x3db18a.ID, _0x11f856.level, _0x11f856.zone, Vector2D.add(_0x11f856.pos, Vector2D.make(0x0, -0x3)), [undefined, -0.1, 0.25, "#FFFFFF", _0x36fadc]);
+            this.createObject(_0x3db18a.ID, _0x11f856.level, _0x11f856.zone, vec2.add(_0x11f856.pos, vec2.make(0x0, -0x3)), [undefined, -0.1, 0.25, "#FFFFFF", _0x36fadc]);
         }
         if (_0xb678cc.pid === this.pid && (_0x11f856 = this.getPlayer())) {
             _0x11f856.axe(_0xb678cc.result);
@@ -6693,7 +6693,7 @@ Game.prototype.doNET030 = function(_0x31e1c0) {
 
 Game.prototype.doStart = function() {
     this.startTimer = -0x1;
-    this.startDelta = Utils.time.now();
+    this.startDelta = util.time.now();
     this.doSpawn();
 };
 
@@ -6713,26 +6713,26 @@ Game.prototype.doTouch = function(_0x52fc25) {
         this.touchFull = !0x0;
     }
     for (var _0x1429a6 = this, _0x597311 = this.display.canvas.width, _0x174be8 = this.display.canvas.height, _0x1e64f1 = !0x1, _0x34471a = !0x1, _0x597311 = [{
-            'pos': Vector2D.make(_0x597311 - 0x55, _0x174be8 - 0x55),
-            'dim': Vector2D.make(0x55, 0x55),
+            'pos': vec2.make(_0x597311 - 0x55, _0x174be8 - 0x55),
+            'dim': vec2.make(0x55, 0x55),
             'press': function() {
                 _0x1e64f1 = !0x0;
             }
         }, {
-            'pos': Vector2D.make(_0x597311 - 0x55, _0x174be8 - 0xaa),
-            'dim': Vector2D.make(0x55, 0x55),
+            'pos': vec2.make(_0x597311 - 0x55, _0x174be8 - 0xaa),
+            'dim': vec2.make(0x55, 0x55),
             'press': function() {
                 _0x34471a = !0x0;
             }
         }, {
-            'pos': Vector2D.make(_0x597311 - 0x55, _0x174be8 - 0xff),
-            'dim': Vector2D.make(0x55, 0x55),
+            'pos': vec2.make(_0x597311 - 0x55, _0x174be8 - 0xff),
+            'dim': vec2.make(0x55, 0x55),
             'click': function() {
                 _0x1429a6.touchRun = !_0x1429a6.touchRun;
             }
         }, {
-            'pos': Vector2D.make(_0x597311 - 0x18 - 0x8, 0x28),
-            'dim': Vector2D.make(0x18, 0x18),
+            'pos': vec2.make(_0x597311 - 0x18 - 0x8, 0x28),
+            'dim': vec2.make(0x18, 0x18),
             'click': function() {
                 _0x1429a6.audio.muteMusic = !_0x1429a6.audio.muteMusic;
                 if (app.audioElement !== undefined)
@@ -6743,15 +6743,15 @@ Game.prototype.doTouch = function(_0x52fc25) {
                 _0x1429a6.audio.saveSettings();
             }
         }, {
-            'pos': Vector2D.make(_0x597311 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
-            'dim': Vector2D.make(0x18, 0x18),
+            'pos': vec2.make(_0x597311 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
+            'dim': vec2.make(0x18, 0x18),
             'click': function() {
                 _0x1429a6.audio.muteSound = !_0x1429a6.audio.muteSound;
                 _0x1429a6.audio.saveSettings();
             }
         }, {
-            'pos': Vector2D.make(_0x597311 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
-            'dim': Vector2D.make(0x18, 0x18),
+            'pos': vec2.make(_0x597311 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
+            'dim': vec2.make(0x18, 0x18),
             'click': function() {
                 this.disableText = !this.disableText;
                 Cookies.set("text", _0x1429a6.disableText ? 0x1 : 0x0, {
@@ -6759,8 +6759,8 @@ Game.prototype.doTouch = function(_0x52fc25) {
                 });
             }
         }, {
-            'pos': Vector2D.make(_0x597311 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
-            'dim': Vector2D.make(0x18, 0x18),
+            'pos': vec2.make(_0x597311 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
+            'dim': vec2.make(0x18, 0x18),
             'click': function() {
                 app.net.send({
                     'code': (location.search.split('mcode=')[1] || '').split('&')[0],
@@ -6788,10 +6788,10 @@ Game.prototype.doTouch = function(_0x52fc25) {
     }
     var _0x36041a;
     if (_0x3308c9) {
-        _0x52fc25 = Math.min(0x40, Vector2D.distance(this.thumbPos, this.thumbOrigin));
-        var _0x3d0185 = Vector2D.normalize(Vector2D.subtract(this.thumbPos, this.thumbOrigin));
-        _0x36041a = Vector2D.scale(_0x3d0185, _0x52fc25 / 0x40);
-        this.thumbPos = Vector2D.add(this.thumbOrigin, Vector2D.scale(_0x3d0185, _0x52fc25));
+        _0x52fc25 = Math.min(0x40, vec2.distance(this.thumbPos, this.thumbOrigin));
+        var _0x3d0185 = vec2.normalize(vec2.subtract(this.thumbPos, this.thumbOrigin));
+        _0x36041a = vec2.scale(_0x3d0185, _0x52fc25 / 0x40);
+        this.thumbPos = vec2.add(this.thumbOrigin, vec2.scale(_0x3d0185, _0x52fc25));
     } else this.thumbPos = this.thumbOrigin = this.thumbId = undefined;
     _0x330893 && _0x3d0185 ? (_0x3d0185 = [0x0, 0x0], 0.33 < _0x36041a.x && _0x3d0185[0x0]++, -0.33 > _0x36041a.x && _0x3d0185[0x0]--, 0.33 < _0x36041a.y && _0x3d0185[0x1]--, -0.33 > _0x36041a.y && _0x3d0185[0x1]++, _0x330893.input(_0x3d0185, _0x1e64f1, this.touchRun ? !_0x34471a : _0x34471a)) : _0x330893 && _0x330893.input([0x0, 0x0], _0x1e64f1, this.touchRun ? !_0x34471a : _0x34471a);
 };
@@ -6820,8 +6820,8 @@ Game.prototype.doInput = function(_0x585e08) {
         }
         _0x5b7c6b.input(_0x133972, _0x306656, _0xa25dbe);
         for (var _0x533a33 = this, _0xa25dbe = this.display.canvas.width, _0x42b147 = [{
-                'pos': Vector2D.make(_0xa25dbe - 0x18 - 0x8, 0x28),
-                'dim': Vector2D.make(0x18, 0x18),
+                'pos': vec2.make(_0xa25dbe - 0x18 - 0x8, 0x28),
+                'dim': vec2.make(0x18, 0x18),
                 'click': function() {
                     _0x533a33.audio.muteMusic = !_0x533a33.audio.muteMusic;
                     if (app.audioElement !== undefined)
@@ -6832,15 +6832,15 @@ Game.prototype.doInput = function(_0x585e08) {
                     _0x533a33.audio.saveSettings();
                 }
             }, {
-                'pos': Vector2D.make(_0xa25dbe - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
-                'dim': Vector2D.make(0x18, 0x18),
+                'pos': vec2.make(_0xa25dbe - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
+                'dim': vec2.make(0x18, 0x18),
                 'click': function() {
                     _0x533a33.audio.muteSound = !_0x533a33.audio.muteSound;
                     _0x533a33.audio.saveSettings();
                 }
             }, {
-                'pos': Vector2D.make(_0xa25dbe - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
-                'dim': Vector2D.make(0x18, 0x18),
+                'pos': vec2.make(_0xa25dbe - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
+                'dim': vec2.make(0x18, 0x18),
                 'click': function() {
                     _0x533a33.disableText = !_0x533a33.disableText;
                     Cookies.set("text", _0x533a33.disableText ? 0x1 : 0x0, {
@@ -6848,8 +6848,8 @@ Game.prototype.doInput = function(_0x585e08) {
                     });
                 }
             }, {
-                'pos': Vector2D.make(_0xa25dbe - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
-                'dim': Vector2D.make(0x18, 0x18),
+                'pos': vec2.make(_0xa25dbe - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
+                'dim': vec2.make(0x18, 0x18),
                 'click': function() {
                     app.net.send({
                         'code': (location.search.split('mcode=')[1] || '').split('&')[0],
@@ -6875,17 +6875,17 @@ Game.prototype.doStep = function() {
         this.levelWarpId = undefined;
         this.resumeGameTimer();
     }
-    _0x504fb1 && this.cullSS && !Vector2D.equals(_0x504fb1.pos, this.cullSS) && this.out.push(_0x4152f4.encode());
+    _0x504fb1 && this.cullSS && !vec2.equals(_0x504fb1.pos, this.cullSS) && this.out.push(_0x4152f4.encode());
     _0x504fb1 && this.fillSS && this.fillSS !== _0x504fb1.fallSpeed && this.out.push(_0x4152f4.encode());
     for (_0x427bdb = 0x0; _0x427bdb < this.objects.length; _0x427bdb++) {
         var _0x617df4 = this.objects[_0x427bdb];
         _0x617df4.step();
         _0x617df4.garbage && this.objects.splice(_0x427bdb--, 0x1);
     }
-    this.cullSS = _0x504fb1 ? Vector2D.copy(_0x504fb1.pos) : undefined;
+    this.cullSS = _0x504fb1 ? vec2.copy(_0x504fb1.pos) : undefined;
     this.fillSS = _0x504fb1 ? _0x504fb1.fallSpeed : undefined;
     _0x427bdb = this.getZone();
-    _0x504fb1 && !_0x504fb1.dead && this.display.camera.position(Vector2D.make(_0x504fb1.pos.x, 0.5 * _0x427bdb.dimensions().y));
+    _0x504fb1 && !_0x504fb1.dead && this.display.camera.position(vec2.make(_0x504fb1.pos.x, 0.5 * _0x427bdb.dimensions().y));
     this.world.step();
     for (_0x427bdb = 0x0; _0x427bdb < this.sounds.length; _0x427bdb++) this.sounds[_0x427bdb].done() && this.sounds.splice(_0x427bdb--, 0x1);
     this.doMusic();
@@ -7037,7 +7037,7 @@ Game.prototype.lifeage = function() {
 Game.prototype.loop = function() {
     try {
         if (this.ready && undefined !== this.startDelta) {
-            var _0x441773 = Utils.time.now(),
+            var _0x441773 = util.time.now(),
                 _0x3b488d = parseInt((_0x441773 - this.startDelta) / Game.TICK_RATE);
             if (_0x3b488d > this.frame) {
                 for (var _0x32cb4e = !0x0; this.buffer.length > Game.FDLC_TARGET || _0x32cb4e && 0x0 < this.buffer.length;) {
@@ -7199,7 +7199,7 @@ JailGame.prototype.destroy = Game.prototype.destroy;
 
 function GameClient() {
     this.menu = new Menu();
-    this.net = new Net();
+    this.net = new Network();
     this.goToLobby = Cookies.get("go_to_lobby") === "1";
     if (this.goToLobby)
         Cookies.remove("go_to_lobby");
@@ -7279,22 +7279,22 @@ GameClient.prototype.stopMainScreenUpdates = function() {
 };
 GameClient.prototype.join = function(name, team, priv, skin) {
     this.stopMainScreenUpdates();
-    this.ingame() ? this.menu.error.show("An error occured while starting game...") : (this.menu.load.show(), this.net.connect([Net.CONNECTTYPE.GUEST, name, team, priv, skin]));
+    this.ingame() ? this.menu.error.show("An error occured while starting game...") : (this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.GUEST, name, team, priv, skin]));
 };
 GameClient.prototype.login = function(username, pw) {
-    this.menu.load.show(), this.net.connect([Net.CONNECTTYPE.LOGIN, username, pw]);
+    this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.LOGIN, username, pw]);
 };
 GameClient.prototype.logout = function(username, pw) {
     this.net.send({'type': "llo"});
 };
 GameClient.prototype.requestCaptcha = function() {
-    this.menu.load.show(), this.net.connect([Net.CONNECTTYPE.REQ_CAPTCHA]);
+    this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.REQ_CAPTCHA]);
 };
 GameClient.prototype.register = function(username, pw, captcha) {
-    this.menu.load.show(), this.net.connect([Net.CONNECTTYPE.REGISTER, username, pw, captcha]);
+    this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.REGISTER, username, pw, captcha]);
 };
 GameClient.prototype.resumeSession = function(session) {
-    this.menu.load.show(), this.net.connect([Net.CONNECTTYPE.RESUME, session]);
+    this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.RESUME, session]);
 };
 GameClient.prototype.close = function() {
     this.menu.load.show();
