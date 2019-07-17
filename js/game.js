@@ -286,7 +286,7 @@ Utils.sprite.getSprite = function(_0xcf938f, _0x3feac1) {
     var _0x31166d = parseInt(Math.floor(_0x3feac1 / _0x3f655d) * Display.TEXRES);
     return _0x31166d > _0xcf938f ? [0x0, 0x0] : [_0x3feac1 % _0x3f655d, _0x31166d];
 };
-var _0x5a9d86 = function() {
+var requestAnimFrameFunc = function() {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(_0x42507e) {
             window.setTimeout(_0x42507e, 0x10);
         };
@@ -295,7 +295,7 @@ var _0x5a9d86 = function() {
         return window.cancelAnimationFrame || window.webkitCancelRequestAnimationFrame || window.mozCancelRequestAnimationFrame || window.oCancelRequestAnimationFrame || window.msCancelRequestAnimationFrame || clearTimeout;
     }();
 "use strict";
-var PackedVec2D = {},
+var shor2 = {},
     _0x41f345 = {};
 _0x41f345.encode = function(_0x3c8a7b, _0x4f1630, _0x3efad8, _0x4e695c, _0x3ebb62) {
     return 0x0 | parseInt(_0x3c8a7b) & 0x7ff | parseInt(_0x4f1630) << 0xb & 0x7800 | (_0x3efad8 ? 0x1 : 0x0) << 0xf & 0x8000 | parseInt(_0x4e695c) << 0x10 & 0xff0000 | parseInt(_0x3ebb62) << 0x18 & 0xff000000;
@@ -334,13 +334,13 @@ _0x41f345.TRIGGER.TYPE.DOWN = 0x1;
 _0x41f345.TRIGGER.TYPE.PUSH = 0x2;
 _0x41f345.TRIGGER.TYPE.SMALL_BUMP = 0x10;
 _0x41f345.TRIGGER.TYPE.BIG_BUMP = 0x11;
-PackedVec2D.encode = function(_0x16c11e, _0x249cd7) {
+shor2.encode = function(_0x16c11e, _0x249cd7) {
     return 0x0 | parseInt(_0x16c11e) & 0xffff | parseInt(_0x249cd7) << 0x10 & 0xffff0000;
 };
-PackedVec2D.decode = function(_0x397dd5) {
+shor2.decode = function(_0x397dd5) {
     return Vector2D.make(_0x397dd5 & 0xffff, _0x397dd5 >> 0x10 & 0xffff);
 };
-PackedVec2D.asArray = function(_0x5c2f23) {
+shor2.asArray = function(_0x5c2f23) {
     return [_0x5c2f23 & 0xffff, _0x5c2f23 >> 0x10 & 0xffff];
 };
 _0x41f345.GEN_FUNC.BUMP = function(_0x3c91bc, _0x897be, _0x5d48f2, _0x43ba2c, _0x4d3e0f, _0x3ff6e1, _0x444def, _0x6654d3) {
@@ -410,11 +410,11 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x52e87f, _0x3e0969, _0x4e1033, _0xa20a5e, _0x32dd03, _0x4532db, _0x4008fc, _0x39cd6f) {
             switch (_0x39cd6f) {
                 case 0x10:
-                    _0x52e87f.pid === _0x3e0969 && _0x52e87f.out.push(_0x231422.encode(_0xa20a5e, _0x32dd03, PackedVec2D.encode(_0x4532db, _0x4008fc), _0x39cd6f));
+                    _0x52e87f.pid === _0x3e0969 && _0x52e87f.out.push(_0x231422.encode(_0xa20a5e, _0x32dd03, shor2.encode(_0x4532db, _0x4008fc), _0x39cd6f));
                     _0x41f345.GEN_FUNC.BUMP(_0x52e87f, _0x3e0969, _0x4e1033, _0xa20a5e, _0x32dd03, _0x4532db, _0x4008fc, _0x39cd6f);
                     break;
                 case 0x11:
-                    _0x52e87f.pid === _0x3e0969 && _0x52e87f.out.push(_0x231422.encode(_0xa20a5e, _0x32dd03, PackedVec2D.encode(_0x4532db, _0x4008fc), _0x39cd6f)), _0x41f345.GEN_FUNC.BUMP(_0x52e87f, _0x3e0969, _0x4e1033, _0xa20a5e, _0x32dd03, _0x4532db, _0x4008fc, _0x39cd6f);
+                    _0x52e87f.pid === _0x3e0969 && _0x52e87f.out.push(_0x231422.encode(_0xa20a5e, _0x32dd03, shor2.encode(_0x4532db, _0x4008fc), _0x39cd6f)), _0x41f345.GEN_FUNC.BUMP(_0x52e87f, _0x3e0969, _0x4e1033, _0xa20a5e, _0x32dd03, _0x4532db, _0x4008fc, _0x39cd6f);
             }
         }
     },
@@ -426,11 +426,11 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x31fd56, _0x121d88, _0x29a2ce, _0xeb7538, _0x409b57, _0xdc7bcb, _0x4aaacd, _0x3a7b7a) {
             switch (_0x3a7b7a) {
                 case 0x10:
-                    _0x31fd56.pid === _0x121d88 && _0x31fd56.out.push(_0x231422.encode(_0xeb7538, _0x409b57, PackedVec2D.encode(_0xdc7bcb, _0x4aaacd), _0x3a7b7a));
+                    _0x31fd56.pid === _0x121d88 && _0x31fd56.out.push(_0x231422.encode(_0xeb7538, _0x409b57, shor2.encode(_0xdc7bcb, _0x4aaacd), _0x3a7b7a));
                     _0x41f345.GEN_FUNC.BUMP(_0x31fd56, _0x121d88, _0x29a2ce, _0xeb7538, _0x409b57, _0xdc7bcb, _0x4aaacd, _0x3a7b7a);
                     break;
                 case 0x11:
-                    _0x31fd56.pid === _0x121d88 && _0x31fd56.out.push(_0x231422.encode(_0xeb7538, _0x409b57, PackedVec2D.encode(_0xdc7bcb, _0x4aaacd), _0x3a7b7a)), _0x41f345.GEN_FUNC.BREAK(_0x31fd56, _0x121d88, _0x29a2ce, _0xeb7538, _0x409b57, _0xdc7bcb, _0x4aaacd, _0x3a7b7a);
+                    _0x31fd56.pid === _0x121d88 && _0x31fd56.out.push(_0x231422.encode(_0xeb7538, _0x409b57, shor2.encode(_0xdc7bcb, _0x4aaacd), _0x3a7b7a)), _0x41f345.GEN_FUNC.BREAK(_0x31fd56, _0x121d88, _0x29a2ce, _0xeb7538, _0x409b57, _0xdc7bcb, _0x4aaacd, _0x3a7b7a);
             }
         }
     },
@@ -442,15 +442,15 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d) {
             switch (_0x96116d) {
                 case 0x10:
-                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, PackedVec2D.encode(_0x1bedc7, _0x216f2e), _0x96116d));
+                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, shor2.encode(_0x1bedc7, _0x216f2e), _0x96116d));
                     var _0x4d5415 = 0x1801b;
                     _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415);
-                    _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, Vector2D.make(_0x1bedc7, _0x216f2e), [PackedVec2D.encode(_0x1bedc7, _0x216f2e)]);
+                    _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, Vector2D.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]);
                     _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d);
                     _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
                     break;
                 case 0x11:
-                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, PackedVec2D.encode(_0x1bedc7, _0x216f2e), _0x96116d)), _0x4d5415 = 0x1801b, _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415), _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, Vector2D.make(_0x1bedc7, _0x216f2e), [PackedVec2D.encode(_0x1bedc7, _0x216f2e)]), _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d), _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
+                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, shor2.encode(_0x1bedc7, _0x216f2e), _0x96116d)), _0x4d5415 = 0x1801b, _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415), _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, Vector2D.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]), _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d), _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
             }
         }
     },
@@ -462,14 +462,14 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0xf3b2fd, _0x2b0cf8, _0x4f89b5, _0x296739, _0x47d7ab, _0x20b93e, _0x17d34e, _0x232f65) {
             switch (_0x232f65) {
                 case 0x10:
-                    _0xf3b2fd.pid === _0x2b0cf8 && (_0xf3b2fd.coinage(), _0xf3b2fd.out.push(_0x231422.encode(_0x296739, _0x47d7ab, PackedVec2D.encode(_0x20b93e, _0x17d34e), _0x232f65)));
+                    _0xf3b2fd.pid === _0x2b0cf8 && (_0xf3b2fd.coinage(), _0xf3b2fd.out.push(_0x231422.encode(_0x296739, _0x47d7ab, shor2.encode(_0x20b93e, _0x17d34e), _0x232f65)));
                     var _0x4cf12a = 0x1801b;
                     _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).replace(_0x20b93e, _0x17d34e, _0x4cf12a);
                     _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).coin(_0x20b93e, _0x17d34e + 0x1);
                     _0x41f345.GEN_FUNC.BUMP(_0xf3b2fd, _0x2b0cf8, _0x4f89b5, _0x296739, _0x47d7ab, _0x20b93e, _0x17d34e, _0x232f65);
                     break;
                 case 0x11:
-                    _0xf3b2fd.pid === _0x2b0cf8 && (_0xf3b2fd.coinage(), _0xf3b2fd.out.push(_0x231422.encode(_0x296739, _0x47d7ab, PackedVec2D.encode(_0x20b93e, _0x17d34e), _0x232f65))), _0x4cf12a = 0x1801b, _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).replace(_0x20b93e, _0x17d34e, _0x4cf12a), _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).coin(_0x20b93e, _0x17d34e + 0x1), _0x41f345.GEN_FUNC.BUMP(_0xf3b2fd, _0x2b0cf8, _0x4f89b5, _0x296739, _0x47d7ab, _0x20b93e, _0x17d34e, _0x232f65);
+                    _0xf3b2fd.pid === _0x2b0cf8 && (_0xf3b2fd.coinage(), _0xf3b2fd.out.push(_0x231422.encode(_0x296739, _0x47d7ab, shor2.encode(_0x20b93e, _0x17d34e), _0x232f65))), _0x4cf12a = 0x1801b, _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).replace(_0x20b93e, _0x17d34e, _0x4cf12a), _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).coin(_0x20b93e, _0x17d34e + 0x1), _0x41f345.GEN_FUNC.BUMP(_0xf3b2fd, _0x2b0cf8, _0x4f89b5, _0x296739, _0x47d7ab, _0x20b93e, _0x17d34e, _0x232f65);
             }
         }
     },
@@ -481,7 +481,7 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x51d0d4, _0xca5919, _0x2cbb60, _0x1c2b78, _0x46b0fe, _0x4e8ae2, _0x1eee7d, _0x1ae7d4) {
             switch (_0x1ae7d4) {
                 case 0x10:
-                    _0x51d0d4.pid === _0xca5919 && (_0x51d0d4.coinage(), _0x51d0d4.out.push(_0x231422.encode(_0x1c2b78, _0x46b0fe, PackedVec2D.encode(_0x4e8ae2, _0x1eee7d), _0x1ae7d4)));
+                    _0x51d0d4.pid === _0xca5919 && (_0x51d0d4.coinage(), _0x51d0d4.out.push(_0x231422.encode(_0x1c2b78, _0x46b0fe, shor2.encode(_0x4e8ae2, _0x1eee7d), _0x1ae7d4)));
                     if (0x0 < _0x2cbb60.data) var _0x109bbf = _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).tile(_0x4e8ae2, _0x1eee7d),
                         _0x109bbf = _0x41f345.data(_0x109bbf, _0x2cbb60.data - 0x1);
                     else _0x109bbf = 0x1801b;
@@ -490,7 +490,7 @@ _0x41f345.TILE_PROPERTIES = {
                     _0x41f345.GEN_FUNC.BUMP(_0x51d0d4, _0xca5919, _0x2cbb60, _0x1c2b78, _0x46b0fe, _0x4e8ae2, _0x1eee7d, _0x1ae7d4);
                     break;
                 case 0x11:
-                    _0x51d0d4.pid === _0xca5919 && (_0x51d0d4.coinage(), _0x51d0d4.out.push(_0x231422.encode(_0x1c2b78, _0x46b0fe, PackedVec2D.encode(_0x4e8ae2, _0x1eee7d), _0x1ae7d4))), 0x0 < _0x2cbb60.data ? (_0x109bbf = _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).tile(_0x4e8ae2, _0x1eee7d), _0x109bbf = _0x41f345.data(_0x109bbf, _0x2cbb60.data - 0x1)) : _0x109bbf = 0x1801b, _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).replace(_0x4e8ae2, _0x1eee7d, _0x109bbf), _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).coin(_0x4e8ae2, _0x1eee7d + 0x1), _0x41f345.GEN_FUNC.BUMP(_0x51d0d4, _0xca5919, _0x2cbb60, _0x1c2b78, _0x46b0fe, _0x4e8ae2, _0x1eee7d, _0x1ae7d4);
+                    _0x51d0d4.pid === _0xca5919 && (_0x51d0d4.coinage(), _0x51d0d4.out.push(_0x231422.encode(_0x1c2b78, _0x46b0fe, shor2.encode(_0x4e8ae2, _0x1eee7d), _0x1ae7d4))), 0x0 < _0x2cbb60.data ? (_0x109bbf = _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).tile(_0x4e8ae2, _0x1eee7d), _0x109bbf = _0x41f345.data(_0x109bbf, _0x2cbb60.data - 0x1)) : _0x109bbf = 0x1801b, _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).replace(_0x4e8ae2, _0x1eee7d, _0x109bbf), _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).coin(_0x4e8ae2, _0x1eee7d + 0x1), _0x41f345.GEN_FUNC.BUMP(_0x51d0d4, _0xca5919, _0x2cbb60, _0x1c2b78, _0x46b0fe, _0x4e8ae2, _0x1eee7d, _0x1ae7d4);
             }
         }
     },
@@ -502,7 +502,7 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x4d7cab, _0xf383, _0x2d3073, _0x421d40, _0x15761f, _0x1979b2, _0x45d74c, _0x150638) {
             switch (_0x150638) {
                 case 0x10:
-                    _0x4d7cab.pid === _0xf383 && _0x4d7cab.out.push(_0x231422.encode(_0x421d40, _0x15761f, PackedVec2D.encode(_0x1979b2, _0x45d74c), _0x150638));
+                    _0x4d7cab.pid === _0xf383 && _0x4d7cab.out.push(_0x231422.encode(_0x421d40, _0x15761f, shor2.encode(_0x1979b2, _0x45d74c), _0x150638));
                     var _0x151148 = 0x1801b,
                         _0x5425be = _0x41f345.data(0xa50164, _0x2d3073.data);
                     _0x4d7cab.world.getZone(_0x421d40, _0x15761f).replace(_0x1979b2, _0x45d74c, _0x151148);
@@ -511,7 +511,7 @@ _0x41f345.TILE_PROPERTIES = {
                     _0x4d7cab.world.getZone(_0x421d40, _0x15761f).play(_0x1979b2, _0x45d74c, "sfx/vine.wav", 0x1, 0.04);
                     break;
                 case 0x11:
-                    _0x4d7cab.pid === _0xf383 && (_0x4d7cab.coinage(), _0x4d7cab.out.push(_0x231422.encode(_0x421d40, _0x15761f, PackedVec2D.encode(_0x1979b2, _0x45d74c), _0x150638))), _0x151148 = 0x1801b, _0x5425be = _0x41f345.data(0xa50164, _0x2d3073.data), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).replace(_0x1979b2, _0x45d74c, _0x151148), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).grow(_0x1979b2, _0x45d74c + 0x1, _0x5425be), _0x41f345.GEN_FUNC.BUMP(_0x4d7cab, _0xf383, _0x2d3073, _0x421d40, _0x15761f, _0x1979b2, _0x45d74c, _0x150638), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).play(_0x1979b2, _0x45d74c, "sfx/vine.wav", 0x1, 0.04);
+                    _0x4d7cab.pid === _0xf383 && (_0x4d7cab.coinage(), _0x4d7cab.out.push(_0x231422.encode(_0x421d40, _0x15761f, shor2.encode(_0x1979b2, _0x45d74c), _0x150638))), _0x151148 = 0x1801b, _0x5425be = _0x41f345.data(0xa50164, _0x2d3073.data), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).replace(_0x1979b2, _0x45d74c, _0x151148), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).grow(_0x1979b2, _0x45d74c + 0x1, _0x5425be), _0x41f345.GEN_FUNC.BUMP(_0x4d7cab, _0xf383, _0x2d3073, _0x421d40, _0x15761f, _0x1979b2, _0x45d74c, _0x150638), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).play(_0x1979b2, _0x45d74c, "sfx/vine.wav", 0x1, 0.04);
             }
         }
     },
@@ -523,15 +523,15 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff) {
             switch (_0x45ddff) {
                 case 0x10:
-                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, PackedVec2D.encode(_0x44da88, _0x24e427), _0x45ddff));
+                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, shor2.encode(_0x44da88, _0x24e427), _0x45ddff));
                     var _0x3ae8a1 = 0x1801b;
                     _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1);
-                    _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, Vector2D.make(_0x44da88, _0x24e427), [PackedVec2D.encode(_0x44da88, _0x24e427)]);
+                    _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, Vector2D.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]);
                     _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff);
                     _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
                     break;
                 case 0x11:
-                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, PackedVec2D.encode(_0x44da88, _0x24e427), _0x45ddff)), _0x3ae8a1 = 0x1801b, _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1), _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, Vector2D.make(_0x44da88, _0x24e427), [PackedVec2D.encode(_0x44da88, _0x24e427)]), _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff), _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
+                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, shor2.encode(_0x44da88, _0x24e427), _0x45ddff)), _0x3ae8a1 = 0x1801b, _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1), _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, Vector2D.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]), _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff), _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
             }
         }
     },
@@ -543,14 +543,14 @@ _0x41f345.TILE_PROPERTIES = {
         'TRIGGER': function(_0x1c89c6, _0x2a975e, _0x5b273d, _0xd12560, _0x43d418, _0x2a406d, _0x1235b3, _0x31ef48) {
             switch (_0x31ef48) {
                 case 0x10:
-                    _0x1c89c6.pid === _0x2a975e && (_0x1c89c6.coinage(), _0x1c89c6.out.push(_0x231422.encode(_0xd12560, _0x43d418, PackedVec2D.encode(_0x2a406d, _0x1235b3), _0x31ef48)));
+                    _0x1c89c6.pid === _0x2a975e && (_0x1c89c6.coinage(), _0x1c89c6.out.push(_0x231422.encode(_0xd12560, _0x43d418, shor2.encode(_0x2a406d, _0x1235b3), _0x31ef48)));
                     var _0x5b57ac = 0x1801b;
                     _0x1c89c6.world.getZone(_0xd12560, _0x43d418).replace(_0x2a406d, _0x1235b3, _0x5b57ac);
                     _0x1c89c6.world.getZone(_0xd12560, _0x43d418).coin(_0x2a406d, _0x1235b3 + 0x1);
                     _0x41f345.GEN_FUNC.BUMP(_0x1c89c6, _0x2a975e, _0x5b273d, _0xd12560, _0x43d418, _0x2a406d, _0x1235b3, _0x31ef48);
                     break;
                 case 0x11:
-                    _0x1c89c6.pid === _0x2a975e && (_0x1c89c6.coinage(), _0x1c89c6.out.push(_0x231422.encode(_0xd12560, _0x43d418, PackedVec2D.encode(_0x2a406d, _0x1235b3), _0x31ef48))), _0x5b57ac = 0x1801b, _0x1c89c6.world.getZone(_0xd12560, _0x43d418).replace(_0x2a406d, _0x1235b3, _0x5b57ac), _0x1c89c6.world.getZone(_0xd12560, _0x43d418).coin(_0x2a406d, _0x1235b3 + 0x1), _0x41f345.GEN_FUNC.BUMP(_0x1c89c6, _0x2a975e, _0x5b273d, _0xd12560, _0x43d418, _0x2a406d, _0x1235b3, _0x31ef48);
+                    _0x1c89c6.pid === _0x2a975e && (_0x1c89c6.coinage(), _0x1c89c6.out.push(_0x231422.encode(_0xd12560, _0x43d418, shor2.encode(_0x2a406d, _0x1235b3), _0x31ef48))), _0x5b57ac = 0x1801b, _0x1c89c6.world.getZone(_0xd12560, _0x43d418).replace(_0x2a406d, _0x1235b3, _0x5b57ac), _0x1c89c6.world.getZone(_0xd12560, _0x43d418).coin(_0x2a406d, _0x1235b3 + 0x1), _0x41f345.GEN_FUNC.BUMP(_0x1c89c6, _0x2a975e, _0x5b273d, _0xd12560, _0x43d418, _0x2a406d, _0x1235b3, _0x31ef48);
             }
         }
     },
@@ -679,18 +679,18 @@ _0x41f345.TILE_PROPERTIES = {
                     });
                     var _0x28753a = 0x1801b;
                     _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a);
-                    _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, Vector2D.make(_0x559fb3, _0x1337d2 + 0x1), [PackedVec2D.encode(_0x559fb3, _0x1337d2)]);
+                    _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, Vector2D.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]);
                     _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
                     break;
                 case 0x11:
                     _0x3a425b.pid === _0x142e63 && _0x3a425b.send({
                         'type': "g50"
-                    }), _0x28753a = 0x1801b, _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a), _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, Vector2D.make(_0x559fb3, _0x1337d2 + 0x1), [PackedVec2D.encode(_0x559fb3, _0x1337d2)]), _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
+                    }), _0x28753a = 0x1801b, _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a), _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, Vector2D.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]), _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
             }
         }
     }
 };
-var NetPacket = {},
+var NETX = {},
     NPAssignPid = {
         'DESIGNATION': 0x2,
         'BYTES': 5,
@@ -842,7 +842,7 @@ var NetPacket = {},
                 'pid': _0xd5c00b[0x1] & 0xff | _0xd5c00b[0x0] << 0x8 & 0xff00,
                 'level': _0xd5c00b[0x2],
                 'zone': _0xd5c00b[0x3],
-                'pos': PackedVec2D.decode(_0xd5c00b[0x7] & 0xff | _0xd5c00b[0x6] << 0x8 & 0xff00 | _0xd5c00b[0x5] << 0x10 & 0xff0000 | _0xd5c00b[0x4] << 0x18 & 0xff0000),
+                'pos': shor2.decode(_0xd5c00b[0x7] & 0xff | _0xd5c00b[0x6] << 0x8 & 0xff00 | _0xd5c00b[0x5] << 0x10 & 0xff0000 | _0xd5c00b[0x4] << 0x18 & 0xff0000),
                 'type': _0xd5c00b[0x8]
             };
         }
@@ -852,7 +852,7 @@ var NetPacket = {},
             for (var _0x1fd122 = 0x0; _0x1fd122 < _0x4cb4b7[_0x1c3a21].length; _0x1fd122++) _0x5bf35f.push(_0x4cb4b7[_0x1c3a21][_0x1fd122]);
         return new Uint8Array(_0x5bf35f);
     };
-NetPacket.decode = function(_0x2b3586) {
+NETX.decode = function(_0x2b3586) {
     for (var _0x2fd3e2 = [], _0x2cd429 = 0x0; _0x2cd429 < _0x2b3586.length;) switch (_0x2b3586.slice(_0x2cd429++, _0x2cd429)[0x0]) {
         case 0x2:
             _0x2fd3e2.push(NPAssignPid.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += NPAssignPid.BYTES - 0x1)));
@@ -882,7 +882,7 @@ NetPacket.decode = function(_0x2b3586) {
             _0x2fd3e2.push(_0x231422.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x231422.BYTES - 0x1)));
             break;
         default:
-            return gameClient && gameClient.menu.warn.show("Error decoding binary data!"), _0x2fd3e2;
+            return app && app.menu.warn.show("Error decoding binary data!"), _0x2fd3e2;
     }
     return _0x2fd3e2;
 };
@@ -991,7 +991,7 @@ Menu.prototype.onBack = function() {
 function WarnScreen() {
     this.element = document.getElementById("warn");
     this.hide();
-    this.timeout = void 0x0;
+    this.timeout = undefined;
 }
 WarnScreen.prototype.show = function(_0x281bdb) {
     this.element.innerHTML = "<img src='img/home/warn.png' class='warn-ico'/> " + _0x281bdb;
@@ -1013,10 +1013,10 @@ function ErrorScreen() {
     this.error = document.getElementById("error-message");
 }
 ErrorScreen.prototype.show = function(mainError, consoleError, consoleTrace) {
-    gameClient.net.close();
-    gameClient.menu.hideAll();
-    gameClient.menu.navigation("error", "error");
-    gameClient.menu.background('b');
+    app.net.close();
+    app.menu.hideAll();
+    app.menu.navigation("error", "error");
+    app.menu.background('b');
     this.error.innerHTML = mainError;
     mainError && console.error("##ERROR## " + mainError);
     consoleError && console.warn("##ERROR## " + consoleError);
@@ -1032,8 +1032,8 @@ function LoadScreen() {
     this.element = document.getElementById("load");
 }
 LoadScreen.prototype.show = function() {
-    gameClient.menu.hideAll();
-    gameClient.menu.background('a');
+    app.menu.hideAll();
+    app.menu.background('a');
     this.element.style.display = "block";
 };
 LoadScreen.prototype.hide = function() {
@@ -1046,8 +1046,8 @@ function DisclaimScreen() {
     this.linkElement = document.getElementById("link");
 }
 DisclaimScreen.prototype.show = function(_0x2243c7) {
-    gameClient.menu.hideAll();
-    gameClient.menu.background('c');
+    app.menu.hideAll();
+    app.menu.background('c');
     this.linkElement.style.display = "block";
     this.element.style.display = "block";
 };
@@ -1065,7 +1065,7 @@ function MainScreen() {
     this.loginBtn = document.getElementById("main-login");
     this.registerBtn = document.getElementById("main-register");
     this.number = document.getElementById("main-number");
-    this.padLoop = void 0x0;
+    this.padLoop = undefined;
     var mainscreen = this;
     this.launchBtn.onclick = function() {
         mainscreen.launch();
@@ -1078,16 +1078,16 @@ function MainScreen() {
     };
 }
 MainScreen.prototype.launch = function() {
-    gameClient.menu.name.show();
+    app.menu.name.show();
 };
 
 MainScreen.prototype.showLogin = function() {
-    gameClient.menu.login.show();
+    app.menu.login.show();
 };
 
 MainScreen.prototype.showRegister = function() {
-    gameClient.menu.register.show();
-    gameClient.requestCaptcha();
+    app.menu.register.show();
+    app.requestCaptcha();
 };
 
 MainScreen.prototype.startPad = function() {
@@ -1104,9 +1104,9 @@ MainScreen.prototype.startPad = function() {
     _0x4736e8();
 };
 MainScreen.prototype.show = function() {
-    gameClient.menu.hideAll();
-    gameClient.menu.navigation("main", "main");
-    gameClient.menu.background('a');
+    app.menu.hideAll();
+    app.menu.navigation("main", "main");
+    app.menu.background('a');
     var wins = Cookies.get("epic_gamer_moments");
     var deaths = Cookies.get("sad_gamer_moments"),
         kills = Cookies.get("heated_gamer_moments"),
@@ -1121,7 +1121,7 @@ MainScreen.prototype.show = function() {
     this.element.style.display = "block";
     session = Cookies.get("session");
     if (session != undefined) {
-        gameClient.resumeSession(session);
+        app.resumeSession(session);
     }
 };
 MainScreen.prototype.hide = function() {
@@ -1155,8 +1155,8 @@ function MainAsMemberScreen() {
 }
 
 MainAsMemberScreen.prototype.show = function(data) {
-    gameClient.menu.hideAll();
-    gameClient.menu.background('a');
+    app.menu.hideAll();
+    app.menu.background('a');
     if (data.session != undefined) {
         Cookies.set("session", data.session, {
             'expires': 0x1e
@@ -1169,7 +1169,7 @@ MainAsMemberScreen.prototype.show = function(data) {
     this.isPrivate = savedPriv ? (savedPriv == "true") : false;
     this.updPrivateBtn();
     this.element.style.display = "block";
-    if (gameClient.goToLobby) {
+    if (app.goToLobby) {
         this.launch();
     }
 };
@@ -1181,14 +1181,14 @@ MainAsMemberScreen.prototype.launch = function() {
     Cookies.set("priv", this.isPrivate, {
         'expires': 0x1e
     });
-    gameClient.join(this.nickname, this.squad, this.isPrivate, this.skin);
+    app.join(this.nickname, this.squad, this.isPrivate, this.skin);
 };
 
 MainAsMemberScreen.prototype.showProfile = function() {
-    gameClient.menu.profile.show({"nickname": this.nickname, "squad": this.squad, "skin": this.skin});
+    app.menu.profile.show({"nickname": this.nickname, "squad": this.squad, "skin": this.skin});
 };
 MainAsMemberScreen.prototype.logout = function() {
-    gameClient.logout();
+    app.logout();
 };
 MainAsMemberScreen.prototype.updPrivateBtn = function() {
     this.privateBtn.innerText = "["+(this.isPrivate?'X':' ')+']Private Room';
@@ -1220,7 +1220,7 @@ function NameScreen() {
     this.isPrivate = false;
     this.privateBtn = document.getElementById("name-private");
     this.launchBtn = document.getElementById("name-launch");
-    this.padLoop = void 0x0;
+    this.padLoop = undefined;
     this.skinButtonPrefix = "skin-select";
     genAddSkinButton(this);
     var nameScreen = this;
@@ -1263,7 +1263,7 @@ NameScreen.prototype.selectSkin = function(skinIdx) {
 }
 
 NameScreen.prototype.selectLevel = function(levelKey) {
-    gameClient.net.send({'type':'gsl', 'name':levelKey});
+    app.net.send({'type':'gsl', 'name':levelKey});
 }
 
 NameScreen.prototype.updateLevelSelectButton = function(name) {
@@ -1289,7 +1289,7 @@ NameScreen.prototype.customLevelFileChangeHandler = function(elem, event) {
     if (files.length == 0) return;
     var reader = new FileReader();
     reader.onload = function(event) {
-        gameClient.net.send({'type':'gsl', 'name':'custom', 'data':event.target.result});
+        app.net.send({'type':'gsl', 'name':'custom', 'data':event.target.result});
     }
     reader.readAsText(files[0]);
 }
@@ -1307,7 +1307,7 @@ NameScreen.prototype.launch = function() {
     Cookies.set("skin", this.skin, {
         'expires': 0x1e
     });
-    gameClient.join(this.nameInput.value, this.teamInput.value, this.isPrivate, this.skin);
+    app.join(this.nameInput.value, this.teamInput.value, this.isPrivate, this.skin);
 };
 NameScreen.prototype.startPad = function() {
     var _0x3bcc0f = this,
@@ -1323,9 +1323,9 @@ NameScreen.prototype.startPad = function() {
     _0x4a0646();
 };
 NameScreen.prototype.show = function() {
-    gameClient.menu.hideAll();
-    gameClient.menu.navigation("name", "name");
-    gameClient.menu.background('a');
+    app.menu.hideAll();
+    app.menu.navigation("name", "name");
+    app.menu.background('a');
     var savedName = Cookies.get("name"),
         savedTeam = Cookies.get("team"),
         savedPriv = Cookies.get("priv"),
@@ -1348,7 +1348,7 @@ NameScreen.prototype.hide = function() {
     this.element.style.display = "none";
 };
 NameScreen.prototype.onBack = function() {
-    gameClient.menu.main.show();
+    app.menu.main.show();
 };
 "use strict";
 
@@ -1365,9 +1365,9 @@ function ProfileScreen() {
     };
 }
 ProfileScreen.prototype.show = function(data) {
-    gameClient.menu.hideAll();
-    gameClient.menu.navigation("profile", "profile");
-    gameClient.menu.background('a');
+    app.menu.hideAll();
+    app.menu.navigation("profile", "profile");
+    app.menu.background('a');
     this.nicknameInput.value = data["nickname"];
     this.squadInput.value = data["squad"];
     genSelectSkin(this, data["skin"]);
@@ -1377,13 +1377,13 @@ ProfileScreen.prototype.hide = function() {
     this.element.style.display = "none";
 };
 ProfileScreen.prototype.save = function() {
-    gameClient.net.send({
+    app.net.send({
         "type": "lpr",
         "nickname": this.nicknameInput.value,
         "squad": this.squadInput.value,
         "skin": this.skin
     });
-    gameClient.menu.mainAsMember.show({"nickname" : this.nicknameInput.value, "squad": this.squadInput.value, "skin": this.skin});
+    app.menu.mainAsMember.show({"nickname" : this.nicknameInput.value, "squad": this.squadInput.value, "skin": this.skin});
 }
 ProfileScreen.prototype.onBack = function() {
     this.save();
@@ -1405,9 +1405,9 @@ function LoginScreen() {
     };
 }
 LoginScreen.prototype.show = function() {
-    gameClient.menu.hideAll();
-    gameClient.menu.navigation("login", "login");
-    gameClient.menu.background('a');
+    app.menu.hideAll();
+    app.menu.navigation("login", "login");
+    app.menu.background('a');
     this.element.style.display = "block";
 };
 LoginScreen.prototype.hide = function() {
@@ -1415,7 +1415,7 @@ LoginScreen.prototype.hide = function() {
 };
 
 LoginScreen.prototype._onBack = function() {
-    gameClient.menu.main.show();
+    app.menu.main.show();
 };
 LoginScreen.prototype.reportError = function(message) {
     this.resultLabel.style.color = "red";
@@ -1433,7 +1433,7 @@ LoginScreen.prototype.launch = function() {
         this.reportError("Password is too short");
         return;
     }
-    gameClient.login(userName, pw);
+    app.login(userName, pw);
 };
 
 function RegisterScreen() {
@@ -1454,16 +1454,16 @@ function RegisterScreen() {
     };
 }
 RegisterScreen.prototype.show = function() {
-    gameClient.menu.hideAll();
-    gameClient.menu.navigation("register", "register");
-    gameClient.menu.background('a');
+    app.menu.hideAll();
+    app.menu.navigation("register", "register");
+    app.menu.background('a');
     this.element.style.display = "block";
 };
 RegisterScreen.prototype.hide = function() {
     this.element.style.display = "none";
 };
 RegisterScreen.prototype._onBack = function() {
-    gameClient.menu.main.show();
+    app.menu.main.show();
 };
 RegisterScreen.prototype.reportError = function(message) {
     this.resultLabel.style.color = "red";
@@ -1495,7 +1495,7 @@ RegisterScreen.prototype.launch = function() {
         this.reportError("Invalid captcha");
         return;
     }
-    gameClient.register(userName, pw, captcha);
+    app.register(userName, pw, captcha);
 };
 
 
@@ -1503,16 +1503,16 @@ function GameScren() {
     this.element = document.getElementById("game");
 }
 GameScren.prototype.show = function() {
-    gameClient.menu.hideAll();
-    gameClient.menu.navigation("game", "game");
-    gameClient.menu.background('c');
+    app.menu.hideAll();
+    app.menu.navigation("game", "game");
+    app.menu.background('c');
     this.element.style.display = "block";
 };
 GameScren.prototype.hide = function() {
     this.element.style.display = "none";
 };
 GameScren.prototype.onBack = function() {
-    gameClient.close();
+    app.close();
 };
 "use strict";
 
@@ -1526,26 +1526,26 @@ Net.CONNECTTYPE.REQ_CAPTCHA = 2;
 Net.CONNECTTYPE.REGISTER = 3;
 Net.CONNECTTYPE.RESUME = 4;
 Net.prototype.connected = function() {
-    return void 0x0 !== this.webSocket && this.webSocket.readyState !== WebSocket.CLOSED;
+    return undefined !== this.webSocket && this.webSocket.readyState !== WebSocket.CLOSED;
 };
 Net.prototype.openWs = function(args) {
     var net = this;
     if (this.connected()) {
-        gameClient.menu.error.show("Connection already open. State error.");
+        app.menu.error.show("Connection already open. State error.");
         return;
     }
     this.webSocket = new WebSocket(WEBSOCKET_SERVER);
     this.webSocket.binaryType = "arraybuffer";
     this.webSocket.onopen = function(name) {
-        "open" !== name.type && gameClient.menu.error.show("Error. WS open event has unexpected result.");
+        "open" !== name.type && app.menu.error.show("Error. WS open event has unexpected result.");
     };
     this.webSocket.onmessage = function(name) {
         name.data instanceof ArrayBuffer ? net.handleBinary(new Uint8Array(name.data)) : net.handlePacket(JSON.parse(name.data));
     };
     this.webSocket.onclose = function(name) {
-        net.webSocket = void 0x0;
+        net.webSocket = undefined;
         document.getElementById("privLobby").style.display = "none";
-        gameClient.menu.error.show("Connection Interrupted");
+        app.menu.error.show("Connection Interrupted");
     };
 };
 //connectType, name, team, priv, skin
@@ -1607,11 +1607,11 @@ Net.prototype.connect = function(args) {
         });
     } else {
         console.error("args = " + args);
-        gameClient.menu.error.show("Assert failed in Net.connect");
+        app.menu.error.show("Assert failed in Net.connect");
     }
 };
 Net.prototype.handlePacket = function(data) {
-    if (void 0x0 === this.state || !this.state.handlePacket(data)) switch (data.type) {
+    if (undefined === this.state || !this.state.handlePacket(data)) switch (data.type) {
         case "s00":
             this.setState(data.state);
             break;
@@ -1621,13 +1621,13 @@ Net.prototype.handlePacket = function(data) {
         case "s02":
             break;
         case "x00":
-            gameClient.menu.error.show("Server Exception", data.message);
+            app.menu.error.show("Server Exception", data.message);
             break;
         case "x01":
-            gameClient.menu.error.show("Server Exception", data.message, data.trace);
+            app.menu.error.show("Server Exception", data.message, data.trace);
             break;
         default:
-            gameClient.menu.error.show("Recieved invalid packet type: " + data.type, JSON.stringify(data));
+            app.menu.error.show("Recieved invalid packet type: " + data.type, JSON.stringify(data));
     }
 };
 Net.prototype.handleBinary = function(data) {
@@ -1637,7 +1637,7 @@ Net.prototype.handleBlob = function(packets) {
     for (var i = 0x0; i < packets.length; i++) this.handlePacket(packets[i]);
 };
 Net.prototype.setState = function(newState) {
-    void 0x0 !== this.state && this.state.destroy();
+    undefined !== this.state && this.state.destroy();
     switch (newState) {
         case 'l':
             this.state = new LobbyState(this.pendingArgs);
@@ -1646,7 +1646,7 @@ Net.prototype.setState = function(newState) {
             this.state = new GameState();
             break;
         default:
-            gameClient.menu.error.show("Received invalid state ID: " + newState);
+            app.menu.error.show("Received invalid state ID: " + newState);
             return;
     }
     this.state.ready();
@@ -1658,8 +1658,8 @@ Net.prototype.sendBinary = function(_0x25450f) {
     this.webSocket.send(_0x25450f.buffer);
 };
 Net.prototype.close = function() {
-    void 0x0 !== this.webSocket && this.webSocket.close();
-    gameClient.ingame() && gameClient.game.destroy();
+    undefined !== this.webSocket && this.webSocket.close();
+    app.ingame() && app.game.destroy();
 };
 "use strict";
 
@@ -1685,13 +1685,13 @@ LobbyState.prototype.handlePacket = function(data) {
     }
 };
 LobbyState.prototype.handleBinary = function(data) {
-    gameClient.menu.warn.show("Recieved unexpected binary data!");
+    app.menu.warn.show("Recieved unexpected binary data!");
 };
 LobbyState.prototype.ready = function() {
-    gameClient.net.connect(gameClient.net.pendingArgs);
+    app.net.connect(app.net.pendingArgs);
 };
 LobbyState.prototype.loggedIn = function(data) {
-    gameClient.net.name = data.name;
+    app.net.name = data.name;
     console.log("Logged in: " + data.name + " :: " + data.team);
 };
 LobbyState.prototype.handleLogoutResult = function(data) {
@@ -1701,12 +1701,12 @@ LobbyState.prototype.handleLogoutResult = function(data) {
 };
 LobbyState.prototype.handleLoginResult = function(data) {
     if (data.status) {
-        gameClient.stopMainScreenUpdates();
-        gameClient.menu.mainAsMember.show(data.msg);
+        app.stopMainScreenUpdates();
+        app.menu.mainAsMember.show(data.msg);
     } else {
         Cookies.remove("session");
-        gameClient.menu.login.show();
-        gameClient.menu.login.reportError(data.msg);
+        app.menu.login.show();
+        app.menu.login.reportError(data.msg);
     }
 };
 LobbyState.prototype.handleRequestCaptcha = function(data) {
@@ -1716,19 +1716,19 @@ LobbyState.prototype.handleRequestCaptcha = function(data) {
     } else {
         document.getElementById('register-captcha-input').style.display = 'none';
     }
-    gameClient.menu.register.show();
+    app.menu.register.show();
 };
 LobbyState.prototype.handleRegisterResult = function(data) {
     if (data.status) {
-        gameClient.stopMainScreenUpdates();
-        gameClient.menu.mainAsMember.show(data.msg);
+        app.stopMainScreenUpdates();
+        app.menu.mainAsMember.show(data.msg);
     } else {
-        gameClient.menu.register.show();
-        gameClient.menu.register.reportError(data.msg);
+        app.menu.register.show();
+        app.menu.register.reportError(data.msg);
     }
 };
 LobbyState.prototype.send = function(data) {
-    gameClient.net.send(data);
+    app.net.send(data);
 };
 LobbyState.prototype.type = function() {
     return 'l';
@@ -1752,11 +1752,11 @@ GameState.prototype.handlePacket = function(data) {
         case "gsl":
             return this.recieveLevelSelectResult(data), !0x0;
         default:
-            return gameClient.ingame() ? gameClient.game.handlePacket(data) : !0x1;
+            return app.ingame() ? app.game.handlePacket(data) : !0x1;
     }
 };
 GameState.prototype.handleBinary = function(data) {
-    gameClient.ingame() && gameClient.game.handleBinary(data);
+    app.ingame() && app.game.handleBinary(data);
 };
 GameState.prototype.ready = function() {
     this.send({
@@ -1767,7 +1767,7 @@ GameState.prototype.load = function(data) {
     var gameState = this;
     if (data.game == "custom") {
         var levelData = JSON.parse(data.levelData);
-        gameClient.load(levelData);
+        app.load(levelData);
         gameState.send({
             'type': "g03"
         });
@@ -1778,29 +1778,29 @@ GameState.prototype.load = function(data) {
         'type': "GET",
         'timeout': 0x1388,
         'success': function(data) {
-            gameClient.load(data);
+            app.load(data);
             gameState.send({
                 'type': "g03"
             });
         },
         'error': function() {
-            gameClient.menu.error.show("Server returned FNF(404) for game file: " + data.game);
+            app.menu.error.show("Server returned FNF(404) for game file: " + data.game);
         }
     });
 };
 GameState.prototype.globalWarn = function(_0xba301c) {
-    gameClient.menu.warn.show(_0xba301c.message);
+    app.menu.warn.show(_0xba301c.message);
 };
 GameState.prototype.sendPing = function() {
     var _0x1ac5e9 = Utils.time.now();
-    this.pingOut && 0x3e7 > this.pingLast - _0x1ac5e9 || (this.pingOut && (gameClient.net.ping = 0x3e7), this.send({
+    this.pingOut && 0x3e7 > this.pingLast - _0x1ac5e9 || (this.pingOut && (app.net.ping = 0x3e7), this.send({
         'type': "g21",
         'delta': _0x1ac5e9
     }), this.pingOut = !0x0);
 };
 GameState.prototype.recievePing = function(_0x5bdfa8) {
     var _0x3162e8 = Utils.time.now();
-    gameClient.net.ping = _0x3162e8 - _0x5bdfa8.delta;
+    app.net.ping = _0x3162e8 - _0x5bdfa8.delta;
     this.pingOut = !0x1;
 };
 GameState.prototype.recieveLevelSelectResult = function(data) {
@@ -1813,11 +1813,11 @@ GameState.prototype.recieveLevelSelectResult = function(data) {
         elem.innerText = "upload successful";
         elem.style.color = "green";
     } else if (data.status == "update") {
-        gameClient.menu.name.updateLevelSelectButton(data.name);
+        app.menu.name.updateLevelSelectButton(data.name);
     }
 };
 GameState.prototype.send = function(data) {
-    gameClient.net.send(data);
+    app.net.send(data);
 };
 GameState.prototype.type = function() {
     return 'g';
@@ -1830,7 +1830,7 @@ function GameObject(game, level, zone, pos) {
     this.level = level;
     this.zone = zone;
     this.pos = pos;
-    this.sprite = this.state = void 0x0;
+    this.sprite = this.state = undefined;
     this.garbage = this.dead = this.reverse = !0x1;
     this.sounds = [];
 }
@@ -1868,7 +1868,7 @@ GameObject.OBJECT = function(_0x42193c) {
         var _0x2f6b43 = GameObject.OBJECT_LIST[_0x3e8d48];
         if (_0x2f6b43.ID === _0x42193c) return _0x2f6b43;
     }
-    gameClient.menu.warn.show("Invalid Object Class ID: " + _0x42193c);
+    app.menu.warn.show("Invalid Object Class ID: " + _0x42193c);
 };
 "use strict";
 
@@ -1884,20 +1884,20 @@ function PlayerObject(game, level, zone, pos, pid, skin) {
     this.fallSpeed = this.moveSpeed = 0x0;
     this.jumping = -0x1;
     this.grounded = this.isSpring = this.isBounce = !0x1;
-    this.name = void 0x0;
+    this.name = undefined;
     this.starTimer = this.power = 0x0;
-    this.starMusic = void 0x0;
+    this.starMusic = undefined;
     this.tfmTimer = this.damageTimer = 0x0;
     this.tfmTarget = -0x1;
-    this.pipeWarp = void 0x0;
+    this.pipeWarp = undefined;
     this.pipeTimer = 0x0;
     this.pipeExt = this.pipeDir = -0x1;
     this.poleTimer = this.pipeDelayLength = this.pipeDelay = 0x0;
     this.poleSound = this.poleWait = !0x1;
-    this.vineWarp = void 0x0;
+    this.vineWarp = undefined;
     this.attackCharge = PlayerObject.MAX_CHARGE;
     this.attackTimer = 0x0;
-    this.autoTarget = void 0x0;
+    this.autoTarget = undefined;
     this.btnD = [0x0, 0x0];
     this.btnBde = this.btnBg = this.btnB = this.btnA = !0x1;
     this.setState(PlayerObject.SNAME.STAND);
@@ -2324,7 +2324,7 @@ PlayerObject.prototype.trigger = function(_0x121f75) {
     }
 };
 PlayerObject.prototype.step = function() {
-    0x0 < this.starTimer && (this.starTimer--, 20 < this.starTimer || (this.starMusic && (this.starMusic.stop(), this.starMusic = void 0x0)));
+    0x0 < this.starTimer && (this.starTimer--, 20 < this.starTimer || (this.starMusic && (this.starMusic.stop(), this.starMusic = undefined)));
     if (this.isState(PlayerObject.SNAME.GHOST)) this.sound();
     else if (!this.isState(PlayerObject.SNAME.HIDE))
         if (this.isState(PlayerObject.SNAME.POLE))
@@ -2378,7 +2378,7 @@ PlayerObject.prototype.step = function() {
         if (0x0 >= this.pipeTimer && this.pipeWarp) {
             this.warp(this.pipeWarp);
             this.weedeat();
-            this.pipeWarp = void 0x0;
+            this.pipeWarp = undefined;
             switch (this.pipeExt) {
                 case 0x1:
                     this.pos.y -= 1.74;
@@ -2507,7 +2507,7 @@ PlayerObject.prototype.axe = function(_0x5050d5) {
     _0x5050d5 && (this.moveSpeed = 0, this.pos = Vector2D.copy(axe.pos), this.autoTarget = Vector2D.add(_0x5050d5.pos, Vector2D.make(0x0, -1.6)));
 };
 PlayerObject.prototype.star = function() {
-    this.starMusic && (this.starMusic.stop(), this.starMusic = void 0x0);
+    this.starMusic && (this.starMusic.stop(), this.starMusic = undefined);
     this.starTimer = PlayerObject.STAR_LENGTH;
     (this.starMusic = this.play("music/star.mp3", 0x1, 0.04)) && this.starMusic.loop(!0x0);
 };
@@ -2518,7 +2518,7 @@ PlayerObject.prototype.tfm = function(_0x538c99) {
     this.setState(PlayerObject.SNAME.TRANSFORM);
 };
 PlayerObject.prototype.warp = function(_0x3f75ed) {
-    if (_0x3f75ed = this.game.world.getLevel(this.level).getWarp(_0x3f75ed)) this.level = _0x3f75ed.level, this.zone = _0x3f75ed.zone, this.pos = _0x3f75ed.pos, this.autoTarget = void 0x0, this.grounded = !0x1;
+    if (_0x3f75ed = this.game.world.getLevel(this.level).getWarp(_0x3f75ed)) this.level = _0x3f75ed.level, this.zone = _0x3f75ed.zone, this.pos = _0x3f75ed.pos, this.autoTarget = undefined, this.grounded = !0x1;
 };
 PlayerObject.prototype.pipe = function(_0x157842, _0x266382, _0x3f3ba4) {
     0x1 !== _0x157842 && 0x2 !== _0x157842 || this.setState(PlayerObject.SNAME.STAND);
@@ -2538,7 +2538,7 @@ PlayerObject.prototype.weedeat = function() {
 PlayerObject.prototype.pole = function(_0x4a8021) {
     if (this.autoTarget) return;
     this.game.stopGameTimer();
-    this.starMusic && (this.starMusic.stop(), this.starMusic = void 0x0, this.starTimer = 0x0);
+    this.starMusic && (this.starMusic.stop(), this.starMusic = undefined, this.starTimer = 0x0);
     this.setState(PlayerObject.SNAME.POLE);
     this.fallSpeed = this.moveSpeed = 0x0;
     this.pos.x = _0x4a8021.x;
@@ -2558,7 +2558,7 @@ PlayerObject.prototype.show = function() {
     this.setState(PlayerObject.SNAME.STAND);
 };
 PlayerObject.prototype.kill = function() {
-    this.starMusic && (this.starMusic.stop(), this.starMusic = void 0x0, this.starTimer = 0x0);
+    this.starMusic && (this.starMusic.stop(), this.starMusic = undefined, this.starTimer = 0x0);
     this.isState(PlayerObject.SNAME.GHOST) ? this.setState(PlayerObject.SNAME.DEADGHOST) : this.setState(PlayerObject.SNAME.DEAD);
     this.dead = !0x0;
     this.deadTimer = PlayerObject.DEAD_TIME;
@@ -2568,13 +2568,13 @@ PlayerObject.prototype.kill = function() {
         this.game.stopGameTimer();
         this.game.out.push(_0x4c5df7.encode());
         var _0x27d445 = Cookies.get("sad_gamer_moments");
-        !gameClient.net.isPrivate && Cookies.set("sad_gamer_moments", _0x27d445 ? parseInt(_0x27d445) + 0x1 : 0x1, {
+        !app.net.isPrivate && Cookies.set("sad_gamer_moments", _0x27d445 ? parseInt(_0x27d445) + 0x1 : 0x1, {
             'expires': 0x16d
         });
     }
 };
 PlayerObject.prototype.destroy = function() {
-    this.starMusic && (this.starMusic.stop(), this.starMusic = void 0x0, this.starTimer = 0x0);
+    this.starMusic && (this.starMusic.stop(), this.starMusic = undefined, this.starTimer = 0x0);
     GameObject.prototype.destroy.call(this);
 };
 PlayerObject.prototype.isTangible = function() {
@@ -3531,7 +3531,7 @@ function _0x1f4abb(_0x25bac6, _0xab1441, _0x1bd210, _0xd7b1a8, _0x55466e, _0xde9
     this.disabled = this.grounded = !0x1;
     this.disabledTimer = 0x0;
     this.proxHit = !0x1;
-    this.hammer = void 0x0;
+    this.hammer = undefined;
     this.loc = 0x1 === parseInt(_0xde92bf) ? [this.pos.x + _0x1f4abb.MOVE_AREA, this.pos.x] : [this.pos.x, this.pos.x - _0x1f4abb.MOVE_AREA];
     this.groundTimer = this.double = this.attackAnimTimer = this.attackTimer = 0x0;
     this.jumpTimer = -0x1;
@@ -3613,7 +3613,7 @@ _0x1f4abb.prototype.update = function(_0x3402c2) {
     }
 };
 _0x1f4abb.prototype.step = function() {
-    this.disabled ? this.proximity() : (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x1f4abb.STATE.BONK ? this.bonkTimer++ > _0x1f4abb.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x1f4abb.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x1f4abb.FALL_SPEED_ACCEL, -_0x1f4abb.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x1f4abb.ANIMATION_RATE) % this.state.SPRITE.length], this.face(), this.control(), this.physics(), this.sound(), 0x0 < this.attackAnimTimer ? (this.setState(_0x1f4abb.STATE.ATTACK), this.attach(), this.attackAnimTimer--) : this.attackTimer++ > _0x1f4abb.ATTACK_DELAY ? this.attack() : this.hammer = void 0x0, 0x0 > this.pos.y && this.destroy()));
+    this.disabled ? this.proximity() : (0x0 < this.disabledTimer && this.disabledTimer--, this.state === _0x1f4abb.STATE.BONK ? this.bonkTimer++ > _0x1f4abb.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = Vector2D.add(this.pos, Vector2D.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x1f4abb.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x1f4abb.FALL_SPEED_ACCEL, -_0x1f4abb.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x1f4abb.ANIMATION_RATE) % this.state.SPRITE.length], this.face(), this.control(), this.physics(), this.sound(), 0x0 < this.attackAnimTimer ? (this.setState(_0x1f4abb.STATE.ATTACK), this.attach(), this.attackAnimTimer--) : this.attackTimer++ > _0x1f4abb.ATTACK_DELAY ? this.attack() : this.hammer = undefined, 0x0 > this.pos.y && this.destroy()));
 };
 _0x1f4abb.prototype.control = function() {
     this.grounded ? (_0x1f4abb.JUMP_DELAY < this.groundTimer++ && (this.groundTimer = this.jumpTimer = 0x0), this.pos.x > this.loc[0x0] ? this.reverse = !0x0 : this.pos.x < this.loc[0x1] && (this.reverse = !0x1)) : this.jumpTimer > _0x1f4abb.JUMP_LENGTH && (this.jumpTimer = -0x1);
@@ -5505,7 +5505,7 @@ function _0x2406bb(_0x4377d5,_0x141691){
         _0x3b9d05.keyboard.event(_0x4377d5,!0x0);
     };
     this.touchEvt=function(_0x4377d5){
-        gameClient.game.input.touch.event(_0x4377d5);
+        app.game.input.touch.event(_0x4377d5);
     };
     document.addEventListener("touchstart",this.touchEvt,!0x0);
     document.addEventListener("touchmove",this.touchEvt,!0x0);
@@ -5529,10 +5529,10 @@ _0x2406bb.prototype.load=function(){
         _0x237481=Cookies.get('g_'+_0x2406bb.INPUTS[_0x586200]),this.assignG[_0x2406bb.INPUTS[_0x586200]]=_0x237481?parseInt(_0x237481):_0x2406bb.G_DEFAULT[_0x586200];
 };
 _0x2406bb.prototype.pad={};
-_0x2406bb.prototype.pad.pad=void 0x0;
+_0x2406bb.prototype.pad.pad=undefined;
 _0x2406bb.prototype.pad.ax=Vector2D.make(0x0,0x0);
 _0x2406bb.prototype.pad.update=function(){
-    this.pad=navigator?navigator.getGamepads()[0x0]:void 0x0;
+    this.pad=navigator?navigator.getGamepads()[0x0]:undefined;
     this.analog();
 };
 _0x2406bb.prototype.pad.analog=function(){
@@ -5573,7 +5573,7 @@ _0x2406bb.prototype.mouse.event=function(_0x2387e9,_0x570db5){
     this.pos={};
     this.pos.x=_0x2387e9.offsetX;
     this.pos.y=_0x2387e9.offsetY;
-    if(void 0x0!==_0x570db5){
+    if(undefined!==_0x570db5){
         switch(_0x2387e9.button){
             case 0x0:this.lmb=_0x570db5;break;
             case 0x2:this.rmb=_0x570db5;break;
@@ -5658,7 +5658,7 @@ Resource.prototype.load=function(resource){
         switch(ext){
             case "png":this.loadTexture(res);break;
             case "gif":this.loadTexture(res);break;
-            default:gameClient.menu.warn.show("Failed to load resource with unknown extension: "+ext);
+            default:app.menu.warn.show("Failed to load resource with unknown extension: "+ext);
         }
     }
 };
@@ -5725,7 +5725,7 @@ Sound.prototype.onload = function(ajax, context) {
 };
 Sound.prototype.onError = function() {};
 Sound.prototype.ready = function() {
-    return void 0x0 !== this.buffer;
+    return undefined !== this.buffer;
 };
 Sound.prototype.destroy = function() {};
 "use strict";
@@ -5735,7 +5735,7 @@ function _0x415c3a(_0x180462, _0x8d00db, _0x52fdb8, _0x50d225, _0x2664ab, _0x57e
     this.path = _0x8d00db;
     this.data = _0x52fdb8;
     this.playing = this.played = this.ready = !0x1;
-    this.data.ready() ? this.create(_0x50d225, _0x2664ab, _0x57e822) : gameClient.menu.warn.show("Attempted to instance partially loaded sound data: '" + _0x8d00db + '\x27');
+    this.data.ready() ? this.create(_0x50d225, _0x2664ab, _0x57e822) : app.menu.warn.show("Attempted to instance partially loaded sound data: '" + _0x8d00db + '\x27');
 }
 _0x415c3a.prototype.create = function(_0x59934b, _0x3f74fb, _0x1b83d9) {
     var _0x71d7c1 = this;
@@ -5756,7 +5756,7 @@ _0x415c3a.prototype.volume = function(_0x43516c) {
     this.ready && (this.gain.gain.value = _0x43516c);
 };
 _0x415c3a.prototype.play = function() {
-    this.ready && !this.played ? (this.source.start(0x0), this.playing = !0x0) : this.played && gameClient.menu.warn.show("Attempted to replay sound instance: '" + this.path + '\x27');
+    this.ready && !this.played ? (this.source.start(0x0), this.playing = !0x0) : this.played && app.menu.warn.show("Attempted to replay sound instance: '" + this.path + '\x27');
     this.played = !0x0;
 };
 _0x415c3a.prototype.stop = function() {
@@ -5804,7 +5804,7 @@ _0x551ffe.prototype.position = function(_0x17cf71) {
 _0x551ffe.prototype.volume = _0x415c3a.prototype.volume;
 _0x551ffe.prototype.play = function(_0x3ce877) {
     this.position(_0x3ce877);
-    this.ready && !this.played ? (this.source.start(0x0), this.playing = !0x0) : this.played && gameClient.menu.warn.show("Attempted to replay sound instance: '" + this.path + '\x27');
+    this.ready && !this.played ? (this.source.start(0x0), this.playing = !0x0) : this.played && app.menu.warn.show("Attempted to replay sound instance: '" + this.path + '\x27');
     this.played = !0x0;
 };
 _0x551ffe.prototype.stop = _0x415c3a.prototype.stop;
@@ -5824,7 +5824,7 @@ Audio.prototype.initWebAudio = function() {
     try {
         this.context = new(window[("AudioContext")] || window[("webkitAudioContext")])();
     } catch (exception) {
-        return gameClient.menu.warn.show("WebAudio not supported. Intializing fallback mode..."), !0x1;
+        return app.menu.warn.show("WebAudio not supported. Intializing fallback mode..."), !0x1;
     }
     var soundList = "sfx/alert.wav sfx/break.wav sfx/breath.wav sfx/bump.wav sfx/gold.wav sfx/coin.wav sfx/fireball.wav sfx/firework.wav sfx/flagpole.wav sfx/item.wav sfx/jump0.wav sfx/jump1.wav sfx/kick.wav sfx/life.wav sfx/pipe.wav sfx/powerup.wav sfx/stomp.wav sfx/vine.wav music/main0.mp3 music/main1.mp3 music/main2.mp3 music/main3.mp3 music/level.mp3 music/castle.mp3 music/victory.mp3 music/star.mp3 music/dead.mp3 music/gameover.mp3".split('\x20');
     this.sounds = [];
@@ -5847,7 +5847,7 @@ Audio.prototype.initWebAudio = function() {
     return !0x0;
 };
 Audio.prototype.initFallback = function() {
-    this.context = void 0x0;
+    this.context = undefined;
     this.sounds = [];
 };
 Audio.prototype.update = function() {
@@ -5889,7 +5889,7 @@ Audio.prototype.setMusic = function(_0x14a0c1, _0x478a92) {
     this.music.play();
 };
 Audio.prototype.stopMusic = function() {
-    this.music && (this.music.stop(), this.music = void 0x0);
+    this.music && (this.music.stop(), this.music = undefined);
 };
 Audio.prototype.createAudio = function(path) {
     sound = new Sound(this.context, path);
@@ -5915,7 +5915,7 @@ Audio.prototype.getAudio = function(_0x5552c8, _0x1ecf0c, _0x35680c, _0xddf719) 
     for (var _0x863959 = 0x0; _0x863959 < this.sounds.length; _0x863959++)
         if (this.sounds[_0x863959].path === _0x5552c8) return new _0x415c3a(this.context, _0x5552c8, this.sounds[_0x863959], _0x1ecf0c, _0x35680c, _0xddf719);
     if (this.createAudio(_0x5552c8)) return this.getAudio(_0x5552c8);
-    gameClient.menu.warn.show("Failed to load sound: '" + _0x5552c8 + '\x27');
+    app.menu.warn.show("Failed to load sound: '" + _0x5552c8 + '\x27');
     return this.getAudio("default.wav");
 };
 Audio.prototype.getSpatialAudio = function(_0x22c6ba, _0x4fe2b6, _0x2762d7, _0x4ab031) {
@@ -5932,7 +5932,7 @@ Audio.prototype.getSpatialAudio = function(_0x22c6ba, _0x4fe2b6, _0x2762d7, _0x4
     for (var _0x3e091b = 0x0; _0x3e091b < this.sounds.length; _0x3e091b++)
         if (this.sounds[_0x3e091b].path === _0x22c6ba) return new _0x551ffe(this.context, _0x22c6ba, this.sounds[_0x3e091b], _0x4fe2b6, _0x2762d7, _0x4ab031);
     if (this.createAudio(_0x22c6ba)) return this.getSpatialAudio(_0x22c6ba);
-    gameClient.menu.warn.show("Failed to load sound: '" + _0x22c6ba + '\x27');
+    app.menu.warn.show("Failed to load sound: '" + _0x22c6ba + '\x27');
     return this.getSpatialAudio("multi/default.wav");
 };
 Audio.prototype.destroy = function() {
@@ -6136,9 +6136,9 @@ Display.prototype.drawUI = function() {
         skinTexture = this.game.skin != undefined ? this.resource.getTexture("skin" + this.game.skin) : objTexture,
         playerInfo = this.game.getPlayerInfo(this.game.pid),
         level;
-    void 0x0 !== this.game.levelWarpId ?
+    undefined !== this.game.levelWarpId ?
         level = this.game.world.getLevel(this.game.levelWarpId)
-        : void 0x0 === this.game.startDelta && (level = this.game.world.getInitialLevel());
+        : undefined === this.game.startDelta && (level = this.game.world.getInitialLevel());
     this.game.gameOver ? (
         context.fillStyle = "black",
         context.fillRect(0x0, 0x0, canvasWidth, canvasHeight),
@@ -6202,7 +6202,7 @@ Display.prototype.drawUI = function() {
         txtWidth = context.measureText(txt).width + 0x1e,
         context.drawImage(skinTexture, sprite[0x0], sprite[0x1], Display.TEXRES, Display.TEXRES, 0x4 + txtWidth + 0x10, 0x28, 0x18, 0x18),
         context.fillText('x' + (0x9 >= this.game.lives ? '0' + this.game.lives : this.game.lives), 0x4 + txtWidth + 0x10 + 0x1a, 0x40),
-        this.game instanceof MainGame ? (
+        this.game instanceof Game ? (
             txt = this.game.getGameTimer(this.game.touchMode),
             txtWidth = context.measureText(txt).width,
             context.fillText(txt, (canvasWidth / 2) - (txtWidth / 2), 0x20),
@@ -6266,29 +6266,29 @@ Display.prototype.drawLoad = function() {
 Display.prototype.destroy = function() {};
 "use strict";
 
-function _0x4ef14c(_0x4cda29, _0x46f74e) {
+function World(_0x4cda29, _0x46f74e) {
     this.game = _0x4cda29;
     this.initial = _0x46f74e.initial;
     this.levels = [];
     for (var _0x5678fd = 0x0; _0x5678fd < _0x46f74e.world.length; _0x5678fd++) this.levels.push(new _0x1433a4(_0x4cda29, _0x46f74e.world[_0x5678fd]));
 }
-_0x4ef14c.prototype.step = function() {
+World.prototype.step = function() {
     for (var _0x1351b3 = 0x0; _0x1351b3 < this.levels.length; _0x1351b3++) this.levels[_0x1351b3].step();
 };
-_0x4ef14c.prototype.getInitialLevel = function() {
+World.prototype.getInitialLevel = function() {
     return this.getLevel(this.initial);
 };
-_0x4ef14c.prototype.getInitialZone = function() {
+World.prototype.getInitialZone = function() {
     var _0x2b561d = this.getLevel(this.initial);
     return this.getZone(_0x2b561d.id, _0x2b561d.initial);
 };
-_0x4ef14c.prototype.getLevel = function(_0x444ae4) {
+World.prototype.getLevel = function(_0x444ae4) {
     for (var _0x46de22 = 0x0; _0x46de22 < this.levels.length; _0x46de22++) {
         var _0x8a2d62 = this.levels[_0x46de22];
         if (_0x8a2d62.id === _0x444ae4) return _0x8a2d62;
     }
 };
-_0x4ef14c.prototype.getZone = function(_0x525a15, _0x36f94d) {
+World.prototype.getZone = function(_0x525a15, _0x36f94d) {
     for (var _0x4ae1ed = 0x0; _0x4ae1ed < this.levels.length; _0x4ae1ed++) {
         var _0x5282f6 = this.levels[_0x4ae1ed];
         if (_0x5282f6.id === _0x525a15)
@@ -6323,7 +6323,7 @@ _0x1433a4.prototype.getWarp = function(_0x35fc72) {
             if (_0x5c0899.id === _0x35fc72) return {
                 'level': this.id,
                 'zone': _0x1ed606.id,
-                'pos': PackedVec2D.decode(_0x5c0899.pos),
+                'pos': shor2.decode(_0x5c0899.pos),
                 'data': _0x5c0899.data
             };
         }
@@ -6430,18 +6430,18 @@ _0x5e1ced.prototype.getEffects = function(_0x28bee8) {
 };
 "use strict";
 
-function MainGame(data) {
+function Game(data) {
     document.getElementById("privLobby").style.display = "none";
     this.container = document.getElementById("game");
     this.canvas = document.getElementById("game-canvas");
     this.input = new _0x2406bb(this, this.canvas);
     this.display = new Display(this, this.container, this.canvas, data.resource);
     this.audio = new Audio(this);
-    if (!(this instanceof LobbyGame) && !(this instanceof JailGame) && gameClient.net.skin in SKIN_MUSIC_URL) {
+    if (!(this instanceof LobbyGame) && !(this instanceof JailGame) && app.net.skin in SKIN_MUSIC_URL) {
         this.audio.muteMusic = true;
     }
     this.objects = [];
-    this.team = this.pid = void 0x0;
+    this.team = this.pid = undefined;
     this.players = [];
     this.sounds = [];
     this.load(data);
@@ -6455,9 +6455,9 @@ function MainGame(data) {
     this.ready = !0x1;
     this.startTimer = -0x1;
     this.touchFull = this.touchMode = !0x1;
-    this.thumbPos = this.thumbOrigin = this.thumbId = void 0x0;
+    this.thumbPos = this.thumbOrigin = this.thumbId = undefined;
     this.touchRun = !0x1;
-    this.fillSS = this.cullSS = void 0x0;
+    this.fillSS = this.cullSS = undefined;
     this.disableText = 0x1 === parseInt(Cookies.get("text"));
     this.victory = this.coins = this.lives = this.remain = 0x0;
     this.victoryMusic = !0x1;
@@ -6466,7 +6466,7 @@ function MainGame(data) {
     var zoneSize = this.getZone().dimensions();
     this.display.camera.position(Vector2D.scale(zoneSize, 0.5));
     this.levelWarpTimer = 0x0;
-    this.levelWarpId = void 0x0;
+    this.levelWarpId = undefined;
     this.gameoverReloading = false;
     this.padReturnToLobby = false;
     this.playersKilled = 0;
@@ -6475,47 +6475,65 @@ function MainGame(data) {
     this.gameTimerStopTime = 0;
     this.poleTimes = 0;
     var game = this;
-    this.frameReq = _0x5a9d86.call(window, function() {
-        game.draw();
-    });
-    this.loopReq = setTimeout(function() {
-        game.loop();
-    }, 0x2);
+    this.frameReq = requestAnimFrameFunc.call(window, function() { game.draw(); });
+    this.loopReq = setTimeout(function( ){ game.loop(); }, 2);
 }
-MainGame.TICK_RATE = 0x21;
-MainGame.FDLC_TARGET = 0x3;
-MainGame.FDLC_MAX = MainGame.FDLC_TARGET + 0x2;
-MainGame.LEVEL_WARP_TIME = 0x64;
-MainGame.GAME_OVER_TIME = 120;
-MainGame.COINS_TO_LIFE = 0x1e;
-MainGame.prototype.load = function(_0x4c8127) {
-    gameClient.menu.load.show();
-    this.world = new _0x4ef14c(this, _0x4c8127);
-    for (_0x4c8127 = 0x0; _0x4c8127 < this.world.levels.length; _0x4c8127++)
-        for (var _0x28220e = this.world.levels[_0x4c8127], _0x5e8cfc = 0x0; _0x5e8cfc < _0x28220e.zones.length; _0x5e8cfc++)
-            for (var _0x465811 = _0x28220e.zones[_0x5e8cfc], _0x48681b = 0x0; _0x48681b < _0x465811.obj.length; _0x48681b++) {
-                for (var _0x33c03b = _0x465811.obj[_0x48681b], _0x161759 = [_0x33c03b.pos], _0x233fee = 0x0; _0x233fee < _0x33c03b.param.length; _0x233fee++) _0x161759.push(_0x33c03b.param[_0x233fee]);
-                this.createObject(_0x33c03b.type, _0x28220e.id, _0x465811.id, PackedVec2D.decode(_0x33c03b.pos), _0x161759);
+
+Game.TICK_RATE = 0x21;
+Game.FDLC_TARGET = 0x3;
+Game.FDLC_MAX = Game.FDLC_TARGET + 0x2;
+
+Game.LEVEL_WARP_TIME = 0x64;
+Game.GAME_OVER_TIME = 120;
+
+Game.COINS_TO_LIFE = 0x1e;
+
+Game.prototype.load = function(data) {
+    app.menu.load.show();
+
+    /* Load world data */
+    this.world = new World(this, data);
+
+    /* Spawn objects from world obj params */
+    for (var i=0;i<this.world.levels.length;i++) {
+        var lvl = this.world.levels[i];
+        for (var j=0;j<lvl.zones.length;j++) {
+            var zn = lvl.zones[i];
+            for (var k=0;k<zn.obj.length;k++) {
+                var obj = zn.obj[k];
+                var pgen = [obj.pos]; // obj.pos here is a shor2, we use it as the oid for this object
+                for (var l=0;l<obj.param.length;l++) { pgen.push(obj.param[l]); }
+                this.createObject(obj.type, lvl.id, zn.id, shor2.decode(obj.pos), pgen)
             }
-};
-MainGame.prototype.send = function(data) {
-    gameClient.net.send(data);
-};
-MainGame.prototype.handlePacket = function(_0x1adc15) {
-    switch (_0x1adc15.type) {
-        case "g12":
-            return this.updatePlayerList(_0x1adc15), !0x0;
-        case "g13":
-            return this.gameStartTimer(_0x1adc15), !0x0;
-        default:
-            return !0x1;
+        }
     }
 };
-MainGame.prototype.updatePlayerList = function(_0x407394) {
-    this.players = _0x407394.players;
-    void 0x0 !== this.pid && this.updateTeam();
+
+/* Immediately sends a json packet */
+Game.prototype.send = function(packet) {
+    app.net.send(packet);
 };
-MainGame.prototype.getGameTimer = function(compact) {
+
+/* Returns false if the packet is not of a type that we know how to handle */
+Game.prototype.handlePacket = function(packet) {
+    /* Parse packet and apply */
+    switch(packet.type) {
+        /* Ingame Type Packets gxx */
+        case "g12" : { this.updatePlayerList(packet); return true; }
+        case "g13" : { this.gameStartTimer(packet); return true; }
+        /* Input Type Packets ixx */
+        default : { return false; }
+    }
+};
+
+/* G12 */
+Game.prototype.updatePlayerList = function(packet) {
+    this.players = packet.players;
+    if(undefined === this.pid) { return; }
+    this.updateTeam();
+};
+
+Game.prototype.getGameTimer = function(compact) {
     if (this.gameTimerStopped !== null) return this.gameTimerStopped;
     if (this.startDelta === undefined) return compact ? "00:00" : "00:00:000";
     var now = Utils.time.now() - this.poleTimes; // get the time now minus the poleTimes
@@ -6529,23 +6547,29 @@ MainGame.prototype.getGameTimer = function(compact) {
     else if (ms < 100) ms = "0" + ms; // add a leading zero if it's double digit
     return m + ":" + s + (compact ? '' : (":" + ms));
 }
-MainGame.prototype.resumeGameTimer = function() {
+
+Game.prototype.resumeGameTimer = function() {
     if (this.gameTimerStopped === null) return;
     this.gameTimerStopped = null;
     this.poleTimes += Utils.time.now() - this.gameTimerStopTime;
 }
-MainGame.prototype.stopGameTimer = function() {
+
+Game.prototype.stopGameTimer = function() {
     if (this.gameTimerStopped !== null) return;
     this.gameTimerStopped = this.getGameTimer();
     this.gameTimerStopTime = Utils.time.now();
 }
-MainGame.prototype.gameStartTimer = function(_0x1effd6) {
-    0x0 > this.startTimer && this.play("sfx/alert.wav", 0x1, 0x0);
-    0x0 < _0x1effd6.time ? (this.startTimer = _0x1effd6.time, this.remain = this.players.length) : this.doStart();
+
+/* G13 */
+Game.prototype.gameStartTimer = function(packet) {
+    if(this.startTimer < 0) { this.play("sfx/alert.wav",1.,0.); }
+    if(packet.time > 0) { this.startTimer = packet.time; this.remain = this.players.length; }
+    else { this.doStart(); }
 };
-MainGame.prototype.updateTeam = function() {
+
+Game.prototype.updateTeam = function() {
     var playerInfo = this.getPlayerInfo(this.pid);
-    if (playerInfo === undefined) return;
+    if(undefined === playerInfo) { return; }
     if (this.team = playerInfo.team)
         for (var _0x1f801c = 0x0; _0x1f801c < this.players.length; _0x1f801c++) {
             var _0x1d518b = this.players[_0x1f801c];
@@ -6555,91 +6579,92 @@ MainGame.prototype.updateTeam = function() {
             }
         }
 };
-MainGame.prototype.handleBinary = function(data) {
-    data = NetPacket.decode(data);
-    this.ready ? this.updatePacket(data) : this.doUpdate(data);
+
+Game.prototype.handleBinary = function(data) {
+    var de = NETX.decode(data);
+
+    if(!this.ready) { this.doUpdate(de); return; }
+    this.updatePacket(de);
 };
-MainGame.prototype.updatePacket = function(data) {
-    for (this.buffer.push(data); this.buffer.length > MainGame.FDLC_MAX;) data = this.buffer.shift(), this.doUpdate(data);
+
+Game.prototype.updatePacket = function(data) {
+    this.buffer.push(data);
+    while(this.buffer.length > Game.FDLC_MAX) {
+        var d = this.buffer.shift();
+        this.doUpdate(d);
+    }
 };
-MainGame.prototype.doUpdate = function(data) {
-    for (var i = 0x0; i < data.length; i++) {
-        var packet = data[i];
-        switch (packet.designation) {
-            case 0x2:
-                this.doNET001(packet);
-                break;
-            case 0x10:
-                this.doNET010(packet);
-                break;
-            case 0x11:
-                this.doNET011(packet);
-                break;
-            case 0x12:
-                this.doNET012(packet);
-                break;
-            case 0x13:
-                this.doNET013(packet);
-                break;
-            case 0x17:
-                this.doNET017(packet);
-                break;
-            case 0x18:
-                this.doNET018(packet);
-                break;
-            case 0x20:
-                this.doNET020(packet);
-                break;
-            case 0x30:
-                this.doNET030(packet);
+
+Game.prototype.doUpdate = function(data) {
+    for(var i=0;i<data.length;i++) {
+        var n = data[i];
+        switch(n.designation) {
+            case 0x02 : { this.doNET002(n); break; }
+            case 0x10 : { this.doNET010(n); break; }
+            case 0x11 : { this.doNET011(n); break; }
+            case 0x12 : { this.doNET012(n); break; }
+            case 0x13 : { this.doNET013(n); break; }
+            case 0x17 : { this.doNET017(n); break; }
+            case 0x18 : { this.doNET018(n); break; }
+            case 0x20 : { this.doNET020(n); break; }
+            case 0x30 : { this.doNET030(n); break; }
         }
     }
 };
-MainGame.prototype.doNET001 = function(packet) {    //AssignPID
-    this.pid = packet.pid;
-    this.skin = packet.skin;
-    this.ready = !0x0;
-    gameClient.menu.game.show();
+
+/* ASSIGN_PID [0x02] */
+Game.prototype.doNET002 = function(n) {
+    this.pid = n.pid;
+    this.skin = n.skin;
+    this.ready = true;
+    app.menu.game.show();
 };
-MainGame.prototype.doNET010 = function(packet) {    //CreatePlayerObject
-    if (packet.pid !== this.pid) {
-        var _0x5c28cd = this.createObject(PlayerObject.ID, packet.level, packet.zone, PackedVec2D.decode(packet.pos), [packet.pid, packet.skin]);
-        _0x5c28cd.setState(PlayerObject.SNAME.GHOST);
-        var _0x48cbe4;
-        this.team && (_0x48cbe4 = this.getPlayerInfo(packet.pid)) && _0x48cbe4.id !== this.pid && _0x48cbe4.team === this.team && (_0x5c28cd = this.getGhost(_0x48cbe4.id)) && (_0x5c28cd.name = _0x48cbe4.name);
-    }
+
+/* CREATE_PLAYER_OBJECT [0x10] */
+Game.prototype.doNET010 = function(n) {
+    if(n.pid === this.pid) { return; }
+    var obj = this.createObject(PlayerObject.ID, n.level, n.zone, shor2.decode(n.pos), [n.pid, n.skin]);
+    obj.setState(PlayerObject.SNAME.GHOST);
+    // TODO: Deobfuscate this part
+    var _0x48cbe4;
+    this.team && (_0x48cbe4 = this.getPlayerInfo(n.pid)) && _0x48cbe4.id !== this.pid && _0x48cbe4.team === this.team && (_0x5c28cd = this.getGhost(_0x48cbe4.id)) && (_0x5c28cd.name = _0x48cbe4.name);
 };
-MainGame.prototype.doNET011 = function(_0x331ef5) {
-    _0x331ef5.pid !== this.pid && ((_0x331ef5 = this.getGhost(_0x331ef5.pid)) && _0x331ef5.kill(), this.remain = this.getRemain());
+
+Game.prototype.doNET011 = function(n) {
+    n.pid !== this.pid && ((n = this.getGhost(n.pid)) && n.kill(), this.remain = this.getRemain());
 };
-MainGame.prototype.doNET012 = function(_0x4eb1fd) {
+
+Game.prototype.doNET012 = function(_0x4eb1fd) {
     if (_0x4eb1fd.pid !== this.pid) {
         var _0x498b38 = this.getGhost(_0x4eb1fd.pid);
         _0x498b38 && _0x498b38.update(_0x4eb1fd);
     }
 };
-MainGame.prototype.doNET013 = function(_0x3c0ee3) {
+
+Game.prototype.doNET013 = function(_0x3c0ee3) {
     _0x3c0ee3.pid !== this.pid && this.getGhost(_0x3c0ee3.pid).trigger(_0x3c0ee3.type);
 };
-MainGame.prototype.doNET017 = function(_0x17186e) {
+
+Game.prototype.doNET017 = function(_0x17186e) {
     this.playersKilled++;
     _0x17186e = Cookies.get("heated_gamer_moments");
-    !gameClient.net.isPrivate && Cookies.set("heated_gamer_moments", _0x17186e ? parseInt(_0x17186e) + 0x1 : 0x1, {
+    !app.net.isPrivate && Cookies.set("heated_gamer_moments", _0x17186e ? parseInt(_0x17186e) + 0x1 : 0x1, {
         'expires': 0x16d
     });
 };
-MainGame.prototype.doNET018 = function(_0xb678cc) {
+
+Game.prototype.doNET018 = function(_0xb678cc) {
     if (!(0x0 >= _0xb678cc.result)) {
         _0xb678cc.pid === this.pid ? this.rate = _0xb678cc.extra : 0x0 !== this.rate && _0xb678cc.result++;
         var _0x11f856 = this.getGhost(_0xb678cc.pid);
         if (_0x11f856 && (_0x11f856 = this.getText(_0x11f856.level, _0x11f856.zone, _0xb678cc.result.toString()))) {
             var _0x36fadc = this.getPlayerInfo(_0xb678cc.pid).name;
-            this.createObject(_0x3db18a.ID, _0x11f856.level, _0x11f856.zone, Vector2D.add(_0x11f856.pos, Vector2D.make(0x0, -0x3)), [void 0x0, -0.1, 0.25, "#FFFFFF", _0x36fadc]);
+            this.createObject(_0x3db18a.ID, _0x11f856.level, _0x11f856.zone, Vector2D.add(_0x11f856.pos, Vector2D.make(0x0, -0x3)), [undefined, -0.1, 0.25, "#FFFFFF", _0x36fadc]);
         }
         if (_0xb678cc.pid === this.pid && (_0x11f856 = this.getPlayer())) {
             _0x11f856.axe(_0xb678cc.result);
             this.victory = _0xb678cc.result;
-            0x1 === _0xb678cc.result && (_0xb678cc = Cookies.get("epic_gamer_moments"), !gameClient.net.isPrivate && Cookies.set("epic_gamer_moments", _0xb678cc ? parseInt(_0xb678cc) + 0x1 : 0x1, {
+            0x1 === _0xb678cc.result && (_0xb678cc = Cookies.get("epic_gamer_moments"), !app.net.isPrivate && Cookies.set("epic_gamer_moments", _0xb678cc ? parseInt(_0xb678cc) + 0x1 : 0x1, {
                 'expires': 0x16d
             }));
             var that = this;
@@ -6650,26 +6675,31 @@ MainGame.prototype.doNET018 = function(_0xb678cc) {
         }
     }
 };
-MainGame.prototype.doNET020 = function(_0x279410) {
+
+Game.prototype.doNET020 = function(_0x279410) {
     if (!(_0x279410.pid === this.pid && 0xa0 > _0x279410.type)) {
         var _0x3f57fe = this.getObject(_0x279410.level, _0x279410.zone, _0x279410.oid);
         _0x3f57fe && _0x3f57fe.update(_0x279410.type);
     }
 };
-MainGame.prototype.doNET030 = function(_0x31e1c0) {
+
+Game.prototype.doNET030 = function(_0x31e1c0) {
     _0x31e1c0.pid !== this.pid && this.world.getZone(_0x31e1c0.level, _0x31e1c0.zone).update(this, _0x31e1c0.pid, _0x31e1c0.level, _0x31e1c0.zone, _0x31e1c0.pos.x, _0x31e1c0.pos.y, _0x31e1c0.type);
 };
-MainGame.prototype.doStart = function() {
+
+Game.prototype.doStart = function() {
     this.startTimer = -0x1;
     this.startDelta = Utils.time.now();
     this.doSpawn();
 };
-MainGame.prototype.doDetermine = function() {
+
+Game.prototype.doDetermine = function() {
     var _0xfab5c9 = this.input.pop();
     0x0 < _0xfab5c9.touch.length ? this.touchMode = !0x0 : 0x0 < _0xfab5c9.keyboard.length && (this.touchMode = !0x1);
     this.touchMode ? this.doTouch(_0xfab5c9) : this.doInput(_0xfab5c9);
 };
-MainGame.prototype.doTouch = function(_0x52fc25) {
+
+Game.prototype.doTouch = function(_0x52fc25) {
     var _0x258db7 = this.input,
         _0x330893 = this.getPlayer();
     this.display.camera.scale = 0x2;
@@ -6701,11 +6731,11 @@ MainGame.prototype.doTouch = function(_0x52fc25) {
             'dim': Vector2D.make(0x18, 0x18),
             'click': function() {
                 _0x1429a6.audio.muteMusic = !_0x1429a6.audio.muteMusic;
-                if (gameClient.audioElement !== undefined)
+                if (app.audioElement !== undefined)
                     if (_0x1429a6.audio.muteMusic)
-                        gameClient.audioElement.pause();
+                        app.audioElement.pause();
                     else
-                        gameClient.audioElement.play();
+                        app.audioElement.play();
                 _0x1429a6.audio.saveSettings();
             }
         }, {
@@ -6728,7 +6758,7 @@ MainGame.prototype.doTouch = function(_0x52fc25) {
             'pos': Vector2D.make(_0x597311 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
             'dim': Vector2D.make(0x18, 0x18),
             'click': function() {
-                gameClient.net.send({
+                app.net.send({
                     'code': (location.search.split('mcode=')[1] || '').split('&')[0],
                     'type': "g51"
                 });
@@ -6758,10 +6788,11 @@ MainGame.prototype.doTouch = function(_0x52fc25) {
         var _0x3d0185 = Vector2D.normalize(Vector2D.subtract(this.thumbPos, this.thumbOrigin));
         _0x36041a = Vector2D.scale(_0x3d0185, _0x52fc25 / 0x40);
         this.thumbPos = Vector2D.add(this.thumbOrigin, Vector2D.scale(_0x3d0185, _0x52fc25));
-    } else this.thumbPos = this.thumbOrigin = this.thumbId = void 0x0;
+    } else this.thumbPos = this.thumbOrigin = this.thumbId = undefined;
     _0x330893 && _0x3d0185 ? (_0x3d0185 = [0x0, 0x0], 0.33 < _0x36041a.x && _0x3d0185[0x0]++, -0.33 > _0x36041a.x && _0x3d0185[0x0]--, 0.33 < _0x36041a.y && _0x3d0185[0x1]--, -0.33 > _0x36041a.y && _0x3d0185[0x1]++, _0x330893.input(_0x3d0185, _0x1e64f1, this.touchRun ? !_0x34471a : _0x34471a)) : _0x330893 && _0x330893.input([0x0, 0x0], _0x1e64f1, this.touchRun ? !_0x34471a : _0x34471a);
 };
-MainGame.prototype.doInput = function(_0x585e08) {
+
+Game.prototype.doInput = function(_0x585e08) {
     this.input.pad.update();
     var _0xa25dbe = this.input,
         _0x42b147 = this.input.mouse,
@@ -6789,11 +6820,11 @@ MainGame.prototype.doInput = function(_0x585e08) {
                 'dim': Vector2D.make(0x18, 0x18),
                 'click': function() {
                     _0x533a33.audio.muteMusic = !_0x533a33.audio.muteMusic;
-                    if (gameClient.audioElement !== undefined)
+                    if (app.audioElement !== undefined)
                         if (_0x533a33.audio.muteMusic)
-                            gameClient.audioElement.pause();
+                            app.audioElement.pause();
                         else
-                            gameClient.audioElement.play();
+                            app.audioElement.play();
                     _0x533a33.audio.saveSettings();
                 }
             }, {
@@ -6816,7 +6847,7 @@ MainGame.prototype.doInput = function(_0x585e08) {
                 'pos': Vector2D.make(_0xa25dbe - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8 - 0x18 - 0x8, 0x28),
                 'dim': Vector2D.make(0x18, 0x18),
                 'click': function() {
-                    gameClient.net.send({
+                    app.net.send({
                         'code': (location.search.split('mcode=')[1] || '').split('&')[0],
                         'type': "g51"
                     });
@@ -6825,18 +6856,19 @@ MainGame.prototype.doInput = function(_0x585e08) {
             for (_0x133972 = _0x585e08.mouse[_0x5b7c6b], _0x306656 = 0x0; _0x306656 < _0x42b147.length; _0x306656++) _0xa25dbe = _0x42b147[_0x306656], 0x0 === _0x133972.btn && _0x1badb6.inside(_0x133972.pos, _0xa25dbe.pos, _0xa25dbe.dim) && _0xa25dbe.click();
     }
 };
-MainGame.prototype.doStep = function() {
+
+Game.prototype.doStep = function() {
     var _0x504fb1 = this.getPlayer();
-    if (_0x504fb1 && void 0x0 !== this.levelWarpId && 0x0 < this.levelWarpTimer && 0x1 > --this.levelWarpTimer) {
+    if (_0x504fb1 && undefined !== this.levelWarpId && 0x0 < this.levelWarpTimer && 0x1 > --this.levelWarpTimer) {
         var _0x427bdb = this.world.getLevel(this.levelWarpId).getInitial();
         _0x504fb1.level = _0x427bdb.level;
         _0x504fb1.zone = _0x427bdb.id;
-        _0x504fb1.pos = PackedVec2D.decode(_0x427bdb.initial);
-        _0x504fb1.autoTarget = void 0x0;
+        _0x504fb1.pos = shor2.decode(_0x427bdb.initial);
+        _0x504fb1.autoTarget = undefined;
         _0x504fb1.grounded = !0x1;
         _0x504fb1.show();
         _0x504fb1.invuln();
-        this.levelWarpId = void 0x0;
+        this.levelWarpId = undefined;
         this.resumeGameTimer();
     }
     _0x504fb1 && this.cullSS && !Vector2D.equals(_0x504fb1.pos, this.cullSS) && this.out.push(_0x4152f4.encode());
@@ -6846,146 +6878,165 @@ MainGame.prototype.doStep = function() {
         _0x617df4.step();
         _0x617df4.garbage && this.objects.splice(_0x427bdb--, 0x1);
     }
-    this.cullSS = _0x504fb1 ? Vector2D.copy(_0x504fb1.pos) : void 0x0;
-    this.fillSS = _0x504fb1 ? _0x504fb1.fallSpeed : void 0x0;
+    this.cullSS = _0x504fb1 ? Vector2D.copy(_0x504fb1.pos) : undefined;
+    this.fillSS = _0x504fb1 ? _0x504fb1.fallSpeed : undefined;
     _0x427bdb = this.getZone();
     _0x504fb1 && !_0x504fb1.dead && this.display.camera.position(Vector2D.make(_0x504fb1.pos.x, 0.5 * _0x427bdb.dimensions().y));
     this.world.step();
     for (_0x427bdb = 0x0; _0x427bdb < this.sounds.length; _0x427bdb++) this.sounds[_0x427bdb].done() && this.sounds.splice(_0x427bdb--, 0x1);
     this.doMusic();
     this.audio.update();
-    void 0x0 === this.startDelta || this.gameOver || _0x504fb1 ? this.gameOver ? ++this.gameOverTimer > MainGame.GAME_OVER_TIME && /*gameClient.close()*/!this.gameoverReloading && !(this.game instanceof JailGame) && (Cookies.set("go_to_lobby", "1"),location.reload(),this.gameoverReloading=true) : this.gameOverTimer = 0x0 : 0x0 < this.lives && 0x0 >= this.victory ? (_0x504fb1 = this.getZone().level, this.doSpawn(), this.levelWarp(_0x504fb1), this.lives--) : 0x2d < ++this.gameOverTimer && (this.gameOver = !0x0, this.gameOverTimer = 0x0);
+    undefined === this.startDelta || this.gameOver || _0x504fb1 ? this.gameOver ? ++this.gameOverTimer > Game.GAME_OVER_TIME && /*gameClient.close()*/!this.gameoverReloading && !(this.game instanceof JailGame) && (Cookies.set("go_to_lobby", "1"),location.reload(),this.gameoverReloading=true) : this.gameOverTimer = 0x0 : 0x0 < this.lives && 0x0 >= this.victory ? (_0x504fb1 = this.getZone().level, this.doSpawn(), this.levelWarp(_0x504fb1), this.lives--) : 0x2d < ++this.gameOverTimer && (this.gameOver = !0x0, this.gameOverTimer = 0x0);
     this.lastDraw = this.frame;
     this.frame++;
 };
-MainGame.prototype.doSpawn = function() {
+
+Game.prototype.doSpawn = function() {
     if (!this.getPlayer()) {
         var zone = this.getZone(),
             initial = zone.initial;
-        this.createObject(PlayerObject.ID, zone.level, zone.id, PackedVec2D.decode(initial), [this.pid, this.skin]);
+        this.createObject(PlayerObject.ID, zone.level, zone.id, shor2.decode(initial), [this.pid, this.skin]);
         this.out.push(NPCreatePlayerObject.encode(zone.level, zone, initial));
     }
     this.updateTeam();
 };
-MainGame.prototype.doMusic = function() {
+
+Game.prototype.doMusic = function() {
     var _0x1844d9 = this.getPlayer(),
         _0x180f62 = this.getZone();
-    this.gameOver ? this.audio.setMusic("music/gameover.mp3", !0x1) : _0x1844d9 && _0x1844d9.dead ? this.audio.setMusic("music/dead.mp3", !0x1) : _0x1844d9 && _0x1844d9.autoTarget && 0x0 >= this.victory ? this.audio.setMusic("music/level.mp3", !0x1) : 0x0 < this.victory && !this.victoryMusic ? (this.audio.setMusic("music/castle.mp3", !0x1), this.victoryMusic = !0x0) : 0x0 < this.victory && 0x4 > this.victory && this.victoryMusic && !this.audio.music.playing ? this.audio.setMusic("music/victory.mp3", !0x1) : _0x1844d9 && 0x0 >= this.levelWarpTimer && void 0x0 !== this.startDelta && !this.victoryMusic && ('' !== _0x180f62.music ? this.audio.setMusic(_0x180f62.music, !0x0) : this.audio.stopMusic());
+    this.gameOver ? this.audio.setMusic("music/gameover.mp3", !0x1) : _0x1844d9 && _0x1844d9.dead ? this.audio.setMusic("music/dead.mp3", !0x1) : _0x1844d9 && _0x1844d9.autoTarget && 0x0 >= this.victory ? this.audio.setMusic("music/level.mp3", !0x1) : 0x0 < this.victory && !this.victoryMusic ? (this.audio.setMusic("music/castle.mp3", !0x1), this.victoryMusic = !0x0) : 0x0 < this.victory && 0x4 > this.victory && this.victoryMusic && !this.audio.music.playing ? this.audio.setMusic("music/victory.mp3", !0x1) : _0x1844d9 && 0x0 >= this.levelWarpTimer && undefined !== this.startDelta && !this.victoryMusic && ('' !== _0x180f62.music ? this.audio.setMusic(_0x180f62.music, !0x0) : this.audio.stopMusic());
 };
-MainGame.prototype.doPush = function() {
+
+Game.prototype.doPush = function() {
     var _0x47ddfe = this.getPlayer();
     _0x47ddfe && !_0x47ddfe.dead && this.out.push(_0x1ea040.encode(_0x47ddfe.level, _0x47ddfe.zone, _0x47ddfe.pos, _0x47ddfe.sprite.ID, _0x47ddfe.reverse));
     _0x47ddfe = _0x1be292(this.out);
     this.out = [];
-    gameClient.net.sendBinary(_0x47ddfe);
+    app.net.sendBinary(_0x47ddfe);
 };
-MainGame.prototype.createObject = function(id, level, zoneId, pos, extraArgs) {
-    var args = [void 0x0, this, level, zoneId, pos];
+
+Game.prototype.createObject = function(id, level, zoneId, pos, extraArgs) {
+    var args = [undefined, this, level, zoneId, pos];
     for (var i = 0x0; i < extraArgs.length; i++) args.push(extraArgs[i]);
     GameObject.OBJECT(id);
     var object = new(Function.prototype.bind.apply(GameObject.OBJECT(id), args))();
     this.objects.push(object);
     return object;
 };
-MainGame.prototype.getObject = function(level, zone, oid) {
+
+Game.prototype.getObject = function(level, zone, oid) {
     for (var i = 0; i < this.objects.length; i++) {
         var obj = this.objects[i];
-        if (void 0x0 !== obj.oid && obj.level === level && obj.zone === zone && obj.oid === oid) return obj;
+        if (undefined !== obj.oid && obj.level === level && obj.zone === zone && obj.oid === oid) return obj;
     }
 };
-MainGame.prototype.getFlag = function(level, zone) {
+
+Game.prototype.getFlag = function(level, zone) {
     for (var i = 0; i < this.objects.length; i++) {
         var obj = this.objects[i];
         if (obj.level === level && obj.zone === zone && obj instanceof FlagpoleObject) return obj;
     }
 };
-MainGame.prototype.getAxe = function(level, zone) {
+
+Game.prototype.getAxe = function(level, zone) {
     for (var i = 0; i < this.objects.length; i++) {
         var obj = this.objects[i];
         if (obj.level === level && obj.zone === zone && obj instanceof AxeObject) return obj;
     }
 };
-MainGame.prototype.getText = function(_0x684bab, _0x1988a8, _0x26b734) {
+
+Game.prototype.getText = function(_0x684bab, _0x1988a8, _0x26b734) {
     for (var i = 0; i < this.objects.length; i++) {
         var obj = this.objects[i];
         if (obj && obj.level === _0x684bab && obj.zone === _0x1988a8 && obj instanceof _0x3db18a && obj.text === _0x26b734.toString()) return obj;
     }
 };
-MainGame.prototype.getPlatforms = function() {
+
+Game.prototype.getPlatforms = function() {
     for (var _0x224f04 = this.getZone(), _0x4bb33b = [], _0x26e8ba = 0x0; _0x26e8ba < this.objects.length; _0x26e8ba++) {
         var _0x510c40 = this.objects[_0x26e8ba];
         (_0x510c40 instanceof _0x5bbb5e || _0x510c40 instanceof _0x4b6e2c) && _0x510c40.level === _0x224f04.level && _0x510c40.zone === _0x224f04.id && _0x4bb33b.push(_0x510c40);
     }
     return _0x4bb33b;
 };
-MainGame.prototype.getGhost = function(_0x449d8f) {
+
+Game.prototype.getGhost = function(_0x449d8f) {
     for (var i = 0; i < this.objects.length; i++) {
         var obj = this.objects[i];
-        if (void 0x0 !== obj.pid && obj.pid === _0x449d8f) return obj;
+        if (undefined !== obj.pid && obj.pid === _0x449d8f) return obj;
     }
 };
-MainGame.prototype.getPlayer = function() {
+
+Game.prototype.getPlayer = function() {
     for (var i = 0; i < this.objects.length; i++) {
         var obj = this.objects[i];
-        if (void 0x0 !== obj.pid && obj.pid === this.pid) return obj;
+        if (undefined !== obj.pid && obj.pid === this.pid) return obj;
     }
 };
-MainGame.prototype.getZone = function() {
+
+Game.prototype.getZone = function() {
     var _0x215d79 = this.getPlayer();
     return _0x215d79 ? this.lastZone = this.world.getZone(_0x215d79.level, _0x215d79.zone) : this.lastZone ? this.lastZone : this.world.getInitialZone();
 };
-MainGame.prototype.getPlayerInfo = function(_0x45814e) {
+
+Game.prototype.getPlayerInfo = function(_0x45814e) {
     for (var i = 0; i < this.players.length; i++) {
         var obj = this.players[i];
         if (obj.id === _0x45814e) return obj;
     }
 };
-MainGame.prototype.getRemain = function() {
+
+Game.prototype.getRemain = function() {
     for (var _0x5ca02b = 0x0, _0x4d40d7 = 0x0; _0x4d40d7 < this.players.length; _0x4d40d7++) {
         var _0xbb8caf = this.getGhost(this.players[_0x4d40d7].id);
         _0xbb8caf && !_0xbb8caf.dead && _0x5ca02b++;
     }
     return _0x5ca02b;
 };
-MainGame.prototype.play = function(_0x5b2be8, _0x2c74b6, _0x4f5b18) {
+
+Game.prototype.play = function(_0x5b2be8, _0x2c74b6, _0x4f5b18) {
     _0x5b2be8 = this.audio.getAudio(_0x5b2be8, _0x2c74b6, _0x4f5b18, "effect");
     _0x5b2be8.play();
     this.sounds.push(_0x5b2be8);
 };
-MainGame.prototype.levelWarp = function(_0x4fb258) {
+
+Game.prototype.levelWarp = function(_0x4fb258) {
     this.levelWarpId = _0x4fb258;
-    this.levelWarpTimer = MainGame.LEVEL_WARP_TIME;
+    this.levelWarpTimer = Game.LEVEL_WARP_TIME;
     this.getPlayer().hide();
 };
-MainGame.prototype.coinage = function(jackpot) {
+
+Game.prototype.coinage = function(jackpot) {
     if (jackpot) {
         this.play("sfx/gold.wav", 1, 0x0);
         var _0x27d445 = Cookies.get("dosh");
-        !gameClient.net.isPrivate && (this.coinsCollected+=50000,Cookies.set("dosh", _0x27d445 ? parseInt(_0x27d445) + 50000 : 50000, {
+        !app.net.isPrivate && (this.coinsCollected+=50000,Cookies.set("dosh", _0x27d445 ? parseInt(_0x27d445) + 50000 : 50000, {
             'expires': 0x16d
         }));
         return;
     }
     this.coinsCollected += 1;
     this.coins = Math.min(0x63, this.coins + 0x1);
-    this.coins >= MainGame.COINS_TO_LIFE && (this.lifeage(), this.coins = 0x0);
+    this.coins >= Game.COINS_TO_LIFE && (this.lifeage(), this.coins = 0x0);
     this.play("sfx/coin.wav", 0.4, 0x0);
     var _0x27d445 = Cookies.get("dosh");
-    !gameClient.net.isPrivate && Cookies.set("dosh", _0x27d445 ? parseInt(_0x27d445) + 0x1 : 0x1, {
+    !app.net.isPrivate && Cookies.set("dosh", _0x27d445 ? parseInt(_0x27d445) + 0x1 : 0x1, {
         'expires': 0x16d
     });
 };
-MainGame.prototype.lifeage = function() {
+
+Game.prototype.lifeage = function() {
     this.lives = Math.min(0x63, this.lives + 0x1);
     this.play("sfx/life.wav", 0x1, 0x0);
 };
-MainGame.prototype.loop = function() {
+
+Game.prototype.loop = function() {
     try {
-        if (this.ready && void 0x0 !== this.startDelta) {
+        if (this.ready && undefined !== this.startDelta) {
             var _0x441773 = Utils.time.now(),
-                _0x3b488d = parseInt((_0x441773 - this.startDelta) / MainGame.TICK_RATE);
+                _0x3b488d = parseInt((_0x441773 - this.startDelta) / Game.TICK_RATE);
             if (_0x3b488d > this.frame) {
-                for (var _0x32cb4e = !0x0; this.buffer.length > MainGame.FDLC_TARGET || _0x32cb4e && 0x0 < this.buffer.length;) {
+                for (var _0x32cb4e = !0x0; this.buffer.length > Game.FDLC_TARGET || _0x32cb4e && 0x0 < this.buffer.length;) {
                     var _0x6b0a25 = this.buffer.shift();
                     this.doUpdate(_0x6b0a25);
                     _0x32cb4e = !0x1;
@@ -7001,14 +7052,16 @@ MainGame.prototype.loop = function() {
         game.loop();
     }, 0x2);
 };
-MainGame.prototype.draw = function() {
-    this.lastDraw === this.frame && void 0x0 !== this.startDelta || this.display.draw();
+
+Game.prototype.draw = function() {
+    this.lastDraw === this.frame && undefined !== this.startDelta || this.display.draw();
     var _0x19f533 = this;
-    this.frameReq = _0x5a9d86.call(window, function() {
+    this.frameReq = requestAnimFrameFunc.call(window, function() {
         _0x19f533.draw();
     });
 };
-MainGame.prototype.destroy = function() {
+
+Game.prototype.destroy = function() {
     _0x2a6b41.call(window, this.frameReq);
     clearTimeout(this.loopReq);
     this.input.destroy();
@@ -7018,126 +7071,126 @@ MainGame.prototype.destroy = function() {
 "use strict";
 
 function LobbyGame(_0x5a8616) {
-    MainGame.call(this, _0x5a8616);
+    Game.call(this, _0x5a8616);
     this.lobbyTimer = 0x5a;
-    if (gameClient.audioElement !== undefined) {
-        gameClient.audioElement.setAttribute('src', gameClient.net.skin in SKIN_MUSIC_URL ? SKIN_MUSIC_URL[gameClient.net.skin] : LOBBY_MUSIC_URL);
-        gameClient.audioElement.load;
-        gameClient.audioElement.volume = 0.18;
-        gameClient.audioElement.loop = true;
+    if (app.audioElement !== undefined) {
+        app.audioElement.setAttribute('src', app.net.skin in SKIN_MUSIC_URL ? SKIN_MUSIC_URL[app.net.skin] : LOBBY_MUSIC_URL);
+        app.audioElement.load;
+        app.audioElement.volume = 0.18;
+        app.audioElement.loop = true;
         if (!this.audio.muteMusic)
-            gameClient.audioElement.play();
+            app.audioElement.play();
     }
 }
-LobbyGame.prototype.load = MainGame.prototype.load;
-LobbyGame.prototype.send = MainGame.prototype.send;
-LobbyGame.prototype.handlePacket = MainGame.prototype.handlePacket;
-LobbyGame.prototype.updatePlayerList = MainGame.prototype.updatePlayerList;
+LobbyGame.prototype.load = Game.prototype.load;
+LobbyGame.prototype.send = Game.prototype.send;
+LobbyGame.prototype.handlePacket = Game.prototype.handlePacket;
+LobbyGame.prototype.updatePlayerList = Game.prototype.updatePlayerList;
 LobbyGame.prototype.gameStartTimer = function() {};
-LobbyGame.prototype.updateTeam = MainGame.prototype.updateTeam;
-LobbyGame.prototype.handleBinary = MainGame.prototype.handleBinary;
-LobbyGame.prototype.updatePacket = MainGame.prototype.updatePacket;
-LobbyGame.prototype.doUpdate = MainGame.prototype.doUpdate;
-LobbyGame.prototype.doNET001 = MainGame.prototype.doNET001;
+LobbyGame.prototype.updateTeam = Game.prototype.updateTeam;
+LobbyGame.prototype.handleBinary = Game.prototype.handleBinary;
+LobbyGame.prototype.updatePacket = Game.prototype.updatePacket;
+LobbyGame.prototype.doUpdate = Game.prototype.doUpdate;
+LobbyGame.prototype.doNET001 = Game.prototype.doNET001;
 LobbyGame.prototype.doNET010 = function(packet) {
-    MainGame.prototype.doNET010.call(this, packet);
-    if(packet.pid == this.pid && gameClient.net.prefTeam.trim() == "" && gameClient.net.isPrivate) {
+    Game.prototype.doNET010.call(this, packet);
+    if(packet.pid == this.pid && app.net.prefTeam.trim() == "" && app.net.isPrivate) {
         document.getElementById("privLobby").style.display = "";
     }
 }
-LobbyGame.prototype.doNET011 = MainGame.prototype.doNET011;
-LobbyGame.prototype.doNET012 = MainGame.prototype.doNET012;
-LobbyGame.prototype.doNET013 = MainGame.prototype.doNET013;
-LobbyGame.prototype.doNET020 = MainGame.prototype.doNET020;
-LobbyGame.prototype.doNET030 = MainGame.prototype.doNET030;
-LobbyGame.prototype.doStart = MainGame.prototype.doStart;
-LobbyGame.prototype.doDetermine = MainGame.prototype.doDetermine;
-LobbyGame.prototype.doInput = MainGame.prototype.doInput;
-LobbyGame.prototype.doTouch = MainGame.prototype.doTouch;
+LobbyGame.prototype.doNET011 = Game.prototype.doNET011;
+LobbyGame.prototype.doNET012 = Game.prototype.doNET012;
+LobbyGame.prototype.doNET013 = Game.prototype.doNET013;
+LobbyGame.prototype.doNET020 = Game.prototype.doNET020;
+LobbyGame.prototype.doNET030 = Game.prototype.doNET030;
+LobbyGame.prototype.doStart = Game.prototype.doStart;
+LobbyGame.prototype.doDetermine = Game.prototype.doDetermine;
+LobbyGame.prototype.doInput = Game.prototype.doInput;
+LobbyGame.prototype.doTouch = Game.prototype.doTouch;
 LobbyGame.prototype.doStep = function() {
     this.doSpawn();
-    MainGame.prototype.doStep.call(this);
+    Game.prototype.doStep.call(this);
 };
-LobbyGame.prototype.doSpawn = MainGame.prototype.doSpawn;
-LobbyGame.prototype.doMusic = MainGame.prototype.doMusic;
-LobbyGame.prototype.doPush = MainGame.prototype.doPush;
-LobbyGame.prototype.createObject = MainGame.prototype.createObject;
-LobbyGame.prototype.getObject = MainGame.prototype.getObject;
-LobbyGame.prototype.getFlag = MainGame.prototype.getFlag;
-LobbyGame.prototype.getPlatforms = MainGame.prototype.getPlatforms;
-LobbyGame.prototype.getGhost = MainGame.prototype.getGhost;
-LobbyGame.prototype.getPlayer = MainGame.prototype.getPlayer;
-LobbyGame.prototype.getZone = MainGame.prototype.getZone;
-LobbyGame.prototype.getPlayerInfo = MainGame.prototype.getPlayerInfo;
-LobbyGame.prototype.getRemain = MainGame.prototype.getRemain;
-LobbyGame.prototype.play = MainGame.prototype.play;
-LobbyGame.prototype.levelWarp = MainGame.prototype.levelWarp;
-LobbyGame.prototype.coinage = MainGame.prototype.coinage;
-LobbyGame.prototype.lifeage = MainGame.prototype.lifeage;
+LobbyGame.prototype.doSpawn = Game.prototype.doSpawn;
+LobbyGame.prototype.doMusic = Game.prototype.doMusic;
+LobbyGame.prototype.doPush = Game.prototype.doPush;
+LobbyGame.prototype.createObject = Game.prototype.createObject;
+LobbyGame.prototype.getObject = Game.prototype.getObject;
+LobbyGame.prototype.getFlag = Game.prototype.getFlag;
+LobbyGame.prototype.getPlatforms = Game.prototype.getPlatforms;
+LobbyGame.prototype.getGhost = Game.prototype.getGhost;
+LobbyGame.prototype.getPlayer = Game.prototype.getPlayer;
+LobbyGame.prototype.getZone = Game.prototype.getZone;
+LobbyGame.prototype.getPlayerInfo = Game.prototype.getPlayerInfo;
+LobbyGame.prototype.getRemain = Game.prototype.getRemain;
+LobbyGame.prototype.play = Game.prototype.play;
+LobbyGame.prototype.levelWarp = Game.prototype.levelWarp;
+LobbyGame.prototype.coinage = Game.prototype.coinage;
+LobbyGame.prototype.lifeage = Game.prototype.lifeage;
 LobbyGame.prototype.loop = function() {
-    0x0 < this.lobbyTimer ? this.lobbyTimer-- : void 0x0 === this.startDelta && this.doStart();
-    MainGame.prototype.loop.call(this);
+    0x0 < this.lobbyTimer ? this.lobbyTimer-- : undefined === this.startDelta && this.doStart();
+    Game.prototype.loop.call(this);
 };
-LobbyGame.prototype.draw = MainGame.prototype.draw;
+LobbyGame.prototype.draw = Game.prototype.draw;
 LobbyGame.prototype.destroy = function() {
-    MainGame.prototype.destroy.call(this);
-    if (gameClient.audioElement !== undefined && !(gameClient.net.skin in SKIN_MUSIC_URL)) {
-        gameClient.audioElement.pause();
-        gameClient.audioElement.remove();
-        gameClient.audioElement = undefined;
+    Game.prototype.destroy.call(this);
+    if (app.audioElement !== undefined && !(app.net.skin in SKIN_MUSIC_URL)) {
+        app.audioElement.pause();
+        app.audioElement.remove();
+        app.audioElement = undefined;
     }
 }
 "use strict";
 
 function JailGame(_0x1425f8) {
-    MainGame.call(this, _0x1425f8);
+    Game.call(this, _0x1425f8);
     this.lobbyTimer = 0x5a;
 }
-JailGame.prototype.load = MainGame.prototype.load;
-JailGame.prototype.send = MainGame.prototype.send;
-JailGame.prototype.handlePacket = MainGame.prototype.handlePacket;
-JailGame.prototype.updatePlayerList = MainGame.prototype.updatePlayerList;
+JailGame.prototype.load = Game.prototype.load;
+JailGame.prototype.send = Game.prototype.send;
+JailGame.prototype.handlePacket = Game.prototype.handlePacket;
+JailGame.prototype.updatePlayerList = Game.prototype.updatePlayerList;
 JailGame.prototype.gameStartTimer = function() {};
-JailGame.prototype.updateTeam = MainGame.prototype.updateTeam;
-JailGame.prototype.handleBinary = MainGame.prototype.handleBinary;
-JailGame.prototype.updatePacket = MainGame.prototype.updatePacket;
-JailGame.prototype.doUpdate = MainGame.prototype.doUpdate;
-JailGame.prototype.doNET001 = MainGame.prototype.doNET001;
-JailGame.prototype.doNET010 = MainGame.prototype.doNET010;
-JailGame.prototype.doNET011 = MainGame.prototype.doNET011;
-JailGame.prototype.doNET012 = MainGame.prototype.doNET012;
-JailGame.prototype.doNET013 = MainGame.prototype.doNET013;
-JailGame.prototype.doNET020 = MainGame.prototype.doNET020;
-JailGame.prototype.doNET030 = MainGame.prototype.doNET030;
-JailGame.prototype.doStart = MainGame.prototype.doStart;
-JailGame.prototype.doDetermine = MainGame.prototype.doDetermine;
-JailGame.prototype.doInput = MainGame.prototype.doInput;
-JailGame.prototype.doTouch = MainGame.prototype.doTouch;
+JailGame.prototype.updateTeam = Game.prototype.updateTeam;
+JailGame.prototype.handleBinary = Game.prototype.handleBinary;
+JailGame.prototype.updatePacket = Game.prototype.updatePacket;
+JailGame.prototype.doUpdate = Game.prototype.doUpdate;
+JailGame.prototype.doNET001 = Game.prototype.doNET001;
+JailGame.prototype.doNET010 = Game.prototype.doNET010;
+JailGame.prototype.doNET011 = Game.prototype.doNET011;
+JailGame.prototype.doNET012 = Game.prototype.doNET012;
+JailGame.prototype.doNET013 = Game.prototype.doNET013;
+JailGame.prototype.doNET020 = Game.prototype.doNET020;
+JailGame.prototype.doNET030 = Game.prototype.doNET030;
+JailGame.prototype.doStart = Game.prototype.doStart;
+JailGame.prototype.doDetermine = Game.prototype.doDetermine;
+JailGame.prototype.doInput = Game.prototype.doInput;
+JailGame.prototype.doTouch = Game.prototype.doTouch;
 JailGame.prototype.doStep = function() {
-    MainGame.prototype.doStep.call(this);
+    Game.prototype.doStep.call(this);
 };
 JailGame.prototype.doSpawn = function() {};
-JailGame.prototype.doMusic = MainGame.prototype.doMusic;
-JailGame.prototype.doPush = MainGame.prototype.doPush;
-JailGame.prototype.createObject = MainGame.prototype.createObject;
-JailGame.prototype.getObject = MainGame.prototype.getObject;
-JailGame.prototype.getFlag = MainGame.prototype.getFlag;
-JailGame.prototype.getPlatforms = MainGame.prototype.getPlatforms;
-JailGame.prototype.getGhost = MainGame.prototype.getGhost;
-JailGame.prototype.getPlayer = MainGame.prototype.getPlayer;
-JailGame.prototype.getZone = MainGame.prototype.getZone;
-JailGame.prototype.getPlayerInfo = MainGame.prototype.getPlayerInfo;
-JailGame.prototype.getRemain = MainGame.prototype.getRemain;
-JailGame.prototype.play = MainGame.prototype.play;
-JailGame.prototype.levelWarp = MainGame.prototype.levelWarp;
-JailGame.prototype.coinage = MainGame.prototype.coinage;
-JailGame.prototype.lifeage = MainGame.prototype.lifeage;
+JailGame.prototype.doMusic = Game.prototype.doMusic;
+JailGame.prototype.doPush = Game.prototype.doPush;
+JailGame.prototype.createObject = Game.prototype.createObject;
+JailGame.prototype.getObject = Game.prototype.getObject;
+JailGame.prototype.getFlag = Game.prototype.getFlag;
+JailGame.prototype.getPlatforms = Game.prototype.getPlatforms;
+JailGame.prototype.getGhost = Game.prototype.getGhost;
+JailGame.prototype.getPlayer = Game.prototype.getPlayer;
+JailGame.prototype.getZone = Game.prototype.getZone;
+JailGame.prototype.getPlayerInfo = Game.prototype.getPlayerInfo;
+JailGame.prototype.getRemain = Game.prototype.getRemain;
+JailGame.prototype.play = Game.prototype.play;
+JailGame.prototype.levelWarp = Game.prototype.levelWarp;
+JailGame.prototype.coinage = Game.prototype.coinage;
+JailGame.prototype.lifeage = Game.prototype.lifeage;
 JailGame.prototype.loop = function() {
-    0x0 < this.lobbyTimer ? this.lobbyTimer-- : void 0x0 === this.startDelta && this.doStart();
-    MainGame.prototype.loop.call(this);
+    0x0 < this.lobbyTimer ? this.lobbyTimer-- : undefined === this.startDelta && this.doStart();
+    Game.prototype.loop.call(this);
 };
-JailGame.prototype.draw = MainGame.prototype.draw;
-JailGame.prototype.destroy = MainGame.prototype.destroy;
+JailGame.prototype.draw = Game.prototype.draw;
+JailGame.prototype.destroy = Game.prototype.destroy;
 "use strict";
 
 function GameClient() {
@@ -7197,10 +7250,10 @@ GameClient.prototype.init = function() {
     }, this.goToLobby ? 100 : 5000);
 };
 GameClient.prototype.load = function(data) {
-    if (this.game instanceof MainGame) this.menu.error.show("State error. Game already loaded.");
+    if (this.game instanceof Game) this.menu.error.show("State error. Game already loaded.");
     else switch (this.game instanceof LobbyGame && this.game.destroy(), data.type) {
         case "game":
-            this.game = new MainGame(data);
+            this.game = new Game(data);
             break;
         case "lobby":
             this.game = new LobbyGame(data);
@@ -7244,6 +7297,6 @@ GameClient.prototype.close = function() {
     this.ingame() && this.net.close();
     location.reload();
 };
-var gameClient = new GameClient();
+var app = new GameClient();
 print("loading game.min.js finished");
-gameClient.init();
+app.init();
