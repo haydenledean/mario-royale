@@ -6474,9 +6474,13 @@ function Game(data) {
     this.gameTimerStopped = null;
     this.gameTimerStopTime = 0;
     this.poleTimes = 0;
-    var game = this;
-    this.frameReq = requestAnimFrameFunc.call(window, function() { game.draw(); });
-    this.loopReq = setTimeout(function( ){ game.loop(); }, 2);
+    var that = this;
+    this.frameReq = requestAnimFrameFunc.call(window, function() {
+        that.draw();
+    });
+    this.loopReq = setTimeout(function() {
+        that.loop();
+    }, 2);
 }
 
 Game.TICK_RATE = 0x21;
@@ -6498,7 +6502,7 @@ Game.prototype.load = function(data) {
     for (var i=0;i<this.world.levels.length;i++) {
         var lvl = this.world.levels[i];
         for (var j=0;j<lvl.zones.length;j++) {
-            var zn = lvl.zones[i];
+            var zn = lvl.zones[j];
             for (var k=0;k<zn.obj.length;k++) {
                 var obj = zn.obj[k];
                 var pgen = [obj.pos]; // obj.pos here is a shor2, we use it as the oid for this object
@@ -7091,7 +7095,7 @@ LobbyGame.prototype.updateTeam = Game.prototype.updateTeam;
 LobbyGame.prototype.handleBinary = Game.prototype.handleBinary;
 LobbyGame.prototype.updatePacket = Game.prototype.updatePacket;
 LobbyGame.prototype.doUpdate = Game.prototype.doUpdate;
-LobbyGame.prototype.doNET001 = Game.prototype.doNET001;
+LobbyGame.prototype.doNET002 = Game.prototype.doNET002;
 LobbyGame.prototype.doNET010 = function(packet) {
     Game.prototype.doNET010.call(this, packet);
     if(packet.pid == this.pid && app.net.prefTeam.trim() == "" && app.net.isPrivate) {
@@ -7155,7 +7159,7 @@ JailGame.prototype.updateTeam = Game.prototype.updateTeam;
 JailGame.prototype.handleBinary = Game.prototype.handleBinary;
 JailGame.prototype.updatePacket = Game.prototype.updatePacket;
 JailGame.prototype.doUpdate = Game.prototype.doUpdate;
-JailGame.prototype.doNET001 = Game.prototype.doNET001;
+JailGame.prototype.doNET002 = Game.prototype.doNET002;
 JailGame.prototype.doNET010 = Game.prototype.doNET010;
 JailGame.prototype.doNET011 = Game.prototype.doNET011;
 JailGame.prototype.doNET012 = Game.prototype.doNET012;
