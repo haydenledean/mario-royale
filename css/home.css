@@ -453,7 +453,7 @@ img {
 .pagination {
   position: absolute;
   left: 50%;
-  transform: translate(-50%, 300%);
+  transform: translate(-50%, 400%);
 }
 .pagination,
 .pagination * {

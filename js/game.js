@@ -1,4 +1,4 @@
-var SKINCOUNT=33;
+var SKINCOUNT=42;
 var DEFAULT_PLAYER_NAME="INFRINGIO";
 var levelSelectors = [
                    {shortId: '?', longId:''}, 
@@ -11,7 +11,8 @@ var levelSelectors = [
                    {shortId: 'P', longId:'world-p' },
                    {shortId: 'S', longId:'world-s' },
                    {shortId: 'M', longId:'world-m' },
-                   {shortId: 'YI', longId:'world-yi' } // Really, we need to automate this
+                   {shortId: 'YI', longId:'world-yi' },
+                   {shortId: 'D', longId:'world-d' } // Really, we need to automate this
                  ];
 var util = {},
     vec2 = {
