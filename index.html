@@ -111,15 +111,15 @@
       <!-- Main Menu -->
       <div id='main' class='container-center'>
         <div class='title'>Mario Royale</div>
-        <div class='container-launch'>
-          <span id ='main-launch' class='launch'>Guest</span>
+        <div class='container-launch' style='margin-bottom: 20px'>
+          <span id='main-launch' class='launch'>Play Now!</span>
           <span class='players'><span id='main-number' class='player-number' style="display:none;">?</span> Online</span>
         </div>
         <div class="container-launch">
-          <span id ='main-login' class='launch'>Login</span>
+          <span id='main-login' class='launch'>Login</span>
         </div>
         <div class="container-launch">
-          <span id ='main-register' class='launch'>Register</span>
+          <span id='main-register' class='launch'>Register</span>
         </div>
       </div>
       
@@ -127,14 +127,14 @@
       <div id='mainAsMember' class='container-center' style='display: none;'>
         <div class='title'>Mario Royale</div>
         <div class='container-launch'>
-          <span id ='mainAsMember-private' class='private'>[ ]Private Room</span>
-          <span id ='mainAsMember-launch' class='launch'>Play Now</span>
+          <span id='mainAsMember-private' class='private'>[ ]Private Room</span>
+          <span id='mainAsMember-launch' class='launch'>Play Now!</span>
         </div>
         <div class="container-launch">
-          <span id ='mainAsMember-profile' class='launch'>Profile</span>
+          <span id='mainAsMember-profile' class='launch'>Profile</span>
         </div>
         <div class="container-launch">
-          <span id ='mainAsMember-logout' class='launch'>Logout</span>
+          <span id='mainAsMember-logout' class='launch'>Logout</span>
         </div>
       </div>
 
@@ -146,7 +146,7 @@
         </div>
         <div class='container-bottom' style='margin-top:80px'>
           <div class='container-go'>
-            <span id ='profile-save' class='launch'>Save</span>
+            <span id='profile-save' class='launch'>Save</span>
           </div>
         </div>
       </div>
@@ -157,8 +157,10 @@
         <div class='team'><input id='team-input' type='text' class='team-input' maxlength="3" placeholder='Squad Code'/></div>
         <div class='container-bottom'>
           <div class='container-go'>
-            <span id ='name-private' class='private'>[ ]Private Room</span>
-            <span id ='name-launch' class='launch'>Go!</span>
+            <span id='name-private' class='private'>[ ]Private Room</span>
+            <span id='name-launch' class='launch'>Go!</span>
+            |
+            <span id='name-back' class='launch'>Cancel</span>
           </div>
         </div>
         <div id='skin-select' class="skin-select">
@@ -167,13 +169,15 @@
 
       <!-- Login -->
       <div id='login' class='container-center' style='display: none;'>
-        <form action="#login">
+        <form id='login-form' action="#login">
             <div class='name'><input id='login-username-input' type='text' class='name-input' placeholder='UserName' maxlength="20"/></div>
             <div class='name'><input id='login-password-input' type='password' class='name-input' placeholder='Password'/></div>
             <div class='container-bottom'>
-                <input id ='login-do' type="submit" class='launchStrong' value="Login"></input>
-                |
-                <span id ='login-back' class='launch'>Cancel</span>
+                <div class="container-launch">
+                  <input id='login-do' type="submit" class='launchStrong' value="Login"></input>
+                  |
+                  <span id='login-back' class='launch'>Cancel</span>
+                </div>
             </div>
             <div id="loginResult" class="login-result">&nbsp;</div>
         </form>
@@ -181,18 +185,20 @@
 
       <!-- Register -->
       <div id='register' class='container-center' style='display: none;'>
-        <form action="#register">
+        <form id='register-form' action="#register">
             <div class='name'><input id='register-username-input' type='text' class='name-input' placeholder='UserName' maxlength='20'/></div>
             <div class='name'><input id='register-password-input' type='password' class='name-input' placeholder='Password'/></div>
             <div class='name'><input id='register-password2-input' type='password' class='name-input' placeholder='Password again'/></div>
             <div class='name'>
               <img id='register-captcha' alt='Captcha' />
-              <input id='register-captcha-input' type='text' class='name-input' placeholder='Captcha' maxlength='5' style='width: 480px'/>
+              <input id='register-captcha-input' type='text' class='captcha-input' placeholder='Captcha' maxlength='5'/>
             </div>
             <div class='container-bottom'>
-                <input id ='register-do' type="submit" class='launchStrong' value="Register"></input>
-                |
-                <span id ='register-back' class='launch'>Cancel</span>
+                <div class="container-launch">
+                  <input id='register-do' type="submit" class='launchStrong' value="Register"></input>
+                  |
+                  <span id='register-back' class='launch'>Cancel</span>
+                </div>
             </div>
             <div id="registerResult" class="login-result">&nbsp;</div>
         </form>

@@ -99,11 +99,13 @@ img {
 }
 
 .container-launch {
+  margin-top: 10px;
   font-size: 32px;
 }
 
 @media only screen and (max-width: 769px) {
   .container-launch {
+    margin-top: 15px;
     font-size: 16px;
   }
 }
@@ -130,7 +132,14 @@ img {
   animation: glow 1s infinite alternate;
 }
 
+@media only screen and (max-width: 769px) {
+  .launch {
+    margin-left: 2px;
+  }
+}
+
 .private {
+  font-size: 28px;
   cursor: pointer;
   margin-left: 6px;
   float: right;
@@ -139,8 +148,8 @@ img {
 }
 
 @media only screen and (max-width: 769px) {
-  .launch {
-    margin-left: 2px;
+  .private {
+    font-size: 12px;
   }
 }
 
@@ -155,12 +164,19 @@ img {
 }
 
 .launchStrong{
-    font-size: 32px;
-    font-family:SmbWeb;
-    background: none;
-    border: none;
-    color: white;
-    animation: glow 1s infinite alternate;
+  cursor: pointer;
+  font-size: 32px;
+  font-family:SmbWeb;
+  background: none;
+  border: none;
+  color: white;
+  animation: glow 1s infinite alternate;
+}
+
+@media only screen and (max-width: 769px) {
+  .launchStrong {
+    font-size: 16px;
+  }
 }
 
 .players {
@@ -202,6 +218,30 @@ img {
 @media only screen and (max-width: 769px) {
   .name-input {
     font-size: 20px;
+  }
+}
+
+.captcha-input {
+  font-family: SmbWeb;
+  font-size: 64px;
+  color: white;
+  text-align: center;
+  
+  width: 480px;
+  background: transparent;
+  border: none;
+  border-bottom: 5px dashed #FFFFFF; 
+  margin-bottom: 8px;
+}
+
+.captcha-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+@media only screen and (max-width: 769px) {
+  .captcha-input {
+    font-size: 20px;
+    width: 180px;
   }
 }
 
@@ -315,6 +355,13 @@ img {
     background-color: rgb(0,0,0,0);
 }
 
+@media only screen and (max-width: 769px) {
+  .skin-select {
+    margin-top: 20px;
+    transform: scale(1);
+  }
+}
+
 .container-return {
   font-family: SmbWeb;
   font-size: 32px;
@@ -365,4 +412,10 @@ img {
 
   font-family: SmbWeb;
   font-size: 32px;
+}
+
+@media only screen and (max-width: 769px) {
+  .login-result {
+    font-size: 12px;
+  }
 }

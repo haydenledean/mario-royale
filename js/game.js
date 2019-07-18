@@ -1162,7 +1162,7 @@ MainAsMemberScreen.prototype.show = function(data) {
             'expires': 0x1e
         });
     }
-    var savedPriv = Cookies.get("priv");
+    var savedPriv = Cookies.get("mpriv");
     this.nickname = data.nickname;
     this.squad = data.squad;
     this.skin = data.skin;
@@ -1178,7 +1178,7 @@ MainAsMemberScreen.prototype.hide = function() {
 };
 
 MainAsMemberScreen.prototype.launch = function() {
-    Cookies.set("priv", this.isPrivate, {
+    Cookies.set("mpriv", this.isPrivate, {
         'expires': 0x1e
     });
     app.join(this.nickname, this.squad, this.isPrivate, this.skin);
@@ -1217,40 +1217,44 @@ function NameScreen() {
     this.linkElement = document.getElementById("link");
     this.nameInput = document.getElementById("name-input");
     this.teamInput = document.getElementById("team-input");
+    this.backBtn = document.getElementById("name-back");
     this.isPrivate = false;
     this.privateBtn = document.getElementById("name-private");
     this.launchBtn = document.getElementById("name-launch");
     this.padLoop = undefined;
     this.skinButtonPrefix = "skin-select";
     genAddSkinButton(this);
-    var nameScreen = this;
+    var that = this;
     for (var i=0; i<levelSelectors.length; i++) {
         var k = levelSelectors[i];
         var elem = document.createElement("div")
         elem.setAttribute("class", "levelSelectButton");
         elem.innerText = k.shortId;
-        elem.addEventListener("click", (function(a){return function() {nameScreen.selectLevel(a);};})(k.longId));
+        elem.addEventListener("click", (function(a){return function() {that.selectLevel(a);};})(k.longId));
         document.getElementById("levelSelectStandard").appendChild(elem);
         levelSelectors[i].elem = elem;
     }
     var elem = document.getElementById("levelSelectInput");
-    elem.addEventListener("change", (function(){return function(event) {nameScreen.customLevelFileChangeHandler(this, event);};})());
+    elem.addEventListener("change", (function(){return function(event) {that.customLevelFileChangeHandler(this, event);};})());
     this.launchBtn.onclick = function() {
-        nameScreen.launch();
+        that.launch();
     };
     this.teamInput.onkeyup = function() {
-        if (nameScreen.teamInput.value.trim() === "" && nameScreen.isPrivate) {
-            nameScreen.teamInput.placeholder = "[ PRIVATE ]";
+        if (that.teamInput.value.trim() === "" && that.isPrivate) {
+            that.teamInput.placeholder = "[ PRIVATE ]";
         } else 
-            nameScreen.teamInput.placeholder = "Squad Code";
+            that.teamInput.placeholder = "Squad Code";
     }
     this.privateBtn.onclick = function() {
-        nameScreen.isPrivate = !nameScreen.isPrivate;
-        nameScreen.updPrivateBtn();
-        if (nameScreen.teamInput.value.trim() === "" && nameScreen.isPrivate) {
-            nameScreen.teamInput.placeholder = "[ PRIVATE ]";
+        that.isPrivate = !that.isPrivate;
+        that.updPrivateBtn();
+        if (that.teamInput.value.trim() === "" && that.isPrivate) {
+            that.teamInput.placeholder = "[ PRIVATE ]";
         } else 
-            nameScreen.teamInput.placeholder = "Squad Code";
+            that.teamInput.placeholder = "Squad Code";
+    };
+    this.backBtn.onclick = function() {
+        that.onBack();
     };
 };
 
@@ -1391,17 +1395,21 @@ ProfileScreen.prototype.onBack = function() {
 
 function LoginScreen() {
     this.element = document.getElementById("login");
+    this.form = document.getElementById("login-form");
     this.userNameInput = document.getElementById("login-username-input");
     this.passwordInput = document.getElementById("login-password-input");
     this.launchBtn = document.getElementById("login-do");
     this.backBtn = document.getElementById("login-back");
     this.resultLabel = document.getElementById("loginResult");
-    var loginScreen = this;
+    var that = this;
+    this.form.onsubmit = function(e) {
+        e.preventDefault(); // Don't let the page be redirected
+    }
     this.launchBtn.onclick = function() {
-        loginScreen.launch();
+        that.launch();
     };
     this.backBtn.onclick = function() {
-        loginScreen._onBack();
+        that._onBack();
     };
 }
 LoginScreen.prototype.show = function() {
@@ -1438,6 +1446,7 @@ LoginScreen.prototype.launch = function() {
 
 function RegisterScreen() {
     this.element = document.getElementById("register");
+    this.form = document.getElementById("register-form");
     this.userNameInput = document.getElementById("register-username-input");
     this.passwordInput = document.getElementById("register-password-input");
     this.passwordInput2 = document.getElementById("register-password2-input");
@@ -1445,12 +1454,15 @@ function RegisterScreen() {
     this.launchBtn = document.getElementById("register-do");
     this.backBtn = document.getElementById("register-back");
     this.resultLabel = document.getElementById("registerResult");
-    var registerScreen = this;
+    var that = this;
+    this.form.onsubmit = function(e) {
+        e.preventDefault(); // Don't let the page be redirected
+    }
     this.launchBtn.onclick = function() {
-        registerScreen.launch();
+        that.launch();
     };
     this.backBtn.onclick = function() {
-        registerScreen._onBack();
+        that._onBack();
     };
 }
 RegisterScreen.prototype.show = function() {
@@ -1701,7 +1713,6 @@ InputState.prototype.handleLogoutResult = function(data) {
 };
 InputState.prototype.handleLoginResult = function(data) {
     if (data.status) {
-        app.stopMainScreenUpdates();
         app.menu.mainAsMember.show(data.msg);
     } else {
         Cookies.remove("session");
@@ -1720,7 +1731,6 @@ InputState.prototype.handleRequestCaptcha = function(data) {
 };
 InputState.prototype.handleRegisterResult = function(data) {
     if (data.status) {
-        app.stopMainScreenUpdates();
         app.menu.mainAsMember.show(data.msg);
     } else {
         app.menu.register.show();
@@ -7197,7 +7207,7 @@ JailGame.prototype.draw = Game.prototype.draw;
 JailGame.prototype.destroy = Game.prototype.destroy;
 "use strict";
 
-function GameClient() {
+function App() {
     this.menu = new Menu();
     this.net = new Network();
     this.goToLobby = Cookies.get("go_to_lobby") === "1";
@@ -7212,7 +7222,7 @@ function GameClient() {
     this.audioElement.play();
     this.statusUpdater = null;
 }
-GameClient.prototype.init = function() {
+App.prototype.init = function() {
     document.getElementById("log").style.display = "none";
     document.getElementById("link-patch").style.display = "";
     document.getElementById("main-number").style.display = "";
@@ -7253,7 +7263,7 @@ GameClient.prototype.init = function() {
         that.menu.main.show();
     }, this.goToLobby ? 100 : 5000);
 };
-GameClient.prototype.load = function(data) {
+App.prototype.load = function(data) {
     if (this.game instanceof Game) this.menu.error.show("State error. Game already loaded.");
     else switch (this.game instanceof LobbyGame && this.game.destroy(), data.type) {
         case "game":
@@ -7269,38 +7279,38 @@ GameClient.prototype.load = function(data) {
             this.menu.error.show("Critical error! Game file missing type!");
     }
 };
-GameClient.prototype.ingame = function() {
+App.prototype.ingame = function() {
     return !!this.game;
 };
-GameClient.prototype.stopMainScreenUpdates = function() {
+App.prototype.stopMainScreenUpdates = function() {
     if (this.audioElement !== undefined)
         this.audioElement.pause();
     clearInterval(this.statusUpdater);
 };
-GameClient.prototype.join = function(name, team, priv, skin) {
+App.prototype.join = function(name, team, priv, skin) {
     this.stopMainScreenUpdates();
     this.ingame() ? this.menu.error.show("An error occured while starting game...") : (this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.GUEST, name, team, priv, skin]));
 };
-GameClient.prototype.login = function(username, pw) {
+App.prototype.login = function(username, pw) {
     this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.LOGIN, username, pw]);
 };
-GameClient.prototype.logout = function(username, pw) {
+App.prototype.logout = function(username, pw) {
     this.net.send({'type': "llo"});
 };
-GameClient.prototype.requestCaptcha = function() {
+App.prototype.requestCaptcha = function() {
     this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.REQ_CAPTCHA]);
 };
-GameClient.prototype.register = function(username, pw, captcha) {
+App.prototype.register = function(username, pw, captcha) {
     this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.REGISTER, username, pw, captcha]);
 };
-GameClient.prototype.resumeSession = function(session) {
+App.prototype.resumeSession = function(session) {
     this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.RESUME, session]);
 };
-GameClient.prototype.close = function() {
+App.prototype.close = function() {
     this.menu.load.show();
     this.ingame() && this.net.close();
     location.reload();
 };
-var app = new GameClient();
+var app = new App();
 print("loading game.min.js finished");
 app.init();
