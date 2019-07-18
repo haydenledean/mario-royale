@@ -5732,11 +5732,48 @@ function AudioData(context, path) {
 }
 AudioData.prototype.onload = function(ajax, context) {
     var sound = this;
-    context.decodeAudioData(ajax.response, function(buffer) {
+    var audioData = ajax.response;
+    var dv = new DataView(audioData);
+    var junk = 0;
+    var position = 12;
+    do {
+        var header = String.fromCharCode.apply(null, Uint8Array(audioData, position, 4));
+        var length = dv.getUint32(position + 4, true);
+        if (header.trim() === 'fmt') {
+            junk = junk + length - 16;
+        }
+        position = position + 8 + length;
+    }while(position < audioData.byteLength);
+    var productArray = new Uint8Array(audioData.byteLength - junk);
+    productArray.set(new Uint8Array(audioData, 0, 12));
+    var newPosition = 12;
+    position = 12;
+    var fmt_length_spot;
+    do {
+        var header = String.fromCharCode.apply(null, Uint8Array(audioData, position, 4));
+        var length = dv.getUint32(position + 4, true);
+        if (header.trim() === 'fmt') {
+            productArray.set(new Uint8Array(audioData, position, 24), newPosition);
+            fmt_length_spot = newPosition + 4;
+            newPosition = newPosition + 24;
+        }
+        else {
+            productArray.set(new Uint8Array(audioData, position, length + 8), newPosition);
+            newPosition = newPosition + 8 + length;
+        }
+        position = position + 8 + length;
+    }while(position < audioData.byteLength);
+    audioData = productArray.buffer;
+    dv = new DataView(audioData);
+    dv.setUint32(4, audioData.byteLength - 8, true);
+    dv.setUint32(fmt_length_spot, 16, true);
+    context.decodeAudioData(audioData, function(buffer) {
         sound.buffer = buffer;
     }, sound.onError);
 };
-AudioData.prototype.onError = function() {};
+AudioData.prototype.onError = function(e) {
+    console.error("Error while decoding audio data: " + e.err)
+};
 AudioData.prototype.ready = function() {
     return undefined !== this.buffer;
 };
@@ -5835,7 +5872,7 @@ Audio.FALLOFF_MIN = 0x1;
 Audio.FALLOFF_MAX = 0x18;
 Audio.prototype.initWebAudio = function() {
     try {
-        this.context = new(window[("AudioContext")] || window[("webkitAudioContext")])();
+        this.context = new(window.AudioContext || window.webkitAudioContext)();
     } catch (exception) {
         return app.menu.warn.show("WebAudio not supported. Intializing fallback mode..."), !0x1;
     }
