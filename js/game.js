@@ -1345,6 +1345,7 @@ NameScreen.prototype.show = function() {
     this.startPad();
     this.linkElement.style.display = "block";
     this.element.style.display = "block";
+    $("#skin-select").pagify(33, ".skin-select-button");
 };
 NameScreen.prototype.hide = function() {
     this.padLoop && clearTimeout(this.padLoop);
@@ -1376,6 +1377,7 @@ ProfileScreen.prototype.show = function(data) {
     this.squadInput.value = data["squad"];
     genSelectSkin(this, data["skin"]);
     this.element.style.display = "block";
+    $("#profile-skin-select").pagify(33, ".skin-select-button");
 };
 ProfileScreen.prototype.hide = function() {
     this.element.style.display = "none";
