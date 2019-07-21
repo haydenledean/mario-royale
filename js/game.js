@@ -1,4 +1,5 @@
-var SKINCOUNT=52;
+var SKINCOUNT=53;
+var DEV_SKINS = [52];
 var DEFAULT_PLAYER_NAME="INFRINGIO";
 var levelSelectors = [
                    {shortId: '?', longId:''}, 
@@ -1226,6 +1227,21 @@ function genSelectSkin(screen, skinIdx) {
 
 function genAddSkinButton(screen) {
     for (var i=0; i<SKINCOUNT; i++) {
+        if (i in DEV_SKINS && !(app.net.username !== undefined && app.net.username in ["taliondiscord",
+                                                                                        "damonj17",
+                                                                                        "ddmil@marioroyale:~$",
+                                                                                        "pixelcraftian",
+                                                                                        "igor",
+                                                                                        "minus",
+                                                                                        "cyuubi",
+                                                                                        "gyorokpeter",
+                                                                                        "zizzydizzymc",
+                                                                                        "nuts & milk",
+                                                                                        "jupitersky",
+                                                                                        "nethowarrior",
+                                                                                        "real novex",
+                                                                                        "nightyoshi370"]))
+            continue;
         var elem = document.createElement("div");
         elem.setAttribute("class", "skin-select-button");
         elem.setAttribute("id", screen.skinButtonPrefix+i);
