@@ -1218,20 +1218,21 @@ MainAsMemberScreen.prototype.updPrivateBtn = function() {
     this.privateBtn.innerText = "["+(this.isPrivate?'X':' ')+']Private Room';
 };
 function genSelectSkin(screen, skinIdx) {
-    if (screen.skin != undefined) {
+    if (screen.skin !== undefined) {
         document.getElementById(screen.skinButtonPrefix+screen.skin).style["border-color"] = "black";
     }
     screen.skin = skinIdx;
-    document.getElementById(screen.skinButtonPrefix+screen.skin).style["border-color"] = "white";
+    var elem = document.getElementById(screen.skinButtonPrefix+screen.skin);
+    if (elem) {
+        elem.style["border-color"] = "white";
+    } else {
+        screen.skin = 0;
+        document.getElementById(screen.skinButtonPrefix+screen.skin).style["border-color"] = "white";
+    }
 }
 
 function genAddSkinButton(screen) {
     for (var i=0; i<SKINCOUNT; i++) {
-        var elem = document.createElement("div");
-        elem.setAttribute("class", "skin-select-button");
-        elem.setAttribute("id", screen.skinButtonPrefix+i);
-        elem.style["background-image"] = "url('img/game/smb_skin" + i +".png')";
-        elem.addEventListener("click", (function(a){return function() {genSelectSkin(screen, a);};})(i));
         if (DEV_SKINS.includes(i) && (!(screen instanceof ProfileScreen) || !(
            ["taliondiscord",
             "damonj17",
@@ -1249,6 +1250,11 @@ function genAddSkinButton(screen) {
             "nightyoshi370"].includes(app.net.username.toLowerCase())))) {
             continue;
         }
+        var elem = document.createElement("div");
+        elem.setAttribute("class", "skin-select-button");
+        elem.setAttribute("id", screen.skinButtonPrefix+i);
+        elem.style["background-image"] = "url('img/game/smb_skin" + i +".png')";
+        elem.addEventListener("click", (function(a){return function() {genSelectSkin(screen, a);};})(i));
         document.getElementById(screen.skinButtonPrefix).appendChild(elem);
     }
 }
@@ -1657,10 +1663,9 @@ Network.prototype.connect = function(args) {
         });
     } else if (connectType == Network.CONNECTTYPE.LOGIN) {
         var username = args[1];
-        this.username = username;
         this.send({
             'type': "llg",
-            'username': this.username,
+            'username': username,
             'password': args[2]
         });
     } else if (connectType == Network.CONNECTTYPE.REQ_CAPTCHA) {
@@ -1779,6 +1784,7 @@ InputState.prototype.handleLogoutResult = function(data) {
 };
 InputState.prototype.handleLoginResult = function(data) {
     if (data.status) {
+        app.net.username = data.username;
         app.menu.mainAsMember.show(data.msg);
     } else {
         Cookies.remove("session");
