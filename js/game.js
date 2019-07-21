@@ -1398,15 +1398,15 @@ NameScreen.prototype.show = function() {
     } else {
         this.charMusicToggle.classList.add("disabled");
     }
+    if ($("#skin-select div").length === 0) {
+        genAddSkinButton(this);
+        $("#skin-select div").pagify(33, ".skin-select-button");
+    }
     this.selectSkin(savedSkin ? parseInt(savedSkin) : 0);
     this.updPrivateBtn();
     this.startPad();
     this.linkElement.style.display = "block";
     this.element.style.display = "block";
-    if ($("#skin-select div").length === 0) {
-        genAddSkinButton(this);
-        $("#skin-select div").pagify(33, ".skin-select-button");
-    }
 };
 NameScreen.prototype.hide = function() {
     this.padLoop && clearTimeout(this.padLoop);
@@ -1435,12 +1435,12 @@ ProfileScreen.prototype.show = function(data) {
     app.menu.background('a');
     this.nicknameInput.value = data["nickname"];
     this.squadInput.value = data["squad"];
-    genSelectSkin(this, data["skin"]);
-    this.element.style.display = "block";
     if ($("#profile-skin-select div").length === 0) {
         genAddSkinButton(this);
         $("#profile-skin-select div").pagify(33, ".skin-select-button");
     }
+    genSelectSkin(this, data["skin"]);
+    this.element.style.display = "block";
 };
 ProfileScreen.prototype.hide = function() {
     this.element.style.display = "none";
