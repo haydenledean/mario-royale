@@ -6027,6 +6027,7 @@ function Display(game, container, canvas, resource) {
     resource.push({ id: "ui", src: "img/game/smb_ui.png" });
     this.resource = new Resource(resource);
     this.camera = new Camera(this);
+    this.misteryAnim = 0;
 }
 Display.TEXRES = 0x10;
 Display.prototype.clear = function() {
@@ -6059,6 +6060,7 @@ Display.prototype.draw = function() {
     ) : this.drawLoad();
 };
 Display.prototype.drawMap = function(_0x5eea15) {
+    this.misteryAnim++;
     for (var _0x498ee4 = this.context, _0x3a22b2 = this.resource.getTexture("map"), _0x5432e0 = this.game.getZone(), _0x19d8bf = _0x5432e0.dimensions(), _0x366f4a = this.canvas.width / Display.TEXRES * 0.55 / this.camera.scale, _0x27c82d = Math.max(0x0, Math.min(_0x19d8bf.x, parseInt(this.camera.pos.x - _0x366f4a))), _0x19d8bf = Math.max(0x0, Math.min(_0x19d8bf.x, parseInt(this.camera.pos.x + _0x366f4a))), _0x366f4a = 0x0; _0x366f4a < _0x5432e0.data.length; _0x366f4a++)
         for (var _0x2d4c21 = _0x5432e0.data[_0x366f4a], _0x4fb7c0 = _0x27c82d; _0x4fb7c0 < _0x19d8bf; _0x4fb7c0++) {
             var _0x2d62c4 = _0x41f345.decode16(_0x2d4c21[_0x4fb7c0]);
@@ -6066,7 +6068,7 @@ Display.prototype.drawMap = function(_0x5eea15) {
                 var _0x59ebb0 = 0;
                 // Mistery Box
                 if (_0x2d62c4.index == 24 || _0x2d62c4.index == 90 || _0x2d62c4.index == 156 || _0x2d62c4.index == 288) {
-                    var frame = parseInt((this.game.frame % 96) / 16);
+                    var frame = parseInt((this.misteryAnim % 96) / 16);
                     frame = frame == 5 ? 0 : frame > 2 ? Math.abs(frame - 4) : frame;
                     _0x59ebb0 = util.sprite.getSprite(_0x3a22b2, _0x2d62c4.index + frame);
                 } 
