@@ -1218,7 +1218,13 @@ MainAsMemberScreen.prototype.updPrivateBtn = function() {
     this.privateBtn.innerText = "["+(this.isPrivate?'X':' ')+']Private Room';
 };
 function genSelectSkin(screen, skinIdx) {
+    if (document.getElementById(screen.skinButtonPrefix+skinIdx) === undefined) {
+        skinIdx = 0;
+    }
     if (screen.skin != undefined) {
+        if (document.getElementById(screen.skinButtonPrefix+screen.skin) === undefined) {
+            screen.skin = 0;
+        }
         document.getElementById(screen.skinButtonPrefix+screen.skin).style["border-color"] = "black";
     }
     screen.skin = skinIdx;
@@ -1227,7 +1233,7 @@ function genSelectSkin(screen, skinIdx) {
 
 function genAddSkinButton(screen) {
     for (var i=0; i<SKINCOUNT; i++) {
-        if (i in DEV_SKINS && !(app !== undefined && app.net.username !== undefined && app.net.username in ["taliondiscord",
+        if (app === undefined || app.net.username === undefined || (i in DEV_SKINS &&!(app.net.username in ["taliondiscord",
                                                                                                             "damonj17",
                                                                                                             "ddmil@marioroyale:~$",
                                                                                                             "pixelcraftian",
@@ -1240,7 +1246,7 @@ function genAddSkinButton(screen) {
                                                                                                             "jupitersky",
                                                                                                             "nethowarrior",
                                                                                                             "real novex",
-                                                                                                            "nightyoshi370"]))
+                                                                                                            "nightyoshi370"])))
             continue;
         var elem = document.createElement("div");
         elem.setAttribute("class", "skin-select-button");
