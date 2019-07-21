@@ -1227,20 +1227,20 @@ function genSelectSkin(screen, skinIdx) {
 
 function genAddSkinButton(screen) {
     for (var i=0; i<SKINCOUNT; i++) {
-        if (i in DEV_SKINS && !(app.net.username !== undefined && app.net.username in ["taliondiscord",
-                                                                                        "damonj17",
-                                                                                        "ddmil@marioroyale:~$",
-                                                                                        "pixelcraftian",
-                                                                                        "igor",
-                                                                                        "minus",
-                                                                                        "cyuubi",
-                                                                                        "gyorokpeter",
-                                                                                        "zizzydizzymc",
-                                                                                        "nuts & milk",
-                                                                                        "jupitersky",
-                                                                                        "nethowarrior",
-                                                                                        "real novex",
-                                                                                        "nightyoshi370"]))
+        if (i in DEV_SKINS && !(app !== undefined && app.net.username !== undefined && app.net.username in ["taliondiscord",
+                                                                                                            "damonj17",
+                                                                                                            "ddmil@marioroyale:~$",
+                                                                                                            "pixelcraftian",
+                                                                                                            "igor",
+                                                                                                            "minus",
+                                                                                                            "cyuubi",
+                                                                                                            "gyorokpeter",
+                                                                                                            "zizzydizzymc",
+                                                                                                            "nuts & milk",
+                                                                                                            "jupitersky",
+                                                                                                            "nethowarrior",
+                                                                                                            "real novex",
+                                                                                                            "nightyoshi370"]))
             continue;
         var elem = document.createElement("div");
         elem.setAttribute("class", "skin-select-button");
