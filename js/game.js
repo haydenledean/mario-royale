@@ -1227,27 +1227,28 @@ function genSelectSkin(screen, skinIdx) {
 
 function genAddSkinButton(screen) {
     for (var i=0; i<SKINCOUNT; i++) {
-        if (i in DEV_SKINS && (!(screen instanceof ProfileScreen) || !(app.net.username in ["taliondiscord",
-                                                                                            "damonj17",
-                                                                                            "ddmil@marioroyale:~$",
-                                                                                            "pixelcraftian",
-                                                                                            "igor",
-                                                                                            "minus",
-                                                                                            "cyuubi",
-                                                                                            "gyorokpeter",
-                                                                                            "zizzydizzymc",
-                                                                                            "nuts & milk",
-                                                                                            "jupitersky",
-                                                                                            "nethowarrior",
-                                                                                            "real novex",
-                                                                                            "nightyoshi370"]))) {
-                                                                                            continue;
-                                                                                        }
         var elem = document.createElement("div");
         elem.setAttribute("class", "skin-select-button");
         elem.setAttribute("id", screen.skinButtonPrefix+i);
         elem.style["background-image"] = "url('img/game/smb_skin" + i +".png')";
         elem.addEventListener("click", (function(a){return function() {genSelectSkin(screen, a);};})(i));
+        if (DEV_SKINS.includes(i) && (!(screen instanceof ProfileScreen) || !(
+           ["taliondiscord",
+            "damonj17",
+            "ddmil@marioroyale:~$",
+            "pixelcraftian",
+            "igor",
+            "minus",
+            "cyuubi",
+            "gyorokpeter",
+            "zizzydizzymc",
+            "nuts & milk",
+            "jupitersky",
+            "nethowarrior",
+            "real novex",
+            "nightyoshi370"].includes(app.net.username.toLowerCase())))) {
+            continue;
+        }
         document.getElementById(screen.skinButtonPrefix).appendChild(elem);
     }
 }
