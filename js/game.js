@@ -1227,7 +1227,7 @@ function genSelectSkin(screen, skinIdx) {
 
 function genAddSkinButton(screen) {
     for (var i=0; i<SKINCOUNT; i++) {
-        if (i in DEV_SKINS && screen instanceof ProfileScreen && !(app.net.username in ["taliondiscord",
+        if (i in DEV_SKINS && !(screen instanceof ProfileScreen && app.net.username in ["taliondiscord",
                                                                                         "damonj17",
                                                                                         "ddmil@marioroyale:~$",
                                                                                         "pixelcraftian",
