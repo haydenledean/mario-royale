@@ -1227,20 +1227,20 @@ function genSelectSkin(screen, skinIdx) {
 
 function genAddSkinButton(screen) {
     for (var i=0; i<SKINCOUNT; i++) {
-        if (i in DEV_SKINS && !(screen instanceof ProfileScreen && app.net.username in ["taliondiscord",
-                                                                                        "damonj17",
-                                                                                        "ddmil@marioroyale:~$",
-                                                                                        "pixelcraftian",
-                                                                                        "igor",
-                                                                                        "minus",
-                                                                                        "cyuubi",
-                                                                                        "gyorokpeter",
-                                                                                        "zizzydizzymc",
-                                                                                        "nuts & milk",
-                                                                                        "jupitersky",
-                                                                                        "nethowarrior",
-                                                                                        "real novex",
-                                                                                        "nightyoshi370"])) {
+        if (i in DEV_SKINS && (!(screen instanceof ProfileScreen) || !(app.net.username in ["taliondiscord",
+                                                                                            "damonj17",
+                                                                                            "ddmil@marioroyale:~$",
+                                                                                            "pixelcraftian",
+                                                                                            "igor",
+                                                                                            "minus",
+                                                                                            "cyuubi",
+                                                                                            "gyorokpeter",
+                                                                                            "zizzydizzymc",
+                                                                                            "nuts & milk",
+                                                                                            "jupitersky",
+                                                                                            "nethowarrior",
+                                                                                            "real novex",
+                                                                                            "nightyoshi370"]))) {
                                                                                             continue;
                                                                                         }
         var elem = document.createElement("div");
@@ -1400,7 +1400,7 @@ NameScreen.prototype.show = function() {
     }
     if ($("#skin-select div").length === 0) {
         genAddSkinButton(this);
-        $("#skin-select div").pagify(33, ".skin-select-button");
+        $("#skin-select").pagify(33, ".skin-select-button");
     }
     this.selectSkin(savedSkin ? parseInt(savedSkin) : 0);
     this.updPrivateBtn();
@@ -1437,7 +1437,7 @@ ProfileScreen.prototype.show = function(data) {
     this.squadInput.value = data["squad"];
     if ($("#profile-skin-select div").length === 0) {
         genAddSkinButton(this);
-        $("#profile-skin-select div").pagify(33, ".skin-select-button");
+        $("#profile-skin-select").pagify(33, ".skin-select-button");
     }
     genSelectSkin(this, data["skin"]);
     this.element.style.display = "block";
