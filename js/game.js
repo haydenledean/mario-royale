@@ -1264,7 +1264,6 @@ function NameScreen() {
     this.launchBtn = document.getElementById("name-launch");
     this.padLoop = undefined;
     this.skinButtonPrefix = "skin-select";
-    genAddSkinButton(this);
     var that = this;
     for (var i=0; i<levelSelectors.length; i++) {
         var k = levelSelectors[i];
@@ -1404,7 +1403,10 @@ NameScreen.prototype.show = function() {
     this.startPad();
     this.linkElement.style.display = "block";
     this.element.style.display = "block";
-    $("#skin-select").pagify(33, ".skin-select-button");
+    if ($("#skin-select div").length === 0) {
+        genAddSkinButton(this);
+        $("#skin-select div").pagify(33, ".skin-select-button");
+    }
 };
 NameScreen.prototype.hide = function() {
     this.padLoop && clearTimeout(this.padLoop);
@@ -1422,7 +1424,6 @@ function ProfileScreen() {
     this.nicknameInput = document.getElementById("profile-nickname");
     this.squadInput = document.getElementById("profile-team");
     this.skinButtonPrefix = "profile-skin-select";
-    genAddSkinButton(this);
     var profileScreen = this;
     this.saveBtn.onclick = function() {
         profileScreen.save();
@@ -1436,7 +1437,10 @@ ProfileScreen.prototype.show = function(data) {
     this.squadInput.value = data["squad"];
     genSelectSkin(this, data["skin"]);
     this.element.style.display = "block";
-    $("#profile-skin-select").pagify(33, ".skin-select-button");
+    if ($("#profile-skin-select div").length === 0) {
+        genAddSkinButton(this);
+        $("#profile-skin-select div").pagify(33, ".skin-select-button");
+    }
 };
 ProfileScreen.prototype.hide = function() {
     this.element.style.display = "none";
