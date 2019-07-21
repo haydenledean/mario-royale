@@ -475,3 +475,33 @@ img {
 .pagination a.current {
   color: black;
 }
+
+.char-music-toggle.enabled {
+  float: right;
+  width: 32px;
+  height: 32px;
+  background-size: 100%;
+  background-image: url('../img/home/char-music-enabled.png');
+}
+
+@media only screen and (max-width: 769px) {
+  .char-music-toggle.enabled {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.char-music-toggle.disabled {
+  float: right;
+  width: 32px;
+  height: 32px;
+  background-size: 100%;
+  background-image: url('../img/home/char-music-disabled.png');
+}
+
+@media only screen and (max-width: 769px) {
+  .char-music-toggle.disabled {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}

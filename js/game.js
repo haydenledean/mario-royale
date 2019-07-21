@@ -1,4 +1,4 @@
-var SKINCOUNT=42;
+var SKINCOUNT=50;
 var DEFAULT_PLAYER_NAME="INFRINGIO";
 var levelSelectors = [
                    {shortId: '?', longId:''}, 
@@ -1134,25 +1134,40 @@ MainScreen.prototype.hide = function() {
 
 function MainAsMemberScreen() {
     this.element = document.getElementById("mainAsMember");
+    this.linkElement = document.getElementById("link");
+    this.charMusicToggle = document.getElementById("member-char-music-toggle");
     this.launchBtn = document.getElementById("mainAsMember-launch");
     this.profileBtn = document.getElementById("mainAsMember-profile");
     this.logoutBtn = document.getElementById("mainAsMember-logout");
     this.privateBtn = document.getElementById("mainAsMember-private");
     this.isPrivate = false;
-    var mainasmemberscreen = this;
+    var that = this;
     this.launchBtn.onclick = function() {
-        mainasmemberscreen.launch();
+        that.launch();
     };
     this.profileBtn.onclick = function() {
-        mainasmemberscreen.showProfile();
+        that.showProfile();
     };
     this.logoutBtn.onclick = function() {
-        mainasmemberscreen.logout();
+        that.logout();
     };
     this.privateBtn.onclick = function() {
-        mainasmemberscreen.isPrivate = !mainasmemberscreen.isPrivate;
-        mainasmemberscreen.updPrivateBtn();
+        that.isPrivate = !that.isPrivate;
+        that.updPrivateBtn();
     };
+    this.charMusicToggle.onclick = function() {
+        if (app.charMusic) {
+            that.charMusicToggle.classList.add("disabled");
+            that.charMusicToggle.classList.remove("enabled");
+        } else {
+            that.charMusicToggle.classList.add("enabled");
+            that.charMusicToggle.classList.remove("disabled");
+        }
+        app.charMusic = !app.charMusic;
+        Cookies.set("char_music", app.charMusic ? "1" : "0", {
+            'expires': 0x1e
+        });
+    }
 }
 
 MainAsMemberScreen.prototype.show = function(data) {
@@ -1169,12 +1184,19 @@ MainAsMemberScreen.prototype.show = function(data) {
     this.skin = data.skin;
     this.isPrivate = savedPriv ? (savedPriv == "true") : false;
     this.updPrivateBtn();
+    this.linkElement.style.display = "block";
     this.element.style.display = "block";
+    if (app.charMusic) {
+        this.charMusicToggle.classList.add("enabled");
+    } else {
+        this.charMusicToggle.classList.add("disabled");
+    }
     if (app.goToLobby) {
         this.launch();
     }
 };
 MainAsMemberScreen.prototype.hide = function() {
+    this.linkElement.style.display = "none";
     this.element.style.display = "none";
 };
 
@@ -1218,6 +1240,7 @@ function NameScreen() {
     this.linkElement = document.getElementById("link");
     this.nameInput = document.getElementById("name-input");
     this.teamInput = document.getElementById("team-input");
+    this.charMusicToggle = document.getElementById("char-music-toggle");
     this.backBtn = document.getElementById("name-back");
     this.isPrivate = false;
     this.privateBtn = document.getElementById("name-private");
@@ -1254,6 +1277,19 @@ function NameScreen() {
         } else 
             that.teamInput.placeholder = "Squad Code";
     };
+    this.charMusicToggle.onclick = function() {
+        if (app.charMusic) {
+            that.charMusicToggle.classList.add("disabled");
+            that.charMusicToggle.classList.remove("enabled");
+        } else {
+            that.charMusicToggle.classList.add("enabled");
+            that.charMusicToggle.classList.remove("disabled");
+        }
+        app.charMusic = !app.charMusic;
+        Cookies.set("char_music", app.charMusic ? "1" : "0", {
+            'expires': 0x1e
+        });
+    }
     this.backBtn.onclick = function() {
         that.onBack();
     };
@@ -1340,6 +1376,11 @@ NameScreen.prototype.show = function() {
     this.isPrivate = savedPriv ? (savedPriv == "true") : false;
     if (this.teamInput.value.trim() === "" && this.isPrivate) {
         this.teamInput.placeholder = "[ PRIVATE ]";
+    }
+    if (app.charMusic) {
+        this.charMusicToggle.classList.add("enabled");
+    } else {
+        this.charMusicToggle.classList.add("disabled");
     }
     this.selectSkin(savedSkin ? parseInt(savedSkin) : 0);
     this.updPrivateBtn();
@@ -6452,7 +6493,7 @@ function Game(data) {
     this.input = new _0x2406bb(this, this.canvas);
     this.display = new Display(this, this.container, this.canvas, data.resource);
     this.audio = new Audio(this);
-    if (!(this instanceof LobbyGame) && !(this instanceof JailGame) && app.net.skin in SKIN_MUSIC_URL) {
+    if (!(this instanceof LobbyGame) && !(this instanceof JailGame) && app.charMusic && app.net.skin in SKIN_MUSIC_URL) {
         this.audio.muteMusic = true;
     }
     this.objects = [];
@@ -7093,7 +7134,7 @@ function LobbyGame(_0x5a8616) {
     Game.call(this, _0x5a8616);
     this.lobbyTimer = 0x5a;
     if (app.audioElement !== undefined) {
-        app.audioElement.setAttribute('src', app.net.skin in SKIN_MUSIC_URL ? SKIN_MUSIC_URL[app.net.skin] : LOBBY_MUSIC_URL);
+        app.audioElement.setAttribute('src', app.charMusic && app.net.skin in SKIN_MUSIC_URL ? SKIN_MUSIC_URL[app.net.skin] : LOBBY_MUSIC_URL);
         app.audioElement.load;
         app.audioElement.volume = 0.18;
         app.audioElement.loop = true;
@@ -7153,7 +7194,7 @@ LobbyGame.prototype.loop = function() {
 LobbyGame.prototype.draw = Game.prototype.draw;
 LobbyGame.prototype.destroy = function() {
     Game.prototype.destroy.call(this);
-    if (app.audioElement !== undefined && !(app.net.skin in SKIN_MUSIC_URL)) {
+    if (app.audioElement !== undefined && !(app.charMusic && app.net.skin in SKIN_MUSIC_URL)) {
         app.audioElement.pause();
         app.audioElement.remove();
         app.audioElement = undefined;
@@ -7224,8 +7265,10 @@ function App() {
     this.audioElement.load;
     this.audioElement.volume = 0.2;
     this.audioElement.loop = true;
-    this.audioElement.play();
+    if (0x1 !== parseInt(Cookies.get("music")))
+        this.audioElement.play();
     this.statusUpdater = null;
+    this.charMusic = Cookies.get("char_music") === "1";
 }
 App.prototype.init = function() {
     document.getElementById("log").style.display = "none";
