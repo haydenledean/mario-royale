@@ -297,603 +297,815 @@ var requestAnimFrameFunc = function() {
         return window.cancelAnimationFrame || window.webkitCancelRequestAnimationFrame || window.mozCancelRequestAnimationFrame || window.oCancelRequestAnimationFrame || window.msCancelRequestAnimationFrame || clearTimeout;
     }();
 "use strict";
-var shor2 = {},
-    _0x41f345 = {};
-_0x41f345.encode = function(_0x3c8a7b, _0x4f1630, _0x3efad8, _0x4e695c, _0x3ebb62) {
-    return 0x0 | parseInt(_0x3c8a7b) & 0x7ff | parseInt(_0x4f1630) << 0xb & 0x7800 | (_0x3efad8 ? 0x1 : 0x0) << 0xf & 0x8000 | parseInt(_0x4e695c) << 0x10 & 0xff0000 | parseInt(_0x3ebb62) << 0x18 & 0xff000000;
+/* global app, util, vec2, squar */
+/* global PlayerObject, CoinObject, CheckObject */
+
+var shor2 = {}; // Two Shorts 32bits // Stored as an int32
+/* ======================================================================================== */
+
+shor2.encode = function(/* short */ a, /* short */ b) {
+    return 0 | (parseInt(a) & 0x0000FFFF) | ((parseInt(b) << 16) & 0xFFFF0000);
 };
-_0x41f345.decode16 = function(_0x286184) {
-    return {
-        index: _0x286184 & 0x7ff,
-        bump: _0x286184 >> 0xb & 0xf,
-        depth: 0x1 === (_0x286184 >> 0xf & 0x1)
-    };
+
+/* returns <vec2> */
+shor2.decode = function(/* shor2 */ a) {
+    return vec2.make(a & 0xFFFF, (a >> 16) & 0xFFFF);
 };
-_0x41f345.decode = function(_0x176cca) {
-    var _0x59bbe0 = _0x176cca >> 0x10 & 0xff;
-    return {
-        index: _0x176cca & 0x7ff,
-        bump: _0x176cca >> 0xb & 0xf,
-        depth: 0x1 === (_0x176cca >> 0xf & 0x1),
-        definition: _0x41f345.TILE_PROPERTIES[_0x59bbe0] ? _0x41f345.TILE_PROPERTIES[_0x59bbe0] : _0x41f345.TILE_PROPERTIES[0x0],
-        data: _0x176cca >> 0x18 & 0xff
-    };
+
+/* returns [x,y] */
+shor2.asArray = function(/* shor2 */ a) {
+    return [a & 0xFFFF, (a >> 16) & 0xFFFF];
 };
-_0x41f345.bump = function(_0x3801c3, _0xbe4b19) {
-    return _0x3801c3 & 0xffff87ff | _0xbe4b19 << 0xb & 0x7800;
+
+var td32 = {}; // Tile Data 32bit // Stored as an int32
+/* ======================================================================================== */
+
+td32.encode = function(/* 11bit int */ index, /* 4bit int */ bump, /* boolean */ depth, /* byte */ definition, /* byte */ data) {
+    return 0 | (parseInt(index) & 0x000007FF) | ((parseInt(bump) << 11) & 0x00007800) | (((depth?1:0) << 15) & 0x00008000) | ((parseInt(definition) << 16) & 0x00FF0000) | ((parseInt(data) << 24) & 0xFF000000);
 };
-_0x41f345.data = function(_0x33a078, _0x691c5e) {
-    return _0x33a078 & 0xffffff | _0x691c5e << 0x18 & 0xff000000;
+
+td32.decode16 = function(/* td32 */ a) {
+    return {index: a & 0x7FF, bump: (a >> 11) & 0xF, depth: ((a >> 15) & 0x1) === 1};
 };
-_0x41f345.asArray = function(_0x7370d3) {
-    return [_0x7370d3 & 0x7ff, _0x7370d3 >> 0xb & 0xf, 0x1 === (_0x7370d3 >> 0xf & 0x1), _0x7370d3 >> 0x10 & 0xff, _0x7370d3 >> 0x18 & 0xff];
+
+td32.decode = function(/* td32 */ a) {
+    var i = (a >> 16) & 0xFF;
+    var def = !td32.TILE_PROPERTIES[i]?td32.TILE_PROPERTIES[0]:td32.TILE_PROPERTIES[i];
+    return {index: a & 0x7FF, bump: (a >> 11) & 0xF, depth: ((a >> 15) & 0x1) === 1, definition: def, data: (a >> 24) & 0xFF};
 };
-_0x41f345.TRIGGER = {};
-_0x41f345.GEN_FUNC = {};
-_0x41f345.TRIGGER.TYPE = {};
-_0x41f345.TRIGGER.TYPE.TOUCH = 0x0;
-_0x41f345.TRIGGER.TYPE.DOWN = 0x1;
-_0x41f345.TRIGGER.TYPE.PUSH = 0x2;
-_0x41f345.TRIGGER.TYPE.SMALL_BUMP = 0x10;
-_0x41f345.TRIGGER.TYPE.BIG_BUMP = 0x11;
-shor2.encode = function(_0x16c11e, _0x249cd7) {
-    return 0x0 | parseInt(_0x16c11e) & 0xffff | parseInt(_0x249cd7) << 0x10 & 0xffff0000;
+
+td32.bump = function(/* td32 */ a, /*4bit unsigned integer*/ b ) {
+    return (a & 0b11111111111111111000011111111111) | ((b << 11) & 0b00000000000000000111100000000000);
 };
-shor2.decode = function(_0x397dd5) {
-    return vec2.make(_0x397dd5 & 0xffff, _0x397dd5 >> 0x10 & 0xffff);
+
+td32.data = function(/* td32 */ a, /*1 byte uint*/ b) {
+    return (a & 0x00FFFFFF) | ((b << 24) & 0xFF000000);
 };
-shor2.asArray = function(_0x5c2f23) {
-    return [_0x5c2f23 & 0xffff, _0x5c2f23 >> 0x10 & 0xffff];
+
+td32.asArray = function(/* td32 */ a) {
+    return [a & 0x7FF, (a >> 11) & 0xF, ((a >> 15) & 0x1) === 1, (a >> 16) & 0xFF, (a >> 24) & 0xFF];
 };
-_0x41f345.GEN_FUNC.BUMP = function(_0x3c91bc, _0x897be, _0x5d48f2, _0x43ba2c, _0x4d3e0f, _0x3ff6e1, _0x444def, _0x6654d3) {
-    _0x3c91bc.world.getZone(_0x43ba2c, _0x4d3e0f).bump(_0x3ff6e1, _0x444def);
-    _0x5d48f2 = vec2.make(0x1, 0.15);
-    _0x3ff6e1 = vec2.make(_0x3ff6e1, _0x444def + 0x1);
-    for (_0x444def = 0x0; _0x444def < _0x3c91bc.objects.length; _0x444def++) 
-        _0x6654d3 = _0x3c91bc.objects[_0x444def],
-        !_0x6654d3.dead && 
-            _0x6654d3.level === _0x43ba2c &&
-            _0x6654d3.zone === _0x4d3e0f && 
-            _0x6654d3.dim && 
-            _0x1badb6.intersection(_0x3ff6e1, _0x5d48f2, _0x6654d3.pos, _0x6654d3.dim) && 
-            (_0x6654d3 instanceof PlayerObject ? 
-                _0x6654d3.bounce() 
-                :_0x6654d3.bounce ? _0x6654d3.bounce()
-                : _0x6654d3.bonk ? _0x6654d3.bonk() 
-                : _0x6654d3 instanceof CoinObject && (
-                    _0x3c91bc.pid === _0x897be &&
-                    _0x6654d3.playerCollide(_0x3c91bc.getPlayer()),
-                    _0x3c91bc.world.getZone(_0x43ba2c, _0x4d3e0f).coin(_0x6654d3.pos.x, _0x6654d3.pos.y)
-                )
-            );
+
+td32.TRIGGER = {
+    TYPE: {
+        TOUCH: 0x00,
+        DOWN: 0x01,
+        PUSH: 0x02,
+        SMALL_BUMP: 0x10,
+        BIG_BUMP: 0x11
+    }
 };
-_0x41f345.GEN_FUNC.BREAK = function(_0x166b7e, _0x53ef4a, _0x4e42f0, _0x7eb58b, _0x3ebd05, _0x3d616e, _0x3a0031, _0x197b34) {
-    _0x166b7e.world.getZone(_0x7eb58b, _0x3ebd05).break(_0x3d616e, _0x3a0031, 0x1e);
-    _0x4e42f0 = vec2.make(0x1, 0.15);
-    _0x3d616e = vec2.make(_0x3d616e, _0x3a0031 + 0x1);
-    for (_0x3a0031 = 0x0; _0x3a0031 < _0x166b7e.objects.length; _0x3a0031++)
-        _0x197b34 = _0x166b7e.objects[_0x3a0031], 
-        !_0x197b34.dead && 
-            _0x197b34.level === _0x7eb58b &&
-            _0x197b34.zone === _0x3ebd05 &&
-            _0x197b34.dim &&
-            _0x1badb6.intersection(_0x3d616e, _0x4e42f0, _0x197b34.pos, _0x197b34.dim) &&
-            (_0x197b34 instanceof PlayerObject ? 
-                _0x197b34.bounce() 
-                : _0x197b34.bounce ? _0x197b34.bounce()
-                : _0x197b34.bonk ? _0x197b34.bonk()
-                : _0x197b34 instanceof CoinObject && (
-                    _0x166b7e.pid === _0x53ef4a &&
-                    _0x197b34.playerCollide(_0x166b7e.getPlayer()),
-                    _0x166b7e.world.getZone(_0x7eb58b, _0x3ebd05).coin(_0x197b34.pos.x, _0x197b34.pos.y)
-                )
-            );
-};
-_0x41f345.TILE_PROPERTIES = {
-    0: {
-        'NAME': "AIR",
-        'COLLIDE': !0x1,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x271f0d, _0x530d63, _0x22261a, _0x33928d, _0x271f34, _0x43e15a, _0xab0c3f, _0x430589) {}
-    },
-    1: {
-        'NAME': "SOLID STANDARD",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x13a296, _0x42a28b, _0x5efabb, _0x2c1ca5, _0x490fb0, _0x103332, _0x2fa206, _0x47c0a8) {}
-    },
-    2: {
-        'NAME': "SOLID BUMPABLE",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x52e87f, _0x3e0969, _0x4e1033, _0xa20a5e, _0x32dd03, _0x4532db, _0x4008fc, _0x39cd6f) {
-            switch (_0x39cd6f) {
-                case 0x10:
-                    _0x52e87f.pid === _0x3e0969 && _0x52e87f.out.push(_0x231422.encode(_0xa20a5e, _0x32dd03, shor2.encode(_0x4532db, _0x4008fc), _0x39cd6f));
-                    _0x41f345.GEN_FUNC.BUMP(_0x52e87f, _0x3e0969, _0x4e1033, _0xa20a5e, _0x32dd03, _0x4532db, _0x4008fc, _0x39cd6f);
-                    break;
-                case 0x11:
-                    _0x52e87f.pid === _0x3e0969 && _0x52e87f.out.push(_0x231422.encode(_0xa20a5e, _0x32dd03, shor2.encode(_0x4532db, _0x4008fc), _0x39cd6f)), _0x41f345.GEN_FUNC.BUMP(_0x52e87f, _0x3e0969, _0x4e1033, _0xa20a5e, _0x32dd03, _0x4532db, _0x4008fc, _0x39cd6f);
-            }
-        }
-    },
-    3: {
-        'NAME': "SOLID BREAKABLE NORMAL",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x31fd56, _0x121d88, _0x29a2ce, _0xeb7538, _0x409b57, _0xdc7bcb, _0x4aaacd, _0x3a7b7a) {
-            switch (_0x3a7b7a) {
-                case 0x10:
-                    _0x31fd56.pid === _0x121d88 && _0x31fd56.out.push(_0x231422.encode(_0xeb7538, _0x409b57, shor2.encode(_0xdc7bcb, _0x4aaacd), _0x3a7b7a));
-                    _0x41f345.GEN_FUNC.BUMP(_0x31fd56, _0x121d88, _0x29a2ce, _0xeb7538, _0x409b57, _0xdc7bcb, _0x4aaacd, _0x3a7b7a);
-                    break;
-                case 0x11:
-                    _0x31fd56.pid === _0x121d88 && _0x31fd56.out.push(_0x231422.encode(_0xeb7538, _0x409b57, shor2.encode(_0xdc7bcb, _0x4aaacd), _0x3a7b7a)), _0x41f345.GEN_FUNC.BREAK(_0x31fd56, _0x121d88, _0x29a2ce, _0xeb7538, _0x409b57, _0xdc7bcb, _0x4aaacd, _0x3a7b7a);
-            }
-        }
-    },
-    17: {
-        'NAME': "ITEM BLOCK STANDARD",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d) {
-            switch (_0x96116d) {
-                case 0x10:
-                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, shor2.encode(_0x1bedc7, _0x216f2e), _0x96116d));
-                    var _0x4d5415 = 0x1801b;
-                    _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415);
-                    _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, vec2.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]);
-                    _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d);
-                    _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
-                    break;
-                case 0x11:
-                    _0x1837f3.pid === _0x4ab377 && _0x1837f3.out.push(_0x231422.encode(_0xa1cf5d, _0x42c8b9, shor2.encode(_0x1bedc7, _0x216f2e), _0x96116d)), _0x4d5415 = 0x1801b, _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).replace(_0x1bedc7, _0x216f2e, _0x4d5415), _0x1837f3.createObject(_0x349774.data, _0xa1cf5d, _0x42c8b9, vec2.make(_0x1bedc7, _0x216f2e), [shor2.encode(_0x1bedc7, _0x216f2e)]), _0x41f345.GEN_FUNC.BUMP(_0x1837f3, _0x4ab377, _0x349774, _0xa1cf5d, _0x42c8b9, _0x1bedc7, _0x216f2e, _0x96116d), _0x1837f3.world.getZone(_0xa1cf5d, _0x42c8b9).play(_0x1bedc7, _0x216f2e, "sfx/item.wav", 0x1, 0.04);
-            }
-        }
-    },
-    18: {
-        'NAME': "COIN BLOCK STANDARD",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0xf3b2fd, _0x2b0cf8, _0x4f89b5, _0x296739, _0x47d7ab, _0x20b93e, _0x17d34e, _0x232f65) {
-            switch (_0x232f65) {
-                case 0x10:
-                    _0xf3b2fd.pid === _0x2b0cf8 && (_0xf3b2fd.coinage(), _0xf3b2fd.out.push(_0x231422.encode(_0x296739, _0x47d7ab, shor2.encode(_0x20b93e, _0x17d34e), _0x232f65)));
-                    var _0x4cf12a = 0x1801b;
-                    _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).replace(_0x20b93e, _0x17d34e, _0x4cf12a);
-                    _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).coin(_0x20b93e, _0x17d34e + 0x1);
-                    _0x41f345.GEN_FUNC.BUMP(_0xf3b2fd, _0x2b0cf8, _0x4f89b5, _0x296739, _0x47d7ab, _0x20b93e, _0x17d34e, _0x232f65);
-                    break;
-                case 0x11:
-                    _0xf3b2fd.pid === _0x2b0cf8 && (_0xf3b2fd.coinage(), _0xf3b2fd.out.push(_0x231422.encode(_0x296739, _0x47d7ab, shor2.encode(_0x20b93e, _0x17d34e), _0x232f65))), _0x4cf12a = 0x1801b, _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).replace(_0x20b93e, _0x17d34e, _0x4cf12a), _0xf3b2fd.world.getZone(_0x296739, _0x47d7ab).coin(_0x20b93e, _0x17d34e + 0x1), _0x41f345.GEN_FUNC.BUMP(_0xf3b2fd, _0x2b0cf8, _0x4f89b5, _0x296739, _0x47d7ab, _0x20b93e, _0x17d34e, _0x232f65);
-            }
-        }
-    },
-    19: {
-        'NAME': "COIN BLOCK MULTI",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x51d0d4, _0xca5919, _0x2cbb60, _0x1c2b78, _0x46b0fe, _0x4e8ae2, _0x1eee7d, _0x1ae7d4) {
-            switch (_0x1ae7d4) {
-                case 0x10:
-                    _0x51d0d4.pid === _0xca5919 && (_0x51d0d4.coinage(), _0x51d0d4.out.push(_0x231422.encode(_0x1c2b78, _0x46b0fe, shor2.encode(_0x4e8ae2, _0x1eee7d), _0x1ae7d4)));
-                    if (0x0 < _0x2cbb60.data) var _0x109bbf = _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).tile(_0x4e8ae2, _0x1eee7d),
-                        _0x109bbf = _0x41f345.data(_0x109bbf, _0x2cbb60.data - 0x1);
-                    else _0x109bbf = 0x1801b;
-                    _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).replace(_0x4e8ae2, _0x1eee7d, _0x109bbf);
-                    _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).coin(_0x4e8ae2, _0x1eee7d + 0x1);
-                    _0x41f345.GEN_FUNC.BUMP(_0x51d0d4, _0xca5919, _0x2cbb60, _0x1c2b78, _0x46b0fe, _0x4e8ae2, _0x1eee7d, _0x1ae7d4);
-                    break;
-                case 0x11:
-                    _0x51d0d4.pid === _0xca5919 && (_0x51d0d4.coinage(), _0x51d0d4.out.push(_0x231422.encode(_0x1c2b78, _0x46b0fe, shor2.encode(_0x4e8ae2, _0x1eee7d), _0x1ae7d4))), 0x0 < _0x2cbb60.data ? (_0x109bbf = _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).tile(_0x4e8ae2, _0x1eee7d), _0x109bbf = _0x41f345.data(_0x109bbf, _0x2cbb60.data - 0x1)) : _0x109bbf = 0x1801b, _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).replace(_0x4e8ae2, _0x1eee7d, _0x109bbf), _0x51d0d4.world.getZone(_0x1c2b78, _0x46b0fe).coin(_0x4e8ae2, _0x1eee7d + 0x1), _0x41f345.GEN_FUNC.BUMP(_0x51d0d4, _0xca5919, _0x2cbb60, _0x1c2b78, _0x46b0fe, _0x4e8ae2, _0x1eee7d, _0x1ae7d4);
-            }
-        }
-    },
-    24: {
-        'NAME': "VINE BLOCK",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x4d7cab, _0xf383, _0x2d3073, _0x421d40, _0x15761f, _0x1979b2, _0x45d74c, _0x150638) {
-            switch (_0x150638) {
-                case 0x10:
-                    _0x4d7cab.pid === _0xf383 && _0x4d7cab.out.push(_0x231422.encode(_0x421d40, _0x15761f, shor2.encode(_0x1979b2, _0x45d74c), _0x150638));
-                    var _0x151148 = 0x1801b,
-                        _0x5425be = _0x41f345.data(0xa50164, _0x2d3073.data);
-                    _0x4d7cab.world.getZone(_0x421d40, _0x15761f).replace(_0x1979b2, _0x45d74c, _0x151148);
-                    _0x4d7cab.world.getZone(_0x421d40, _0x15761f).grow(_0x1979b2, _0x45d74c + 0x1, _0x5425be);
-                    _0x41f345.GEN_FUNC.BUMP(_0x4d7cab, _0xf383, _0x2d3073, _0x421d40, _0x15761f, _0x1979b2, _0x45d74c, _0x150638);
-                    _0x4d7cab.world.getZone(_0x421d40, _0x15761f).play(_0x1979b2, _0x45d74c, "sfx/vine.wav", 0x1, 0.04);
-                    break;
-                case 0x11:
-                    _0x4d7cab.pid === _0xf383 && (_0x4d7cab.coinage(), _0x4d7cab.out.push(_0x231422.encode(_0x421d40, _0x15761f, shor2.encode(_0x1979b2, _0x45d74c), _0x150638))), _0x151148 = 0x1801b, _0x5425be = _0x41f345.data(0xa50164, _0x2d3073.data), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).replace(_0x1979b2, _0x45d74c, _0x151148), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).grow(_0x1979b2, _0x45d74c + 0x1, _0x5425be), _0x41f345.GEN_FUNC.BUMP(_0x4d7cab, _0xf383, _0x2d3073, _0x421d40, _0x15761f, _0x1979b2, _0x45d74c, _0x150638), _0x4d7cab.world.getZone(_0x421d40, _0x15761f).play(_0x1979b2, _0x45d74c, "sfx/vine.wav", 0x1, 0.04);
-            }
-        }
-    },
-    21: {
-        'NAME': "ITEM BLOCK INVISIBLE",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x0,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff) {
-            switch (_0x45ddff) {
-                case 0x10:
-                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, shor2.encode(_0x44da88, _0x24e427), _0x45ddff));
-                    var _0x3ae8a1 = 0x1801b;
-                    _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1);
-                    _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, vec2.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]);
-                    _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff);
-                    _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
-                    break;
-                case 0x11:
-                    _0x25478a.pid === _0x3c594f && _0x25478a.out.push(_0x231422.encode(_0x3652bf, _0xfe88a7, shor2.encode(_0x44da88, _0x24e427), _0x45ddff)), _0x3ae8a1 = 0x1801b, _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).replace(_0x44da88, _0x24e427, _0x3ae8a1), _0x25478a.createObject(_0x3bf8ce.data, _0x3652bf, _0xfe88a7, vec2.make(_0x44da88, _0x24e427), [shor2.encode(_0x44da88, _0x24e427)]), _0x41f345.GEN_FUNC.BUMP(_0x25478a, _0x3c594f, _0x3bf8ce, _0x3652bf, _0xfe88a7, _0x44da88, _0x24e427, _0x45ddff), _0x25478a.world.getZone(_0x3652bf, _0xfe88a7).play(_0x44da88, _0x24e427, "sfx/item.wav", 0x1, 0.04);
-            }
-        }
-    },
-    22: {
-        'NAME': "COIN BLOCK INVISIBLE",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x0,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x1c89c6, _0x2a975e, _0x5b273d, _0xd12560, _0x43d418, _0x2a406d, _0x1235b3, _0x31ef48) {
-            switch (_0x31ef48) {
-                case 0x10:
-                    _0x1c89c6.pid === _0x2a975e && (_0x1c89c6.coinage(), _0x1c89c6.out.push(_0x231422.encode(_0xd12560, _0x43d418, shor2.encode(_0x2a406d, _0x1235b3), _0x31ef48)));
-                    var _0x5b57ac = 0x1801b;
-                    _0x1c89c6.world.getZone(_0xd12560, _0x43d418).replace(_0x2a406d, _0x1235b3, _0x5b57ac);
-                    _0x1c89c6.world.getZone(_0xd12560, _0x43d418).coin(_0x2a406d, _0x1235b3 + 0x1);
-                    _0x41f345.GEN_FUNC.BUMP(_0x1c89c6, _0x2a975e, _0x5b273d, _0xd12560, _0x43d418, _0x2a406d, _0x1235b3, _0x31ef48);
-                    break;
-                case 0x11:
-                    _0x1c89c6.pid === _0x2a975e && (_0x1c89c6.coinage(), _0x1c89c6.out.push(_0x231422.encode(_0xd12560, _0x43d418, shor2.encode(_0x2a406d, _0x1235b3), _0x31ef48))), _0x5b57ac = 0x1801b, _0x1c89c6.world.getZone(_0xd12560, _0x43d418).replace(_0x2a406d, _0x1235b3, _0x5b57ac), _0x1c89c6.world.getZone(_0xd12560, _0x43d418).coin(_0x2a406d, _0x1235b3 + 0x1), _0x41f345.GEN_FUNC.BUMP(_0x1c89c6, _0x2a975e, _0x5b273d, _0xd12560, _0x43d418, _0x2a406d, _0x1235b3, _0x31ef48);
-            }
-        }
-    },
-    81: {
-        'NAME': "WARP TILE",
-        'COLLIDE': !0x1,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x166940, _0x21651a, _0x398810, _0x1a4cf6, _0x13c13b, _0x5c7568, _0x2e93e7, _0x4ed92f) {
-            switch (_0x4ed92f) {
-                case 0x0:
-                    _0x166940.pid === _0x21651a && _0x166940.getPlayer().warp(_0x398810.data);
-            }
-        }
-    },
-    82: {
-        'NAME': "WARP PIPE SLOW",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x33b9c9, _0x1aa909, _0xf403f9, _0x2ec993, _0x4346f5, _0x531e8f, _0x459a7d, _0x42a534) {
-            switch (_0x42a534) {
-                case 0x1:
-                    if (_0x33b9c9.pid === _0x1aa909) {
-                        _0x1aa909 = _0x33b9c9.getPlayer();
-                        _0x42a534 = _0x33b9c9.world.getZone(_0x2ec993, _0x4346f5).getTile(vec2.make(_0x531e8f - 0x1, _0x459a7d));
-                        _0x33b9c9 = _0x33b9c9.world.getZone(_0x2ec993, _0x4346f5).getTile(vec2.make(_0x531e8f + 0x1, _0x459a7d));
-                        if (_0x42a534.definition !== this)
-                            if (_0x33b9c9.definition === this) _0x531e8f += 0x1;
-                            else break;
-                        0.45 >= Math.abs(_0x1aa909.pos.x + 0.5 * _0x1aa909.dim.x - _0x531e8f) && _0x1aa909.pipe(0x2, _0xf403f9.data, 0x32);
-                    }
-            }
-        }
-    },
-    83: {
-        'NAME': "WARP PIPE RIGHT SLOW",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x1e46b3, _0x4d1a45, _0x1c0a89, _0x429c2c, _0x6ca5e6, _0x2de017, _0x196410, _0x179b57) {
-            switch (_0x179b57) {
-                case 0x2:
-                    _0x1e46b3.pid === _0x4d1a45 && _0x1e46b3.getPlayer().pipe(0x4, _0x1c0a89.data, 0x32);
-            }
-        }
-    },
-    84: {
-        'NAME': "WARP PIPE FAST",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x47a8a6, _0x35bf48, _0x47aee6, _0x2d00a0, _0x504ce8, _0x125071, _0x4c94f9, _0x4f3822) {
-            switch (_0x4f3822) {
-                case 0x1:
-                    if (_0x47a8a6.pid === _0x35bf48) {
-                        _0x35bf48 = _0x47a8a6.getPlayer();
-                        _0x4f3822 = _0x47a8a6.world.getZone(_0x2d00a0, _0x504ce8).getTile(vec2.make(_0x125071 - 0x1, _0x4c94f9));
-                        _0x47a8a6 = _0x47a8a6.world.getZone(_0x2d00a0, _0x504ce8).getTile(vec2.make(_0x125071 + 0x1, _0x4c94f9));
-                        if (_0x4f3822.definition !== this)
-                            if (_0x47a8a6.definition === this) _0x125071 += 0x1;
-                            else break;
-                        0.45 >= Math.abs(_0x35bf48.pos.x + 0.5 * _0x35bf48.dim.x - _0x125071) && _0x35bf48.pipe(0x2, _0x47aee6.data, 0x0);
-                    }
-            }
-        }
-    },
-    85: {
-        'NAME': "WARP PIPE RIGHT FAST",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x47a9b7, _0x4b6d5e, _0x26135d, _0x4f0dbe, _0x3ec790, _0x5a2b87, _0x2d52f1, _0x41887b) {
-            switch (_0x41887b) {
-                case 0x2:
-                    _0x47a9b7.pid === _0x4b6d5e && _0x47a9b7.getPlayer().pipe(0x4, _0x26135d.data, 0x0);
-            }
-        }
-    },
-    86: {
-        'NAME': "LEVEL END WARP",
-        'COLLIDE': !0x1,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x43bf1b, _0x5cb9f8, _0x3de0f5, _0x44674c, _0x2888e5, _0x355fcd, _0x53b8e9, _0xc4dea7) {
-            switch (_0xc4dea7) {
-                case 0x0:
-                    _0x43bf1b.pid === _0x5cb9f8 && _0x43bf1b.levelWarp(_0x3de0f5.data);
-            }
-        }
-    },
-    160: {
-        'NAME': "FLAGPOLE",
-        'COLLIDE': !0x1,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0x59976b, _0x31e137, _0x4b42d8, _0xc56f80, _0x1036c6, _0x592649, _0x51f8a9, _0x4ac35a) {
-            switch (_0x4ac35a) {
-                case 0x0:
-                    _0x59976b.pid === _0x31e137 && (_0x59976b = _0x59976b.getPlayer(), _0x59976b.pos.x >= _0x592649 && _0x59976b.pole(vec2.make(_0x592649, _0x51f8a9)));
-            }
-        }
-    },
-    165: {
-        'NAME': "VINE",
-        'COLLIDE': !0x1,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x0,
-        'TRIGGER': function(_0xbc2513, _0x4cf103, _0x4204b2, _0x13be17, _0x2b4eb4, _0x5da513, _0x3169d1, _0x50b1db) {
-            switch (_0x50b1db) {
-                case 0x0:
-                    _0xbc2513.pid === _0x4cf103 && (_0xbc2513 = _0xbc2513.getPlayer(), _0xbc2513.pos.x >= _0x5da513 && _0xbc2513.pos.x <= _0x5da513 + 0x1 && _0xbc2513.vine(vec2.make(_0x5da513, _0x3169d1), _0x4204b2.data));
-            }
-        }
-    },
-    240: {
-        'NAME': "VOTE BLOCK",
-        'COLLIDE': !0x0,
-        'HIDDEN': !0x1,
-        'ASYNC': !0x1,
-        'TRIGGER': function(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29) {
-            switch (_0x25ee29) {
-                case 0x10:
-                    _0x3a425b.pid === _0x142e63 && _0x3a425b.send({
-                        'type': "g50"
-                    });
-                    var _0x28753a = 0x1801b;
-                    _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a);
-                    _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, vec2.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]);
-                    _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
-                    break;
-                case 0x11:
-                    _0x3a425b.pid === _0x142e63 && _0x3a425b.send({
-                        'type': "g50"
-                    }), _0x28753a = 0x1801b, _0x3a425b.world.getZone(_0x5613d0, _0xc41e0).replace(_0x559fb3, _0x1337d2, _0x28753a), _0x3a425b.createObject(_0x260d28.ID, _0x5613d0, _0xc41e0, vec2.make(_0x559fb3, _0x1337d2 + 0x1), [shor2.encode(_0x559fb3, _0x1337d2)]), _0x41f345.GEN_FUNC.BUMP(_0x3a425b, _0x142e63, _0x2ee02b, _0x5613d0, _0xc41e0, _0x559fb3, _0x1337d2, _0x25ee29);
+
+td32.GEN_FUNC = {};
+
+td32.GEN_FUNC.BUMP = function(game, pid, td, level, zone, x, y, type) {
+    game.world.getZone(level, zone).bump(x,y);
+    var tdim = vec2.make(1.,0.15);
+    var tpos = vec2.make(x, y+1.);
+    for(var i=0;i<game.objects.length;i++) {
+        var obj = game.objects[i];
+        if(!obj.dead && obj.level === level && obj.zone === zone && obj.dim) {
+            if(squar.intersection(tpos, tdim, obj.pos, obj.dim)) {
+                if(obj instanceof PlayerObject) { obj.bounce(); }
+                else if(obj.bounce) { obj.bounce(); }
+                else if(obj.bonk) { obj.bonk(); }
+                else if(obj instanceof CoinObject) {
+                    if(game.pid === pid) { obj.playerCollide(game.getPlayer()); }
+                    game.world.getZone(level, zone).coin(obj.pos.x, obj.pos.y);
+                }
             }
         }
     }
 };
-var NETX = {},
-    NPAssignPid = {
-        'DESIGNATION': 0x2,
-        'BYTES': 5,
-        'decode': function(buffer) {
-            return {
-                'designation': NPAssignPid.DESIGNATION,
-                'pid': buffer[0x1] & 0xff | buffer[0x0] << 0x8 & 0xff00,
-                'skin': buffer[0x3] & 0xff | buffer[0x2] << 0x8 & 0xff00
-            };
+
+
+td32.GEN_FUNC.BREAK = function(game, pid, td, level, zone, x, y, type) {
+    var rep = 30; // Replacement td32 data for broken tile.
+    game.world.getZone(level, zone).break(x,y,rep);
+    var tdim = vec2.make(1.,0.15);
+    var tpos = vec2.make(x, y+1.);
+    for(var i=0;i<game.objects.length;i++) {
+        var obj = game.objects[i];
+        if(!obj.dead && obj.level === level && obj.zone === zone && obj.dim) {
+            if(squar.intersection(tpos, tdim, obj.pos, obj.dim)) {
+                if(obj instanceof PlayerObject) { obj.bounce(); }
+                else if(obj.bounce) { obj.bounce(); }
+                else if(obj.bonk) { obj.bonk(); }
+                else if(obj instanceof CoinObject) {
+                    if(game.pid === pid) { obj.playerCollide(game.getPlayer()); }
+                    game.world.getZone(level, zone).coin(obj.pos.x, obj.pos.y);
+                }
+            }
         }
-    },
-    NPCreatePlayerObject = {
-        'DESIGNATION': 0x10,
-        'BYTES': 11,
-        'encode': function(_0x145e47, _0x1e0468, _0x39dd6c) {
-            return new Uint8Array([NPCreatePlayerObject.DESIGNATION, _0x145e47, _0x1e0468, _0x39dd6c >> 0x18 & 0xff, _0x39dd6c >> 0x10 & 0xff, _0x39dd6c >> 0x8 & 0xff, _0x39dd6c & 0xff]);
-        },
-        'decode': function(buffer) {
-            return {
-                'designation': NPCreatePlayerObject.DESIGNATION,
-                'pid': buffer[0x1] & 0xff | buffer[0x0] << 0x8 & 0xff00,
-                'level': buffer[0x2],
-                'zone': buffer[0x3],
-                'pos': buffer[0x7] & 0xff | buffer[0x6] << 0x8 & 0xff00 | buffer[0x5] << 0x10 & 0xff0000 | buffer[0x4] << 0x18 & 0xff0000,
-                'skin': buffer[9] & 0xff | buffer[8]
-            };
-        }
-    },
-    _0x4c5df7 = {
-        'DESIGNATION': 0x11,
-        'BYTES': 0x3,
-        'encode': function() {
-            return new Uint8Array([_0x4c5df7.DESIGNATION]);
-        },
-        'decode': function(_0x154b89) {
-            return {
-                'designation': _0x4c5df7.DESIGNATION,
-                'pid': _0x154b89[0x1] & 0xff | _0x154b89[0x0] << 0x8 & 0xff00
-            };
-        }
-    },
-    _0x1ea040 = {
-        'DESIGNATION': 0x12,
-        'BYTES': 0xf,
-        'encode': function(_0x341a4b, _0x398ad1, _0x2767b5, _0x20daef, _0x238a24) {
-            _0x2767b5 = new Float32Array([_0x2767b5.x, _0x2767b5.y]);
-            _0x2767b5 = new Uint8Array(_0x2767b5.buffer);
-            return new Uint8Array([_0x1ea040.DESIGNATION, _0x341a4b, _0x398ad1, _0x2767b5[0x3], _0x2767b5[0x2], _0x2767b5[0x1], _0x2767b5[0x0], _0x2767b5[0x7], _0x2767b5[0x6], _0x2767b5[0x5], _0x2767b5[0x4], _0x20daef, _0x238a24]);
-        },
-        'decode': function(_0x12700f) {
-            var _0x55dcf2 = new Uint8Array([_0x12700f[0x4], _0x12700f[0x5], _0x12700f[0x6], _0x12700f[0x7]]),
-                _0x2d37d7 = new Uint8Array([_0x12700f[0x8], _0x12700f[0x9], _0x12700f[0xa], _0x12700f[0xb]]),
-                _0x55dcf2 = new DataView(_0x55dcf2.buffer),
-                _0x2d37d7 = new DataView(_0x2d37d7.buffer);
-            return {
-                'designation': _0x1ea040.DESIGNATION,
-                'pid': _0x12700f[0x1] & 0xff | _0x12700f[0x0] << 0x8 & 0xff00,
-                'level': _0x12700f[0x2],
-                'zone': _0x12700f[0x3],
-                'pos': vec2.make(_0x55dcf2.getFloat32(0x0), _0x2d37d7.getFloat32(0x0)),
-                'sprite': _0x12700f[0xc],
-                'reverse': 0x0 !== _0x12700f[0xd]
-            };
-        }
-    },
-    _0x2ca693 = {
-        'DESIGNATION': 0x13,
-        'BYTES': 0x4,
-        'encode': function(_0x687d34) {
-            return new Uint8Array([_0x2ca693.DESIGNATION, _0x687d34]);
-        },
-        'decode': function(_0x5bb315) {
-            return {
-                'designation': _0x2ca693.DESIGNATION,
-                'pid': _0x5bb315[0x1] & 0xff | _0x5bb315[0x0] << 0x8 & 0xff00,
-                'type': _0x5bb315[0x2]
-            };
-        }
-    },
-    _0x4152f4 = {
-        'DESIGNATION': 0x15,
-        'BYTES': 0x3,
-        'encode': function() {
-            return new Uint8Array([_0x4152f4.DESIGNATION]);
-        }
-    },
-    _0x2f5327 = {
-        'DESIGNATION': 0x17,
-        'BYTES': 0x5,
-        'encode': function(_0x4ccd9) {
-            return new Uint8Array([_0x2f5327.DESIGNATION, _0x4ccd9 >> 0x8 & 0xff, _0x4ccd9 & 0xff]);
-        },
-        'decode': function(_0x57b596) {
-            return {
-                'designation': _0x2f5327.DESIGNATION,
-                'pid': _0x57b596[0x1] & 0xff | _0x57b596[0x0] << 0x8 & 0xff00,
-                'killer': _0x57b596[0x3] & 0xff | _0x57b596[0x2] << 0x8 & 0xff00
-            };
-        }
-    },
-    _0x2656cf = {
-        'DESIGNATION': 0x18,
-        'BYTES': 0x5,
-        'encode': function() {
-            return new Uint8Array([_0x2656cf.DESIGNATION]);
-        },
-        'decode': function(_0x44dd97) {
-            return {
-                'designation': _0x2656cf.DESIGNATION,
-                'pid': _0x44dd97[0x1] & 0xff | _0x44dd97[0x0] << 0x8 & 0xff00,
-                'result': _0x44dd97[0x2],
-                'extra': _0x44dd97[0x3]
-            };
-        }
-    },
-    _0x3bdaa9 = {
-        'DESIGNATION': 0x19,
-        'BYTES': 0x3,
-        'encode': function() {
-            return new Uint8Array([_0x3bdaa9.DESIGNATION]);
-        }
-    },
-    _0x30e075 = {
-        'DESIGNATION': 0x20,
-        'BYTES': 0xa,
-        'encode': function(_0x2dd0ce, _0x155841, _0x4593e8, _0x13b6fd) {
-            return new Uint8Array([_0x30e075.DESIGNATION, _0x2dd0ce, _0x155841, _0x4593e8 >> 0x18 & 0xff, _0x4593e8 >> 0x10 & 0xff, _0x4593e8 >> 0x8 & 0xff, _0x4593e8 & 0xff, _0x13b6fd]);
-        },
-        'decode': function(_0x374b18) {
-            return {
-                'designation': _0x30e075.DESIGNATION,
-                'pid': _0x374b18[0x1] & 0xff | _0x374b18[0x0] << 0x8 & 0xff00,
-                'level': _0x374b18[0x2],
-                'zone': _0x374b18[0x3],
-                'oid': _0x374b18[0x7] & 0xff | _0x374b18[0x6] << 0x8 & 0xff00 | _0x374b18[0x5] << 0x10 & 0xff0000 | _0x374b18[0x4] << 0x18 & 0xff0000,
-                'type': _0x374b18[0x8]
-            };
-        }
-    },
-    _0x231422 = {
-        'DESIGNATION': 0x30,
-        'BYTES': 0xa,
-        'encode': function(_0x159c89, _0x10e6d5, _0x2bc6a8, _0x1646b0) {
-            return new Uint8Array([_0x231422.DESIGNATION, _0x159c89, _0x10e6d5, _0x2bc6a8 >> 0x18 & 0xff, _0x2bc6a8 >> 0x10 & 0xff, _0x2bc6a8 >> 0x8 & 0xff, _0x2bc6a8 & 0xff, _0x1646b0]);
-        },
-        'decode': function(_0xd5c00b) {
-            return {
-                'designation': _0x231422.DESIGNATION,
-                'pid': _0xd5c00b[0x1] & 0xff | _0xd5c00b[0x0] << 0x8 & 0xff00,
-                'level': _0xd5c00b[0x2],
-                'zone': _0xd5c00b[0x3],
-                'pos': shor2.decode(_0xd5c00b[0x7] & 0xff | _0xd5c00b[0x6] << 0x8 & 0xff00 | _0xd5c00b[0x5] << 0x10 & 0xff0000 | _0xd5c00b[0x4] << 0x18 & 0xff0000),
-                'type': _0xd5c00b[0x8]
-            };
-        }
-    },
-    _0x1be292 = function(_0x4cb4b7) {
-        for (var _0x5bf35f = [], _0x1c3a21 = 0x0; _0x1c3a21 < _0x4cb4b7.length; _0x1c3a21++)
-            for (var _0x1fd122 = 0x0; _0x1fd122 < _0x4cb4b7[_0x1c3a21].length; _0x1fd122++) _0x5bf35f.push(_0x4cb4b7[_0x1c3a21][_0x1fd122]);
-        return new Uint8Array(_0x5bf35f);
-    };
-NETX.decode = function(_0x2b3586) {
-    for (var _0x2fd3e2 = [], _0x2cd429 = 0x0; _0x2cd429 < _0x2b3586.length;) switch (_0x2b3586.slice(_0x2cd429++, _0x2cd429)[0x0]) {
-        case 0x2:
-            _0x2fd3e2.push(NPAssignPid.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += NPAssignPid.BYTES - 0x1)));
-            break;
-        case 0x10:
-            _0x2fd3e2.push(NPCreatePlayerObject.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += NPCreatePlayerObject.BYTES - 0x1)));
-            break;
-        case 0x11:
-            _0x2fd3e2.push(_0x4c5df7.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x4c5df7.BYTES - 0x1)));
-            break;
-        case 0x12:
-            _0x2fd3e2.push(_0x1ea040.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x1ea040.BYTES - 0x1)));
-            break;
-        case 0x13:
-            _0x2fd3e2.push(_0x2ca693.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x2ca693.BYTES - 0x1)));
-            break;
-        case 0x17:
-            _0x2fd3e2.push(_0x2f5327.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x2f5327.BYTES - 0x1)));
-            break;
-        case 0x18:
-            _0x2fd3e2.push(_0x2656cf.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x2656cf.BYTES - 0x1)));
-            break;
-        case 0x20:
-            _0x2fd3e2.push(_0x30e075.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x30e075.BYTES - 0x1)));
-            break;
-        case 0x30:
-            _0x2fd3e2.push(_0x231422.decode(_0x2b3586.slice(_0x2cd429, _0x2cd429 += _0x231422.BYTES - 0x1)));
-            break;
-        default:
-            return app && app.menu.warn.show("Error decoding binary data!"), _0x2fd3e2;
     }
-    return _0x2fd3e2;
+};
+
+td32.TILE_PROPERTIES = {
+	/* Nothing */
+	0x00: {
+		NAME: "AIR",
+		COLLIDE: false,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {}
+	},
+	/* Solid Standard */
+	0x01: {
+		NAME: "SOLID STANDARD",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {}
+	},
+	/* Solid Bumpable */
+	0x02: {
+		NAME: "SOLID BUMPABLE",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+			}
+		}
+	},
+	/* Solid Breakable Normal */
+	0x03: {
+		NAME: "SOLID BREAKABLE NORMAL",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					td32.GEN_FUNC.BREAK(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+			}
+		}
+	},
+	/* Item Block Normal */
+	0x11: {
+		NAME: "ITEM BLOCK STANDARD",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.createObject(td.data, level, zone, vec2.make(x,y), [shor2.encode(x,y)]);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					game.world.getZone(level, zone).play(x,y,"sfx/item.wav",1.,0.04);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.createObject(td.data, level, zone, vec2.make(x,y), [shor2.encode(x,y)]);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					game.world.getZone(level, zone).play(x,y,"sfx/item.wav",1.,0.04);
+					break;
+				}
+			}
+		}
+	},
+	/* Coin Block Normal */
+	0x12: {
+		NAME: "COIN BLOCK STANDARD",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.coinage(); game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.world.getZone(level, zone).coin(x,y+1);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.coinage(); game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.world.getZone(level, zone).coin(x,y+1);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+			}
+		}
+	},
+	/* Coin Block Multi */
+	0x13: {
+		NAME: "COIN BLOCK MULTI",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.coinage(); game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					if(td.data > 0) {
+						var raw = game.world.getZone(level, zone).tile(x,y);
+						var rep = td32.data(raw, td.data-1);											// Replacement td32 data for tile.
+						game.world.getZone(level, zone).replace(x,y,rep);
+						game.world.getZone(level, zone).coin(x,y+1);
+						td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					}
+					else {
+						var rep = 98331; // Replacement td32 data for tile.
+						game.world.getZone(level, zone).replace(x,y,rep);
+						game.world.getZone(level, zone).coin(x,y+1);
+						td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					}
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.coinage(); game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					if(td.data > 0) {
+						var raw = game.world.getZone(level, zone).tile(x,y);
+						var rep = td32.data(raw, td.data-1);											// Replacement td32 data for tile.
+						game.world.getZone(level, zone).replace(x,y,rep);
+						game.world.getZone(level, zone).coin(x,y+1);
+						td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					}
+					else {
+						var rep = 98331; // Replacement td32 data for tile.
+						game.world.getZone(level, zone).replace(x,y,rep);
+						game.world.getZone(level, zone).coin(x,y+1);
+						td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					}
+					break;
+				}
+			}
+		}
+	},
+	/* Vine Block */
+	0x18: {
+		NAME: "VINE BLOCK",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					var vin = td32.data(10813796, td.data); // Vine td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.world.getZone(level, zone).grow(x,y+1,vin);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					game.world.getZone(level, zone).play(x,y,"sfx/vine.wav",1.,0.04);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.coinage(); game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					var vin = td32.data(10813796, td.data); // Vine td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.world.getZone(level, zone).grow(x,y+1,vin);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					game.world.getZone(level, zone).play(x,y,"sfx/vine.wav",1.,0.04);
+					break;
+				}
+			}
+		}
+	},
+	/* Item Block Invisible */
+	0x15: {
+		NAME: "ITEM BLOCK INVISIBLE",
+		COLLIDE: true,
+		HIDDEN: true,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.createObject(td.data, level, zone, vec2.make(x,y), [shor2.encode(x,y)]);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					game.world.getZone(level, zone).play(x,y,"sfx/item.wav",1.,0.04);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.createObject(td.data, level, zone, vec2.make(x,y), [shor2.encode(x,y)]);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					game.world.getZone(level, zone).play(x,y,"sfx/item.wav",1.,0.04);
+					break;
+				}
+			}
+		}
+	},
+	/* Coin Block INVISIBLE */
+	0x16: {
+		NAME: "COIN BLOCK INVISIBLE",
+		COLLIDE: true,
+		HIDDEN: true,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.coinage(); game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.world.getZone(level, zone).coin(x,y+1);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.coinage(); game.out.push(NET030.encode(level, zone, shor2.encode(x,y), type)); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.world.getZone(level, zone).coin(x,y+1);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+			}
+		}
+	},
+	/* Warp Tile */
+	0x51: {
+		NAME: "WARP TILE",
+		COLLIDE: false,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Touch */
+				case 0x00 : {
+					if(game.pid === pid) {
+						game.getPlayer().warp(td.data);
+					}
+				}
+			}
+		}
+	},
+	/* Warp Pipe */
+	0x52: {
+		NAME: "WARP PIPE SLOW",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Down */
+				case 0x01 : {
+					if(game.pid === pid) {
+						var ply = game.getPlayer();
+						var l = game.world.getZone(level, zone).getTile(vec2.make(x-1,y));
+						var r = game.world.getZone(level, zone).getTile(vec2.make(x+1,y));
+						
+						var cx;
+						if(l.definition === this) { cx = x; }
+						else if(r.definition === this) { cx = x+1; }
+						else { return; }
+						
+						if(Math.abs((ply.pos.x + (ply.dim.x*.5)) - cx) <= 0.45) { ply.pipe(2, td.data, 50); }
+					}
+				}
+			}
+		}
+	},
+	/* Warp Pipe Horiz */
+	0x53: {
+		NAME: "WARP PIPE RIGHT SLOW",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Push */
+				case 0x02 : {
+					if(game.pid === pid) {
+						game.getPlayer().pipe(4, td.data, 50);
+					}
+				}
+			}
+		}
+	},
+	/* Warp Pipe */
+	0x54: {
+		NAME: "WARP PIPE FAST",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Down */
+				case 0x01 : {
+					if(game.pid === pid) {
+						var ply = game.getPlayer();
+						var l = game.world.getZone(level, zone).getTile(vec2.make(x-1,y));
+						var r = game.world.getZone(level, zone).getTile(vec2.make(x+1,y));
+						
+						var cx;
+						if(l.definition === this) { cx = x; }
+						else if(r.definition === this) { cx = x+1; }
+						else { return; }
+						
+						if(Math.abs((ply.pos.x + (ply.dim.x*.5)) - cx) <= 0.45) { ply.pipe(2, td.data, 0); }
+					}
+				}
+			}
+		}
+	},
+	/* Warp Pipe Horiz */
+	0x55: {
+		NAME: "WARP PIPE RIGHT FAST",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Push */
+				case 0x02 : {
+					if(game.pid === pid) {
+						game.getPlayer().pipe(4, td.data, 0);
+					}
+				}
+			}
+		}
+	},
+	/* End of Level Warp */
+	0x56: {
+		NAME: "LEVEL END WARP",
+		COLLIDE: false,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Touch */
+				case 0x00 : {
+					if(game.pid === pid) {
+						game.levelWarp(td.data);
+					}
+				}
+			}
+		}
+	},
+	/* Flagpole */
+	0xA0: {
+		NAME: "FLAGPOLE",
+		COLLIDE: false,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Touch */
+				case 0x00 : {
+					if(game.pid === pid) {
+						var ply = game.getPlayer();
+						if(ply.pos.x >= x) { ply.pole(vec2.make(x,y)); }
+					}
+				}
+			}
+		}
+	},
+	/* Vine */
+	0xA5: {
+		NAME: "VINE",
+		COLLIDE: false,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Touch */
+				case 0x00 : {
+					if(game.pid === pid) {
+						var ply = game.getPlayer();
+						if(ply.pos.x >= x && ply.pos.x <= x+1.) { ply.vine(vec2.make(x,y), td.data); }
+					}
+				}
+			}
+		}
+	},
+	/* Vote Block */
+	0xF0: {
+		NAME: "VOTE BLOCK",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: false,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Small bump */
+				case 0x10 : {
+					if(game.pid === pid) { game.send({type: "g50"}); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.createObject(CheckObject.ID, level, zone, vec2.make(x,y+1), [shor2.encode(x,y)]);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+				/* Big bump */
+				case 0x11 : {
+					if(game.pid === pid) { game.send({type: "g50"}); }
+					var rep = 98331; // Replacement td32 data for tile.
+					game.world.getZone(level, zone).replace(x,y,rep);
+					game.createObject(CheckObject.ID, level, zone, vec2.make(x,y+1), [shor2.encode(x,y)]);
+					td32.GEN_FUNC.BUMP(game, pid, td, level, zone, x, y, type);
+					break;
+				}
+			}
+		}
+	}
+};
+
+var NETX = {}; // Main
+/* ======================================================================================== */
+
+NETX.decode = function(/* Uint8Array */ data) {
+    var de = [];
+    var i = 0;
+    while(i<data.length) {
+        var desig = data.slice(i++, i)[0];
+        switch(desig) {
+            case 0x02 : { de.push(NET001.decode(data.slice(i, i+=NET001.BYTES-1))); break; }
+            case 0x10 : { de.push(NET010.decode(data.slice(i, i+=NET010.BYTES-1))); break; }
+            case 0x11 : { de.push(NET011.decode(data.slice(i, i+=NET011.BYTES-1))); break; }
+            case 0x12 : { de.push(NET012.decode(data.slice(i, i+=NET012.BYTES-1))); break; }
+            case 0x13 : { de.push(NET013.decode(data.slice(i, i+=NET013.BYTES-1))); break; }
+            case 0x17 : { de.push(NET017.decode(data.slice(i, i+=NET017.BYTES-1))); break; }
+            case 0x18 : { de.push(NET018.decode(data.slice(i, i+=NET018.BYTES-1))); break; }
+            case 0x20 : { de.push(NET020.decode(data.slice(i, i+=NET020.BYTES-1))); break; }
+            case 0x30 : { de.push(NET030.decode(data.slice(i, i+=NET030.BYTES-1))); break; }
+            default : { if(app) { app.menu.warn.show("Error decoding binary data!"); } return de; }
+        }
+    }
+    return de;
+};
+
+var NET001 = {}; // ASSIGN_PID [0x1] // As Uint8Array
+/* ======================================================================================== */
+NET001.DESIGNATION = 0x02;
+NET001.BYTES = 5;
+
+/* Server->Client */
+NET001.decode = function(/* NET001_SERV */ a) {
+	return {
+        designation: NET001.DESIGNATION,
+        pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00),
+        skin: (a[3] & 0x00FF) | ((a[2] << 8) & 0xFF00)
+    };
+};
+
+var NET010 = {}; // CREATE_PLAYER_OBJECT [0x10] // As Uint8Array
+/* ======================================================================================== */
+NET010.DESIGNATION = 0x10;
+NET010.BYTES = 11;
+
+/* Client->Server */
+NET010.encode = function(/* byte */ levelID, /* byte */ zoneID, /* shor2 */ pos) {
+	return new Uint8Array([NET010.DESIGNATION, levelID, zoneID, (pos >> 24) & 0xFF, (pos >> 16) & 0xFF, (pos >> 8) & 0xFF, pos & 0xFF]);
+};
+
+/* Server->>>Client */
+NET010.decode = function(/* NET010_SERV */ a) {
+	return {
+		designation: NET010.DESIGNATION,
+		pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00),
+		level: a[2],
+		zone: a[3],
+        pos: (a[7] & 0xFF) | ((a[6] << 8) & 0xFF00) | ((a[5] << 16) & 0xFF0000) | ((a[4] << 24) & 0xFF0000),
+        skin: (a[9] & 0xFF) | a[8]
+	};
+};
+
+var NET011 = {}; // KILL_PLAYER_OBJECT [0x11] // As Uint8Array
+/* ======================================================================================== */
+NET011.DESIGNATION = 0x11;
+NET011.BYTES = 3;
+
+/* Client->Server */
+NET011.encode = function() {
+	return new Uint8Array([NET011.DESIGNATION]);
+};
+
+/* Server->>>Client */
+NET011.decode = function(/* NET011_SERV */ a) {
+	return {
+		designation: NET011.DESIGNATION, pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00)
+	};
+};
+
+var NET012 = {}; // UPDATE_PLAYER_OBJECT [0x12] // As Uint8Array
+/* ======================================================================================== */
+NET012.DESIGNATION = 0x12;
+NET012.BYTES = 15;
+
+/* Client->Server */
+NET012.encode = function(/* byte */ levelID, /* byte */ zoneID, /* vec2 */ pos, /* byte */ spriteID, /* byte */ reverse) {
+	var farr = new Float32Array([pos.x, pos.y]);
+	var barr = new Uint8Array(farr.buffer);
+	return new Uint8Array([
+		NET012.DESIGNATION, levelID, zoneID,
+		barr[3], barr[2], barr[1], barr[0],
+		barr[7], barr[6], barr[5], barr[4],
+		spriteID,
+		reverse
+	]);
+};
+
+/* Server->>Client */
+NET012.decode = function(/* NET012_SERV */ a) {
+	var b1 = new Uint8Array([a[4], a[5], a[6], a[7]]);
+	var b2 = new Uint8Array([a[8], a[9], a[10], a[11]]);
+	var v1 = new DataView(b1.buffer);
+	var v2 = new DataView(b2.buffer);
+	
+	return {
+		designation: NET012.DESIGNATION,
+		pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00),
+		level: a[2],
+		zone: a[3],
+		pos: vec2.make(v1.getFloat32(0), v2.getFloat32(0)),
+		sprite: a[12],
+		reverse: a[13] !== 0
+	};
+};
+
+var NET013 = {}; // PLAYER_OBJECT_EVENT [0x13] // As Uint8Array
+/* ======================================================================================== */
+NET013.DESIGNATION = 0x13;
+NET013.BYTES = 4;
+
+/* Client->Server */
+NET013.encode = function(/* byte */ type) {
+	return new Uint8Array([NET013.DESIGNATION, type]);
+};
+
+/* Server->>>Client */
+NET013.decode = function(/* NET013_SERV */ a) {
+	return {
+		designation: NET013.DESIGNATION,
+		pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00),
+		type: a[2]
+	};
+};
+
+var NET015 = {}; // PLAYER_INVALID_MOVE [0x15] // As Uint8Array
+/* ======================================================================================== */
+NET015.DESIGNATION = 0x15;
+NET015.BYTES = 3;
+
+/* Client->Server */
+NET015.encode = function() {
+	return new Uint8Array([NET015.DESIGNATION]);
+};
+
+var NET017 = {}; // PLAYER_KILL_EVENT [0x17] // As Uint8Array
+/* ======================================================================================== */
+NET017.DESIGNATION = 0x17;
+NET017.BYTES = 5;
+
+/* Client->Server */
+NET017.encode = function(/* short */ killer) {
+	return new Uint8Array([NET017.DESIGNATION, killer >> 8 & 0xFF, killer & 0xFF]);
+};
+
+/* Server->Client */
+NET017.decode = function(/* NET017_SERV */ a) {
+	return {
+		designation: NET017.DESIGNATION,
+		pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00),
+		killer: (a[3] & 0x00FF) | ((a[2] << 8) & 0xFF00)
+	};
+};
+
+var NET018 = {}; // PLAYER_RESULT_REQUEST [0x18] // As Uint8Array
+/* ======================================================================================== */
+NET018.DESIGNATION = 0x18;
+NET018.BYTES = 5;
+
+/* Client->Server */
+NET018.encode = function() {
+	return new Uint8Array([NET018.DESIGNATION]);
+};
+
+/* Server->>>Client */
+NET018.decode = function(/* NET011_SERV */ a) {
+	return {
+		designation: NET018.DESIGNATION, pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00), result: a[2], extra: a[3]
+	};
+};
+
+var NET019 = {}; // PLAYER_SNITCH [0x19] // As Uint8Array
+/* ======================================================================================== */
+NET019.DESIGNATION = 0x19;
+NET019.BYTES = 3;
+
+/* Client->Server */
+NET019.encode = function() {
+	return new Uint8Array([NET019.DESIGNATION]);
+};
+
+var NET020 = {}; // OBJECT_EVENT_TRIGGER [0x20] // As Uint8Array
+/* ======================================================================================== */
+NET020.DESIGNATION = 0x20;
+NET020.BYTES = 10;
+
+/* Client->Server */
+NET020.encode = function(/* byte */ levelID, /* byte */ zoneID, /* int */ oid, /* byte */ type) {
+	return new Uint8Array([
+		NET020.DESIGNATION, levelID, zoneID,
+		(oid >> 24) & 0xFF, (oid >> 16) & 0xFF, (oid >> 8) & 0xFF, oid & 0xFF,
+		type
+	]);
+};
+
+/* Server->>>Client */
+NET020.decode = function(/* NET020_SERV */ a) {
+	return {
+		designation: NET020.DESIGNATION,
+		pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00),
+		level: a[2],
+		zone: a[3],
+		oid: (a[7] & 0xFF) | ((a[6] << 8) & 0xFF00) | ((a[5] << 16) & 0xFF0000) | ((a[4] << 24) & 0xFF0000),
+		type: a[8]
+	};
+};
+
+var NET030 = {}; // TILE_EVENT_TRIGGER [0x30] // As Uint8Array
+/* ======================================================================================== */
+NET030.DESIGNATION = 0x30;
+NET030.BYTES = 10;
+
+/* Client->Server */
+NET030.encode = function(/* byte */ levelID, /* byte */ zoneID, /* shor2 */ pos, /* byte */ type) {
+	return new Uint8Array([
+		NET030.DESIGNATION, levelID, zoneID,
+		(pos >> 24) & 0xFF, (pos >> 16) & 0xFF, (pos >> 8) & 0xFF, pos & 0xFF,
+		type
+	]);
+};
+
+/* Server->/>Client */
+NET030.decode = function(/* NET030_SERV */ a) {
+	return {
+		designation: NET030.DESIGNATION,
+		pid: (a[1] & 0x00FF) | ((a[0] << 8) & 0xFF00),
+		level: a[2],
+		zone: a[3],
+		pos: shor2.decode((a[7] & 0xFF) | ((a[6] << 8) & 0xFF00) | ((a[5] << 16) & 0xFF0000) | ((a[4] << 24) & 0xFF0000)),
+		type: a[8]
+	};
+};
+
+/* Merges all Uint8Arrays into one */
+var MERGE_BYTE = function(/* Uint8Array[] */ a) {
+	var data = [];
+	for(var i=0;i<a.length;i++) {
+		for(var j=0;j<a[i].length;j++) {
+			data.push(a[i][j]);
+		}
+	}
+	return new Uint8Array(data);
 };
 "use strict";
-var _0x1badb6 = {};
-_0x1badb6.intersection = function(_0x43a044, _0x59c3e0, _0x4eb9a3, _0x4741a0) {
+var squar = {};
+squar.intersection = function(_0x43a044, _0x59c3e0, _0x4eb9a3, _0x4741a0) {
     return _0x4eb9a3.x < _0x43a044.x + _0x59c3e0.x && _0x4eb9a3.x + _0x4741a0.x > _0x43a044.x && _0x4eb9a3.y < _0x43a044.y + _0x59c3e0.y && _0x4eb9a3.y + _0x4741a0.y > _0x43a044.y;
 };
-_0x1badb6.inside = function(_0x15c2a5, _0x1957cd, _0x4042e7) {
+squar.inside = function(_0x15c2a5, _0x1957cd, _0x4042e7) {
     return _0x1957cd.x < _0x15c2a5.x && _0x1957cd.x + _0x4042e7.x > _0x15c2a5.x && _0x1957cd.y < _0x15c2a5.y && _0x1957cd.y + _0x4042e7.y > _0x15c2a5.y;
 };
 "use strict";
@@ -2418,7 +2630,7 @@ PlayerObject.prototype.step = function() {
                     else {
                         for (var _0x4d4e5b = vec2.add(this.pos, vec2.make(0x0, -0.25)), _0x280236 = vec2.make(this.pos.x, this.pos.y - 0.25), _0x191ffc = vec2.make(this.dim.x, this.dim.y + 0.25), _0x280236 = this.game.world.getZone(this.level, this.zone).getTiles(_0x280236, _0x191ffc), _0x191ffc = vec2.make(0x1, 0x1), _0x1f539b = !0x1, _0x5a99db = 0x0; _0x5a99db < _0x280236.length; _0x5a99db++) {
                             var _0x4eb640 = _0x280236[_0x5a99db];
-                            if (_0x1badb6.intersection(_0x4eb640.pos, _0x191ffc, _0x4d4e5b, this.dim) && _0x4eb640.definition.COLLIDE) {
+                            if (squar.intersection(_0x4eb640.pos, _0x191ffc, _0x4d4e5b, this.dim) && _0x4eb640.definition.COLLIDE) {
                                 _0x1f539b = !0x0;
                                 break;
                             }
@@ -2507,7 +2719,7 @@ PlayerObject.prototype.control = function() {
         for (var _0x41484b = this.isSpring ? 0xe : 0x7, _0x39fd87 = this.isSpring ? PlayerObject.SPRING_LENGTH_MIN : this.isBounce ? PlayerObject.BOUNCE_LENGTH_MIN : PlayerObject.JUMP_LENGTH_MIN, _0x4f2d3c = 0x0; _0x4f2d3c < PlayerObject.JUMP_SPEED_INC_THRESHOLD.length && Math.abs(this.moveSpeed) >= PlayerObject.JUMP_SPEED_INC_THRESHOLD[_0x4f2d3c]; _0x4f2d3c++) _0x41484b++;
         this.btnA ? (this.grounded && (this.jumping = 0x0, this.play(0x0 < this.power ? "sfx/jump1.wav" : "sfx/jump0.wav", 0.7, 0.04)), this.jumping > _0x41484b && (this.jumping = -0x1)) : this.jumping > _0x39fd87 && (this.jumping = -0x1);
         this.grounded || this.setState(PlayerObject.SNAME.FALL);
-        this.btnB && !this.btnBde && 0x2 === this.power && !this.isState(PlayerObject.SNAME.DOWN) && !this.isState(PlayerObject.SNAME.SLIDE) && 0x1 > this.attackTimer && this.attackCharge >= PlayerObject.ATTACK_CHARGE && (this.attack(), this.game.out.push(_0x2ca693.encode(0x1)));
+        this.btnB && !this.btnBde && 0x2 === this.power && !this.isState(PlayerObject.SNAME.DOWN) && !this.isState(PlayerObject.SNAME.SLIDE) && 0x1 > this.attackTimer && this.attackCharge >= PlayerObject.ATTACK_CHARGE && (this.attack(), this.game.out.push(NET013.encode(0x1)));
         this.btnBde = this.btnB;
         0x0 < this.attackTimer && 0x2 === this.power && (this.isState(PlayerObject.SNAME.STAND) || this.isState(PlayerObject.SNAME.RUN)) && this.setState(PlayerObject.SNAME.ATTACK);
     }
@@ -2518,14 +2730,14 @@ PlayerObject.prototype.physics = function() {
         var _0x28e288 = _0x513d1f[_0x5b32b0];
         if (_0x28e288.definition.COLLIDE)
             if (_0x28e288.definition.HIDDEN) _0x27521c.push(_0x28e288);
-            else if (_0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) || _0x1badb6.intersection(_0x28e288.pos, _0x208a75, this.pos, this.dim)) 0.01 < Math.abs(this.moveSpeed) && this.grounded && this.pos.y <= _0x28e288.pos.y && _0x346d1d.push(_0x28e288), _0x27521c.push(_0x28e288);
+            else if (squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) || squar.intersection(_0x28e288.pos, _0x208a75, this.pos, this.dim)) 0.01 < Math.abs(this.moveSpeed) && this.grounded && this.pos.y <= _0x28e288.pos.y && _0x346d1d.push(_0x28e288), _0x27521c.push(_0x28e288);
     }
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x20e6e6.length; _0x5b32b0++) _0x28e288 = _0x20e6e6[_0x5b32b0], _0x1badb6.intersection(_0x28e288.pos, _0x28e288.dim, _0x57b791, this.dim) && _0x535e81.push(_0x28e288);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x20e6e6.length; _0x5b32b0++) _0x28e288 = _0x20e6e6[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x28e288.dim, _0x57b791, this.dim) && _0x535e81.push(_0x28e288);
     _0x20e6e6 = vec2.make(_0x57b791.x, this.pos.y);
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], !_0x28e288.definition.HIDDEN && _0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x20e6e6, this.dim) && (_0x20e6e6.x = _0x20e6e6.x + 0.5 * this.dim.x < _0x28e288.pos.x + 0.5 * _0x208a75.x ? _0x28e288.pos.x - this.dim.x : _0x28e288.pos.x + _0x208a75.x, this.moveSpeed *= 0.33);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], !_0x28e288.definition.HIDDEN && squar.intersection(_0x28e288.pos, _0x208a75, _0x20e6e6, this.dim) && (_0x20e6e6.x = _0x20e6e6.x + 0.5 * this.dim.x < _0x28e288.pos.x + 0.5 * _0x208a75.x ? _0x28e288.pos.x - this.dim.x : _0x28e288.pos.x + _0x208a75.x, this.moveSpeed *= 0.33);
     _0x57b791.x = _0x20e6e6.x;
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], _0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && (this.fallSpeed > PlayerObject.BLOCK_BUMP_THRESHOLD && _0x50b7b9.push(_0x28e288), 0x0 > this.fallSpeed && this.pos.y >= _0x28e288.pos.y && _0x27c16e.push(_0x28e288));
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], _0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && (this.pos.y >= _0x57b791.y ? _0x28e288.definition.HIDDEN || (_0x57b791.y = _0x28e288.pos.y + _0x208a75.y, this.fallSpeed = 0x0, _0x58342b = !0x0) : (_0x57b791.y = _0x28e288.pos.y - this.dim.y, this.fallSpeed = 0x0));
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && (this.fallSpeed > PlayerObject.BLOCK_BUMP_THRESHOLD && _0x50b7b9.push(_0x28e288), 0x0 > this.fallSpeed && this.pos.y >= _0x28e288.pos.y && _0x27c16e.push(_0x28e288));
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && (this.pos.y >= _0x57b791.y ? _0x28e288.definition.HIDDEN || (_0x57b791.y = _0x28e288.pos.y + _0x208a75.y, this.fallSpeed = 0x0, _0x58342b = !0x0) : (_0x57b791.y = _0x28e288.pos.y - this.dim.y, this.fallSpeed = 0x0));
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x535e81.length; _0x5b32b0++)
         if (_0x28e288 = _0x535e81[_0x5b32b0], this.pos.y >= _0x57b791.y && _0x28e288.pos.y + _0x28e288.dim.y - this.pos.y < PlayerObject.PLATFORM_SNAP_DIST) {
             _0x57b791.y = _0x28e288.pos.y + _0x28e288.dim.y;
@@ -2535,24 +2747,24 @@ PlayerObject.prototype.physics = function() {
         } this.grounded = _0x58342b;
     this.pos = _0x57b791;
     _0x3f505e && _0x3f505e.riding(this);
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) _0x28e288 = _0x513d1f[_0x5b32b0], _0x1badb6.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, _0x41f345.TRIGGER.TYPE.TOUCH);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) _0x28e288 = _0x513d1f[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, td32.TRIGGER.TYPE.TOUCH);
     if (this.isState(PlayerObject.SNAME.DOWN) && 0.05 > this.moveSpeed)
-        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27c16e.length; _0x5b32b0++) _0x28e288 = _0x27c16e[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, _0x41f345.TRIGGER.TYPE.DOWN);
+        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27c16e.length; _0x5b32b0++) _0x28e288 = _0x27c16e[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, td32.TRIGGER.TYPE.DOWN);
     if (this.isState(PlayerObject.SNAME.RUN))
-        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x346d1d.length; _0x5b32b0++) _0x28e288 = _0x346d1d[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, _0x41f345.TRIGGER.TYPE.PUSH);
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x50b7b9.length; _0x5b32b0++) _0x28e288 = _0x50b7b9[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, 0x0 < this.power ? _0x41f345.TRIGGER.TYPE.BIG_BUMP : _0x41f345.TRIGGER.TYPE.SMALL_BUMP), this.jumping = -0x1, this.fallSpeed = -PlayerObject.BLOCK_BUMP_THRESHOLD;
+        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x346d1d.length; _0x5b32b0++) _0x28e288 = _0x346d1d[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, td32.TRIGGER.TYPE.PUSH);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x50b7b9.length; _0x5b32b0++) _0x28e288 = _0x50b7b9[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, 0x0 < this.power ? td32.TRIGGER.TYPE.BIG_BUMP : td32.TRIGGER.TYPE.SMALL_BUMP), this.jumping = -0x1, this.fallSpeed = -PlayerObject.BLOCK_BUMP_THRESHOLD;
 };
 PlayerObject.prototype.collisionTest = function(_0x569425, _0x1323bb) {
     for (var _0x4dc291 = vec2.make(0x1, 0x1), _0x471838 = this.game.world.getZone(this.level, this.zone).getTiles(_0x569425, _0x1323bb), _0x426d64 = 0x0; _0x426d64 < _0x471838.length; _0x426d64++) {
         var _0x2faa4b = _0x471838[_0x426d64];
-        if (_0x2faa4b.definition.COLLIDE && _0x1badb6.intersection(_0x2faa4b.pos, _0x4dc291, _0x569425, _0x1323bb)) return !0x0;
+        if (_0x2faa4b.definition.COLLIDE && squar.intersection(_0x2faa4b.pos, _0x4dc291, _0x569425, _0x1323bb)) return !0x0;
     }
     return !0x1;
 };
 PlayerObject.prototype.interaction = function() {
     for (var _0x588c5e = 0x0; _0x588c5e < this.game.objects.length; _0x588c5e++) {
         var _0x4e9f01 = this.game.objects[_0x588c5e];
-        _0x4e9f01 !== this && !this.dead && _0x4e9f01.level === this.level && _0x4e9f01.zone === this.zone && _0x4e9f01.isTangible() && _0x1badb6.intersection(_0x4e9f01.pos, _0x4e9f01.dim, this.pos, this.dim) && (0x0 < this.starTimer && _0x4e9f01.bonk && (_0x4e9f01.bonk(), this.game.out.push(_0x30e075.encode(_0x4e9f01.level, _0x4e9f01.zone, _0x4e9f01.oid, 0x1))), _0x4e9f01 instanceof PlayerObject && 0x0 < _0x4e9f01.starTimer && !this.autoTarget && (this.damage(_0x4e9f01), this.dead && this.game.out.push(_0x2f5327.encode(_0x4e9f01.pid))), this.lastPos.y > _0x4e9f01.pos.y + 0.66 * _0x4e9f01.dim.y - Math.max(0x0, _0x4e9f01.fallSpeed) ? _0x4e9f01.playerStomp && _0x4e9f01.playerStomp(this) : this.lastPos.y < _0x4e9f01.pos.y ? _0x4e9f01.playerBump && _0x4e9f01.playerBump(this) : _0x4e9f01.playerCollide && _0x4e9f01.playerCollide(this));
+        _0x4e9f01 !== this && !this.dead && _0x4e9f01.level === this.level && _0x4e9f01.zone === this.zone && _0x4e9f01.isTangible() && squar.intersection(_0x4e9f01.pos, _0x4e9f01.dim, this.pos, this.dim) && (0x0 < this.starTimer && _0x4e9f01.bonk && (_0x4e9f01.bonk(), this.game.out.push(NET020.encode(_0x4e9f01.level, _0x4e9f01.zone, _0x4e9f01.oid, 0x1))), _0x4e9f01 instanceof PlayerObject && 0x0 < _0x4e9f01.starTimer && !this.autoTarget && (this.damage(_0x4e9f01), this.dead && this.game.out.push(NET017.encode(_0x4e9f01.pid))), this.lastPos.y > _0x4e9f01.pos.y + 0.66 * _0x4e9f01.dim.y - Math.max(0x0, _0x4e9f01.fallSpeed) ? _0x4e9f01.playerStomp && _0x4e9f01.playerStomp(this) : this.lastPos.y < _0x4e9f01.pos.y ? _0x4e9f01.playerBump && _0x4e9f01.playerBump(this) : _0x4e9f01.playerCollide && _0x4e9f01.playerCollide(this));
     }
 };
 PlayerObject.prototype.arrow = function() {
@@ -2581,7 +2793,7 @@ PlayerObject.prototype.invuln = function() {
     this.damageTimer = PlayerObject.DAMAGE_TIME;
 };
 PlayerObject.prototype.powerup = function(_0x316532) {
-    _0x316532 instanceof MushroomObject && 0x1 > this.power ? (this.tfm(0x1), this.rate = 0x73) : _0x316532 instanceof FlowerObject && 0x2 > this.power ? (this.tfm(0x2), this.rate = 0x71) : _0x316532 instanceof StarObject ? (this.star(), this.game.out.push(_0x2ca693.encode(0x2)), this.rate = 0x43) : _0x316532 instanceof LifeObject ? this.game.lifeage() : _0x316532 instanceof CoinObject ? this.game.coinage() : _0x316532 instanceof GoldFlowerObject ? this.game.coinage(true) : _0x316532 instanceof AxeObject ? (this.game.stopGameTimer(),this.game.out.push(_0x2656cf.encode())) : _0x316532 instanceof _0x5010c8 && this.damage(_0x316532);
+    _0x316532 instanceof MushroomObject && 0x1 > this.power ? (this.tfm(0x1), this.rate = 0x73) : _0x316532 instanceof FlowerObject && 0x2 > this.power ? (this.tfm(0x2), this.rate = 0x71) : _0x316532 instanceof StarObject ? (this.star(), this.game.out.push(NET013.encode(0x2)), this.rate = 0x43) : _0x316532 instanceof LifeObject ? this.game.lifeage() : _0x316532 instanceof CoinObject ? this.game.coinage() : _0x316532 instanceof GoldFlowerObject ? this.game.coinage(true) : _0x316532 instanceof AxeObject ? (this.game.stopGameTimer(),this.game.out.push(NET018.encode())) : _0x316532 instanceof _0x5010c8 && this.damage(_0x316532);
 };
 PlayerObject.prototype.axe = function(_0x5050d5) {
     (_0x5050d5 = this.game.getText(this.level, this.zone, _0x5050d5.toString())) || (_0x5050d5 = this.game.getText(this.level, this.zone, "too bad"));
@@ -2648,7 +2860,7 @@ PlayerObject.prototype.kill = function() {
     this.fallSpeed = PlayerObject.DEAD_UP_FORCE;
     if (this.game.getPlayer() === this) {
         this.game.stopGameTimer();
-        this.game.out.push(_0x4c5df7.encode());
+        this.game.out.push(NET011.encode());
         var _0x27d445 = Cookies.get("sad_gamer_moments");
         !app.net.isPrivate && Cookies.set("sad_gamer_moments", _0x27d445 ? parseInt(_0x27d445) + 0x1 : 0x1, {
             'expires': 0x16d
@@ -2831,16 +3043,16 @@ _0x2040e7.prototype.physics = function() {
     this.grounded = !0x1;
     for (var _0x3c302a = 0x0; _0x3c302a < _0x44dd07.length; _0x3c302a++) {
         var _0x1a430b = _0x44dd07[_0x3c302a];
-        _0x1a430b.definition.COLLIDE && _0x1badb6.intersection(_0x1a430b.pos, _0x39b88d, _0x482f3b, this.dim) && (this.pos.x <= _0x482f3b.x && _0x482f3b.x + this.dim.x > _0x1a430b.pos.x ? (_0x482f3b.x = _0x1a430b.pos.x - this.dim.x, _0x443a52.x = _0x482f3b.x, this.moveSpeed = 0x0, _0x5c888e = !0x0) : this.pos.x >= _0x482f3b.x && _0x482f3b.x < _0x1a430b.pos.x + _0x39b88d.x && (_0x482f3b.x = _0x1a430b.pos.x + _0x39b88d.x, _0x443a52.x = _0x482f3b.x, this.moveSpeed = 0x0, _0x5c888e = !0x0));
+        _0x1a430b.definition.COLLIDE && squar.intersection(_0x1a430b.pos, _0x39b88d, _0x482f3b, this.dim) && (this.pos.x <= _0x482f3b.x && _0x482f3b.x + this.dim.x > _0x1a430b.pos.x ? (_0x482f3b.x = _0x1a430b.pos.x - this.dim.x, _0x443a52.x = _0x482f3b.x, this.moveSpeed = 0x0, _0x5c888e = !0x0) : this.pos.x >= _0x482f3b.x && _0x482f3b.x < _0x1a430b.pos.x + _0x39b88d.x && (_0x482f3b.x = _0x1a430b.pos.x + _0x39b88d.x, _0x443a52.x = _0x482f3b.x, this.moveSpeed = 0x0, _0x5c888e = !0x0));
     }
-    for (_0x3c302a = 0x0; _0x3c302a < _0x44dd07.length; _0x3c302a++) _0x1a430b = _0x44dd07[_0x3c302a], _0x1a430b.definition.COLLIDE && _0x1badb6.intersection(_0x1a430b.pos, _0x39b88d, _0x443a52, this.dim) && (this.pos.y >= _0x443a52.y && _0x443a52.y < _0x1a430b.pos.y + _0x39b88d.y ? (_0x443a52.y = _0x1a430b.pos.y + _0x39b88d.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y <= _0x443a52.y && _0x443a52.y + this.dim.y > _0x1a430b.pos.y && (_0x443a52.y = _0x1a430b.pos.y - this.dim.y, this.fallSpeed = 0x0));
+    for (_0x3c302a = 0x0; _0x3c302a < _0x44dd07.length; _0x3c302a++) _0x1a430b = _0x44dd07[_0x3c302a], _0x1a430b.definition.COLLIDE && squar.intersection(_0x1a430b.pos, _0x39b88d, _0x443a52, this.dim) && (this.pos.y >= _0x443a52.y && _0x443a52.y < _0x1a430b.pos.y + _0x39b88d.y ? (_0x443a52.y = _0x1a430b.pos.y + _0x39b88d.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y <= _0x443a52.y && _0x443a52.y + this.dim.y > _0x1a430b.pos.y && (_0x443a52.y = _0x1a430b.pos.y - this.dim.y, this.fallSpeed = 0x0));
     this.pos = vec2.make(_0x482f3b.x, _0x443a52.y);
     _0x5c888e && (this.dir = !this.dir);
 };
 _0x2040e7.prototype.sound = GameObject.prototype.sound;
 _0x2040e7.prototype.proximity = function() {
     var _0xc67304 = this.game.getPlayer();
-    _0xc67304 && !_0xc67304.dead && _0xc67304.level === this.level && _0xc67304.zone === this.zone && !this.proxHit && vec2.distance(_0xc67304.pos, this.pos) < _0x2040e7.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
+    _0xc67304 && !_0xc67304.dead && _0xc67304.level === this.level && _0xc67304.zone === this.zone && !this.proxHit && vec2.distance(_0xc67304.pos, this.pos) < _0x2040e7.ENABLE_DIST && (this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
 };
 _0x2040e7.prototype.enable = function() {
     this.disabled && (this.disabled = !0x1, this.disabledTimer = _0x2040e7.ENABLE_FADE_TIME);
@@ -2849,7 +3061,7 @@ _0x2040e7.prototype.disable = function() {
     this.disabled = !0x0;
 };
 _0x2040e7.prototype.damage = function(_0x5b7e53) {
-    this.dead || (this.bonk(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x1)));
+    this.dead || (this.bonk(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x1)));
 };
 _0x2040e7.prototype.bonk = function() {
     this.dead || (this.setState(_0x2040e7.STATE.BONK), this.moveSpeed = _0x2040e7.BONK_IMP.x, this.fallSpeed = _0x2040e7.BONK_IMP.y, this.dead = !0x0, this.play("sfx/kick.wav", 0x1, 0.04));
@@ -2858,7 +3070,7 @@ _0x2040e7.prototype.playerCollide = function(_0x5ee074) {
     this.dead || this.garbage || _0x5ee074.damage(this);
 };
 _0x2040e7.prototype.playerStomp = function(_0x584473) {
-    this.dead || this.garbage || (this.kill(), _0x584473.bounce(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x0)));
+    this.dead || this.garbage || (this.kill(), _0x584473.bounce(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x0)));
 };
 _0x2040e7.prototype.playerBump = function(_0x5e0adc) {
     this.dead || this.garbage || _0x5e0adc.damage(this);
@@ -3064,9 +3276,9 @@ _0xafe583.prototype.physics = function() {
     this.grounded = !0x1;
     for (var _0x277a15 = 0x0; _0x277a15 < _0x186c6d.length; _0x277a15++) {
         var _0xb496d = _0x186c6d[_0x277a15];
-        _0xb496d.definition.COLLIDE && _0x1badb6.intersection(_0xb496d.pos, _0x1f400c, _0x228c79, this.dim) && (this.pos.x + this.dim.x <= _0xb496d.pos.x && _0x228c79.x + this.dim.x > _0xb496d.pos.x ? (_0x228c79.x = _0xb496d.pos.x - this.dim.x, _0xa7c94d.x = _0x228c79.x, this.moveSpeed = 0x0, _0x350f0e = !0x0) : this.pos.x >= _0xb496d.pos.x + _0x1f400c.x && _0x228c79.x < _0xb496d.pos.x + _0x1f400c.x && (_0x228c79.x = _0xb496d.pos.x + _0x1f400c.x, _0xa7c94d.x = _0x228c79.x, this.moveSpeed = 0x0, _0x350f0e = !0x0));
+        _0xb496d.definition.COLLIDE && squar.intersection(_0xb496d.pos, _0x1f400c, _0x228c79, this.dim) && (this.pos.x + this.dim.x <= _0xb496d.pos.x && _0x228c79.x + this.dim.x > _0xb496d.pos.x ? (_0x228c79.x = _0xb496d.pos.x - this.dim.x, _0xa7c94d.x = _0x228c79.x, this.moveSpeed = 0x0, _0x350f0e = !0x0) : this.pos.x >= _0xb496d.pos.x + _0x1f400c.x && _0x228c79.x < _0xb496d.pos.x + _0x1f400c.x && (_0x228c79.x = _0xb496d.pos.x + _0x1f400c.x, _0xa7c94d.x = _0x228c79.x, this.moveSpeed = 0x0, _0x350f0e = !0x0));
     }
-    for (_0x277a15 = 0x0; _0x277a15 < _0x186c6d.length; _0x277a15++) _0xb496d = _0x186c6d[_0x277a15], _0xb496d.definition.COLLIDE && _0x1badb6.intersection(_0xb496d.pos, _0x1f400c, _0xa7c94d, this.dim) && (this.pos.y >= _0xb496d.pos.y + _0x1f400c.y && _0xa7c94d.y < _0xb496d.pos.y + _0x1f400c.y ? (_0xa7c94d.y = _0xb496d.pos.y + _0x1f400c.y, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0xb496d.pos.y && _0xa7c94d.y + this.dim.y > _0xb496d.pos.y && (_0xa7c94d.y = _0xb496d.pos.y - this.dim.y, this.jump = -0x1, this.fallSpeed = 0x0));
+    for (_0x277a15 = 0x0; _0x277a15 < _0x186c6d.length; _0x277a15++) _0xb496d = _0x186c6d[_0x277a15], _0xb496d.definition.COLLIDE && squar.intersection(_0xb496d.pos, _0x1f400c, _0xa7c94d, this.dim) && (this.pos.y >= _0xb496d.pos.y + _0x1f400c.y && _0xa7c94d.y < _0xb496d.pos.y + _0x1f400c.y ? (_0xa7c94d.y = _0xb496d.pos.y + _0x1f400c.y, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0xb496d.pos.y && _0xa7c94d.y + this.dim.y > _0xb496d.pos.y && (_0xa7c94d.y = _0xb496d.pos.y - this.dim.y, this.jump = -0x1, this.fallSpeed = 0x0));
     this.pos = vec2.make(_0x228c79.x, _0xa7c94d.y);
     _0x350f0e && (this.dir = !this.dir);
 };
@@ -3074,12 +3286,12 @@ _0xafe583.prototype.interaction = function() {
     if (this.state === _0xafe583.STATE.SPIN)
         for (var _0x369f51 = 0x0; _0x369f51 < this.game.objects.length; _0x369f51++) {
             var _0x597333 = this.game.objects[_0x369f51];
-            _0x597333 === this || _0x597333 instanceof PlayerObject || !_0x597333.isTangible() || !_0x597333.damage || _0x597333.level === this.level && _0x597333.zone === this.zone && _0x1badb6.intersection(_0x597333.pos, _0x597333.dim, this.pos, this.dim) && _0x597333.damage(this);
+            _0x597333 === this || _0x597333 instanceof PlayerObject || !_0x597333.isTangible() || !_0x597333.damage || _0x597333.level === this.level && _0x597333.zone === this.zone && squar.intersection(_0x597333.pos, _0x597333.dim, this.pos, this.dim) && _0x597333.damage(this);
         }
 };
 _0xafe583.prototype.proximity = function() {
     var _0x12bcf2 = this.game.getPlayer();
-    _0x12bcf2 && !_0x12bcf2.dead && _0x12bcf2.level === this.level && _0x12bcf2.zone === this.zone && !this.proxHit && vec2.distance(_0x12bcf2.pos, this.pos) < _0xafe583.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
+    _0x12bcf2 && !_0x12bcf2.dead && _0x12bcf2.level === this.level && _0x12bcf2.zone === this.zone && !this.proxHit && vec2.distance(_0x12bcf2.pos, this.pos) < _0xafe583.ENABLE_DIST && (this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
 };
 _0xafe583.prototype.sound = GameObject.prototype.sound;
 _0xafe583.prototype.enable = function() {
@@ -3089,7 +3301,7 @@ _0xafe583.prototype.disable = function() {
     this.disabled = !0x0;
 };
 _0xafe583.prototype.damage = function(_0x565802) {
-    this.dead || (this.bonk(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x1)));
+    this.dead || (this.bonk(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x1)));
 };
 _0xafe583.prototype.bonk = function() {
     this.dead || (this.setState(_0xafe583.STATE.BONK), this.moveSpeed = _0xafe583.BONK_IMP.x, this.fallSpeed = _0xafe583.BONK_IMP.y, this.dead = !0x0, this.play("sfx/kick.wav", 0x1, 0.04));
@@ -3102,7 +3314,7 @@ _0xafe583.prototype.stomped = function(_0x45b447) {
     this.play("sfx/stomp.wav", 0x1, 0.04);
 };
 _0xafe583.prototype.playerCollide = function(_0x49360d) {
-    this.dead || this.garbage || (this.state === _0xafe583.STATE.SHELL || this.state === _0xafe583.STATE.TRANSFORM ? (_0x49360d = 0x0 < _0x49360d.pos.x - this.pos.x, this.stomped(_0x49360d), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, _0x49360d ? 0x10 : 0x11)), this.immuneTimer = _0xafe583.PLAYER_IMMUNE_TIME) : 0x0 >= this.immuneTimer && _0x49360d.damage(this));
+    this.dead || this.garbage || (this.state === _0xafe583.STATE.SHELL || this.state === _0xafe583.STATE.TRANSFORM ? (_0x49360d = 0x0 < _0x49360d.pos.x - this.pos.x, this.stomped(_0x49360d), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, _0x49360d ? 0x10 : 0x11)), this.immuneTimer = _0xafe583.PLAYER_IMMUNE_TIME) : 0x0 >= this.immuneTimer && _0x49360d.damage(this));
 };
 _0xafe583.prototype.playerStomp = function(_0x4a7d08) {
     if (!this.dead && !this.garbage) {
@@ -3110,7 +3322,7 @@ _0xafe583.prototype.playerStomp = function(_0x4a7d08) {
         _0x4a7d08.bounce();
         this.stomped(_0x2f4f3f);
         this.immuneTimer = _0xafe583.PLAYER_IMMUNE_TIME;
-        this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, _0x2f4f3f ? 0x10 : 0x11));
+        this.game.out.push(NET020.encode(this.level, this.zone, this.oid, _0x2f4f3f ? 0x10 : 0x11));
     }
 };
 _0xafe583.prototype.playerBump = function(_0x542091) {
@@ -3286,9 +3498,9 @@ _0x5e412e.prototype.physics = function() {
         this.grounded = !0x1;
         for (var _0x36c036 = 0x0; _0x36c036 < _0x26638d.length; _0x36c036++) {
             var _0x46e9db = _0x26638d[_0x36c036];
-            _0x46e9db.definition.COLLIDE && _0x1badb6.intersection(_0x46e9db.pos, _0x2160ce, _0x487bc8, this.dim) && (this.pos.x + this.dim.x <= _0x46e9db.pos.x && _0x487bc8.x + this.dim.x > _0x46e9db.pos.x ? (_0x487bc8.x = _0x46e9db.pos.x - this.dim.x, _0x41141f.x = _0x487bc8.x, this.moveSpeed = 0x0, _0x58fc4d = !0x0) : this.pos.x >= _0x46e9db.pos.x + _0x2160ce.x && _0x487bc8.x < _0x46e9db.pos.x + _0x2160ce.x && (_0x487bc8.x = _0x46e9db.pos.x + _0x2160ce.x, _0x41141f.x = _0x487bc8.x, this.moveSpeed = 0x0, _0x58fc4d = !0x0));
+            _0x46e9db.definition.COLLIDE && squar.intersection(_0x46e9db.pos, _0x2160ce, _0x487bc8, this.dim) && (this.pos.x + this.dim.x <= _0x46e9db.pos.x && _0x487bc8.x + this.dim.x > _0x46e9db.pos.x ? (_0x487bc8.x = _0x46e9db.pos.x - this.dim.x, _0x41141f.x = _0x487bc8.x, this.moveSpeed = 0x0, _0x58fc4d = !0x0) : this.pos.x >= _0x46e9db.pos.x + _0x2160ce.x && _0x487bc8.x < _0x46e9db.pos.x + _0x2160ce.x && (_0x487bc8.x = _0x46e9db.pos.x + _0x2160ce.x, _0x41141f.x = _0x487bc8.x, this.moveSpeed = 0x0, _0x58fc4d = !0x0));
         }
-        for (_0x36c036 = 0x0; _0x36c036 < _0x26638d.length; _0x36c036++) _0x46e9db = _0x26638d[_0x36c036], _0x46e9db.definition.COLLIDE && _0x1badb6.intersection(_0x46e9db.pos, _0x2160ce, _0x41141f, this.dim) && (this.pos.y >= _0x46e9db.pos.y + _0x2160ce.y && _0x41141f.y < _0x46e9db.pos.y + _0x2160ce.y ? (_0x41141f.y = _0x46e9db.pos.y + _0x2160ce.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x46e9db.pos.y && _0x41141f.y + this.dim.y > _0x46e9db.pos.y && (_0x41141f.y = _0x46e9db.pos.y - this.dim.y, this.fallSpeed = 0x0));
+        for (_0x36c036 = 0x0; _0x36c036 < _0x26638d.length; _0x36c036++) _0x46e9db = _0x26638d[_0x36c036], _0x46e9db.definition.COLLIDE && squar.intersection(_0x46e9db.pos, _0x2160ce, _0x41141f, this.dim) && (this.pos.y >= _0x46e9db.pos.y + _0x2160ce.y && _0x41141f.y < _0x46e9db.pos.y + _0x2160ce.y ? (_0x41141f.y = _0x46e9db.pos.y + _0x2160ce.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x46e9db.pos.y && _0x41141f.y + this.dim.y > _0x46e9db.pos.y && (_0x41141f.y = _0x46e9db.pos.y - this.dim.y, this.fallSpeed = 0x0));
         this.pos = vec2.make(_0x487bc8.x, _0x41141f.y);
         _0x58fc4d && (this.dir = !this.dir);
     }
@@ -3297,7 +3509,7 @@ _0x5e412e.prototype.interaction = function() {
     if (this.state === _0x5e412e.STATE.SPIN)
         for (var _0x55c0e3 = 0x0; _0x55c0e3 < this.game.objects.length; _0x55c0e3++) {
             var _0xa2c7b4 = this.game.objects[_0x55c0e3];
-            _0xa2c7b4 === this || _0xa2c7b4 instanceof PlayerObject || !_0xa2c7b4.isTangible() || !_0xa2c7b4.damage || _0xa2c7b4.level === this.level && _0xa2c7b4.zone === this.zone && _0x1badb6.intersection(_0xa2c7b4.pos, _0xa2c7b4.dim, this.pos, this.dim) && _0xa2c7b4.damage();
+            _0xa2c7b4 === this || _0xa2c7b4 instanceof PlayerObject || !_0xa2c7b4.isTangible() || !_0xa2c7b4.damage || _0xa2c7b4.level === this.level && _0xa2c7b4.zone === this.zone && squar.intersection(_0xa2c7b4.pos, _0xa2c7b4.dim, this.pos, this.dim) && _0xa2c7b4.damage();
         }
 };
 _0x5e412e.prototype.sound = GameObject.prototype.sound;
@@ -3321,7 +3533,7 @@ _0x5e412e.prototype.stomped = function(_0x2f1cbf) {
     this.play("sfx/stomp.wav", 0x1, 0.04);
 };
 _0x5e412e.prototype.playerCollide = function(_0x2665f3) {
-    this.dead || this.garbage || (this.state === _0x5e412e.STATE.SHELL || this.state === _0x5e412e.STATE.TRANSFORM ? (_0x2665f3 = 0x0 < _0x2665f3.pos.x - this.pos.x, this.stomped(_0x2665f3), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, _0x2665f3 ? 0x10 : 0x11)), this.immuneTimer = _0xafe583.PLAYER_IMMUNE_TIME) : 0x0 >= this.immuneTimer && _0x2665f3.damage(this));
+    this.dead || this.garbage || (this.state === _0x5e412e.STATE.SHELL || this.state === _0x5e412e.STATE.TRANSFORM ? (_0x2665f3 = 0x0 < _0x2665f3.pos.x - this.pos.x, this.stomped(_0x2665f3), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, _0x2665f3 ? 0x10 : 0x11)), this.immuneTimer = _0xafe583.PLAYER_IMMUNE_TIME) : 0x0 >= this.immuneTimer && _0x2665f3.damage(this));
 };
 _0x5e412e.prototype.playerStomp = _0xafe583.prototype.playerStomp;
 _0x5e412e.prototype.playerBump = _0xafe583.prototype.playerBump;
@@ -3433,7 +3645,7 @@ _0xa70071.prototype.physics = function() {
 };
 _0xa70071.prototype.sound = GameObject.prototype.sound;
 _0xa70071.prototype.damage = function(_0x508a32) {
-    this.dead || (this.bonk(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x1)));
+    this.dead || (this.bonk(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x1)));
 };
 _0xa70071.prototype.bonk = function() {
     this.dead || (this.setState(_0xa70071.STATE.BONK), this.moveSpeed = _0xa70071.BONK_IMP.x, this.fallSpeed = _0xa70071.BONK_IMP.y, this.dead = !0x0, this.play("sfx/kick.wav", 0x1, 0.04));
@@ -3567,7 +3779,7 @@ _0x25ddce.prototype.enable = function() {
     this.disabled = !0x1;
 };
 _0x25ddce.prototype.damage = function(_0x491a38) {
-    this.dead || (this.bonk(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x1)));
+    this.dead || (this.bonk(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x1)));
 };
 _0x25ddce.prototype.bonk = function() {
     this.dead || (this.setState(_0x25ddce.STATE.BONK), this.moveSpeed = _0x25ddce.BONK_IMP.x, this.fallSpeed = _0x25ddce.BONK_IMP.y, this.dead = !0x0, this.play("sfx/kick.wav", 0x1, 0.04));
@@ -3576,7 +3788,7 @@ _0x25ddce.prototype.playerCollide = function(_0x28a0cf) {
     this.dead || this.garbage || _0x28a0cf.damage(this);
 };
 _0x25ddce.prototype.playerStomp = function(_0x2eb09b) {
-    this.dead || this.garbage || (this.bonk(), _0x2eb09b.bounce(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x1)));
+    this.dead || this.garbage || (this.bonk(), _0x2eb09b.bounce(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x1)));
 };
 _0x25ddce.prototype.playerBump = function(_0x5e66c8) {
     this.playerCollide(_0x5e66c8);
@@ -3713,14 +3925,14 @@ _0x1f4abb.prototype.physics = function() {
     this.grounded = !0x1;
     for (var _0xac132f = 0x0; _0xac132f < _0x27250d.length; _0xac132f++) {
         var _0x44201c = _0x27250d[_0xac132f];
-        _0x44201c.definition.COLLIDE && _0x1badb6.intersection(_0x44201c.pos, _0xfe9df8, _0x12b803, this.dim) && (this.pos.x + this.dim.x <= _0x44201c.pos.x && _0x12b803.x + this.dim.x > _0x44201c.pos.x ? (_0x12b803.x = _0x44201c.pos.x - this.dim.x, _0x176893.x = _0x12b803.x, this.moveSpeed = 0x0) : this.pos.x >= _0x44201c.pos.x + _0xfe9df8.x && _0x12b803.x < _0x44201c.pos.x + _0xfe9df8.x && (_0x12b803.x = _0x44201c.pos.x + _0xfe9df8.x, _0x176893.x = _0x12b803.x, this.moveSpeed = 0x0));
+        _0x44201c.definition.COLLIDE && squar.intersection(_0x44201c.pos, _0xfe9df8, _0x12b803, this.dim) && (this.pos.x + this.dim.x <= _0x44201c.pos.x && _0x12b803.x + this.dim.x > _0x44201c.pos.x ? (_0x12b803.x = _0x44201c.pos.x - this.dim.x, _0x176893.x = _0x12b803.x, this.moveSpeed = 0x0) : this.pos.x >= _0x44201c.pos.x + _0xfe9df8.x && _0x12b803.x < _0x44201c.pos.x + _0xfe9df8.x && (_0x12b803.x = _0x44201c.pos.x + _0xfe9df8.x, _0x176893.x = _0x12b803.x, this.moveSpeed = 0x0));
     }
-    for (_0xac132f = 0x0; _0xac132f < _0x27250d.length; _0xac132f++) _0x44201c = _0x27250d[_0xac132f], _0x44201c.definition.COLLIDE && _0x1badb6.intersection(_0x44201c.pos, _0xfe9df8, _0x176893, this.dim) && (this.pos.y >= _0x44201c.pos.y + _0xfe9df8.y && _0x176893.y < _0x44201c.pos.y + _0xfe9df8.y ? (_0x176893.y = _0x44201c.pos.y + _0xfe9df8.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x44201c.pos.y && _0x176893.y + this.dim.y > _0x44201c.pos.y && (_0x176893.y = _0x44201c.pos.y - this.dim.y, this.jumpTimer = -0x1, this.fallSpeed = 0x0));
+    for (_0xac132f = 0x0; _0xac132f < _0x27250d.length; _0xac132f++) _0x44201c = _0x27250d[_0xac132f], _0x44201c.definition.COLLIDE && squar.intersection(_0x44201c.pos, _0xfe9df8, _0x176893, this.dim) && (this.pos.y >= _0x44201c.pos.y + _0xfe9df8.y && _0x176893.y < _0x44201c.pos.y + _0xfe9df8.y ? (_0x176893.y = _0x44201c.pos.y + _0xfe9df8.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x44201c.pos.y && _0x176893.y + this.dim.y > _0x44201c.pos.y && (_0x176893.y = _0x44201c.pos.y - this.dim.y, this.jumpTimer = -0x1, this.fallSpeed = 0x0));
     this.pos = vec2.make(_0x12b803.x, _0x176893.y);
 };
 _0x1f4abb.prototype.proximity = function() {
     var _0x2e2202 = this.game.getPlayer();
-    _0x2e2202 && !_0x2e2202.dead && _0x2e2202.level === this.level && _0x2e2202.zone === this.zone && !this.proxHit && vec2.distance(_0x2e2202.pos, this.pos) < _0x1f4abb.ENABLE_DIST && (this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
+    _0x2e2202 && !_0x2e2202.dead && _0x2e2202.level === this.level && _0x2e2202.zone === this.zone && !this.proxHit && vec2.distance(_0x2e2202.pos, this.pos) < _0x1f4abb.ENABLE_DIST && (this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0xa0)), this.proxHit = !0x0);
 };
 _0x1f4abb.prototype.face = function() {
     for (var _0xe75dbb, _0x338971 = 0x0; _0x338971 < this.game.objects.length; _0x338971++) {
@@ -3749,11 +3961,11 @@ _0x1f4abb.prototype.playerCollide = function(_0x4b48ff) {
     this.dead || this.garbage || _0x4b48ff.damage(this);
 };
 _0x1f4abb.prototype.playerStomp = function(_0x382396) {
-    this.dead || this.garbage || (this.bonk(), _0x382396.bounce(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x1)));
+    this.dead || this.garbage || (this.bonk(), _0x382396.bounce(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x1)));
 };
 _0x1f4abb.prototype.playerBump = _0x1f4abb.prototype.playerCollide;
 _0x1f4abb.prototype.damage = function(_0x23a76d) {
-    this.dead || (this.bonk(), _0x30e075.encode(this.level, this.zone, this.oid, 0x1));
+    this.dead || (this.bonk(), NET020.encode(this.level, this.zone, this.oid, 0x1));
 };
 _0x1f4abb.prototype.bonk = function() {
     this.dead || (this.setState(_0x1f4abb.STATE.BONK), this.moveSpeed = _0x1f4abb.BONK_IMP.x, this.fallSpeed = _0x1f4abb.BONK_IMP.y, this.dead = !0x0, this.play("sfx/kick.wav", 0x1, 0.04));
@@ -3889,9 +4101,9 @@ BowserObject.prototype.physics = function() {
     this.grounded = !0x1;
     for (var _0x2d6663 = 0x0; _0x2d6663 < _0x3ec375.length; _0x2d6663++) {
         var _0x50845a = _0x3ec375[_0x2d6663];
-        _0x50845a.definition.COLLIDE && _0x1badb6.intersection(_0x50845a.pos, _0x486f5e, _0x85d755, this.dim) && (this.pos.x + this.dim.x <= _0x50845a.pos.x && _0x85d755.x + this.dim.x > _0x50845a.pos.x ? (_0x85d755.x = _0x50845a.pos.x - this.dim.x, _0x471885.x = _0x85d755.x, this.moveSpeed = 0x0) : this.pos.x >= _0x50845a.pos.x + _0x486f5e.x && _0x85d755.x < _0x50845a.pos.x + _0x486f5e.x && (_0x85d755.x = _0x50845a.pos.x + _0x486f5e.x, _0x471885.x = _0x85d755.x, this.moveSpeed = 0x0));
+        _0x50845a.definition.COLLIDE && squar.intersection(_0x50845a.pos, _0x486f5e, _0x85d755, this.dim) && (this.pos.x + this.dim.x <= _0x50845a.pos.x && _0x85d755.x + this.dim.x > _0x50845a.pos.x ? (_0x85d755.x = _0x50845a.pos.x - this.dim.x, _0x471885.x = _0x85d755.x, this.moveSpeed = 0x0) : this.pos.x >= _0x50845a.pos.x + _0x486f5e.x && _0x85d755.x < _0x50845a.pos.x + _0x486f5e.x && (_0x85d755.x = _0x50845a.pos.x + _0x486f5e.x, _0x471885.x = _0x85d755.x, this.moveSpeed = 0x0));
     }
-    for (_0x2d6663 = 0x0; _0x2d6663 < _0x3ec375.length; _0x2d6663++) _0x50845a = _0x3ec375[_0x2d6663], _0x50845a.definition.COLLIDE && _0x1badb6.intersection(_0x50845a.pos, _0x486f5e, _0x471885, this.dim) && (this.pos.y >= _0x50845a.pos.y + _0x486f5e.y && _0x471885.y < _0x50845a.pos.y + _0x486f5e.y ? (_0x471885.y = _0x50845a.pos.y + _0x486f5e.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x50845a.pos.y && _0x471885.y + this.dim.y > _0x50845a.pos.y && (_0x471885.y = _0x50845a.pos.y - this.dim.y, this.jumpTimer = -0x1, this.fallSpeed = 0x0));
+    for (_0x2d6663 = 0x0; _0x2d6663 < _0x3ec375.length; _0x2d6663++) _0x50845a = _0x3ec375[_0x2d6663], _0x50845a.definition.COLLIDE && squar.intersection(_0x50845a.pos, _0x486f5e, _0x471885, this.dim) && (this.pos.y >= _0x50845a.pos.y + _0x486f5e.y && _0x471885.y < _0x50845a.pos.y + _0x486f5e.y ? (_0x471885.y = _0x50845a.pos.y + _0x486f5e.y, this.fallSpeed = 0x0, this.grounded = !0x0) : this.pos.y + this.dim.y <= _0x50845a.pos.y && _0x471885.y + this.dim.y > _0x50845a.pos.y && (_0x471885.y = _0x50845a.pos.y - this.dim.y, this.jumpTimer = -0x1, this.fallSpeed = 0x0));
     this.pos = vec2.make(_0x85d755.x, _0x471885.y);
 };
 BowserObject.prototype.sound = GameObject.prototype.sound;
@@ -4070,7 +4282,7 @@ _0x4b6e2c.prototype.start = function() {
     this.go = !0x0;
 };
 _0x4b6e2c.prototype.riding = function(_0x4a3b82) {
-    _0x4a3b82.pid !== this.game.pid || this.go || this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0xa1));
+    _0x4a3b82.pid !== this.game.pid || this.go || this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0xa1));
     this.riders.push(_0x4a3b82);
 };
 _0x4b6e2c.prototype.kill = function() {};
@@ -4147,7 +4359,7 @@ SpringObject.prototype.step = function() {
 };
 SpringObject.prototype.interaction = function() {
     var _0x4c2d7a = this.game.getPlayer();
-    if (_0x4c2d7a && _0x4c2d7a.level === this.level && _0x4c2d7a.zone === this.zone && _0x4c2d7a.isTangible() && _0x1badb6.intersection(this.pos, this.dim, _0x4c2d7a.pos, _0x4c2d7a.dim)) {
+    if (_0x4c2d7a && _0x4c2d7a.level === this.level && _0x4c2d7a.zone === this.zone && _0x4c2d7a.isTangible() && squar.intersection(this.pos, this.dim, _0x4c2d7a.pos, _0x4c2d7a.dim)) {
         var _0x370dd9 = Math.pow(0x1 - 0.5 * Math.min(Math.max(0x0, _0x4c2d7a.pos.y - this.pos.y), 0x2), 0x2);
         _0x4c2d7a.fallSpeed >= 0.75 * PlayerObject.FALL_SPEED_MAX && _0x4c2d7a.btnA && (_0x4c2d7a.jumping = 0x0, _0x4c2d7a.isSpring = !0x0);
         _0x4c2d7a.fallSpeed += Math.min(0x2 * PlayerObject.FALL_SPEED_MAX, _0x370dd9 * SpringObject.POWER);
@@ -4156,7 +4368,7 @@ SpringObject.prototype.interaction = function() {
     _0x4c2d7a = 0x2;
     for (_0x370dd9 = 0x0; _0x370dd9 < this.game.objects.length; _0x370dd9++) {
         var _0x3645c3 = this.game.objects[_0x370dd9];
-        _0x3645c3 instanceof PlayerObject && _0x3645c3.level === this.level && _0x3645c3.zone === this.zone && _0x3645c3.isTangible() && _0x1badb6.intersection(this.pos, this.dim, _0x3645c3.pos, _0x3645c3.dim) && (_0x3645c3 = Math.min(Math.max(0x0, _0x3645c3.pos.y - this.pos.y), 0x2), _0x3645c3 < _0x4c2d7a && (_0x4c2d7a = _0x3645c3));
+        _0x3645c3 instanceof PlayerObject && _0x3645c3.level === this.level && _0x3645c3.zone === this.zone && _0x3645c3.isTangible() && squar.intersection(this.pos, this.dim, _0x3645c3.pos, _0x3645c3.dim) && (_0x3645c3 = Math.min(Math.max(0x0, _0x3645c3.pos.y - this.pos.y), 0x2), _0x3645c3 < _0x4c2d7a && (_0x4c2d7a = _0x3645c3));
     }
     _0x4c2d7a < SpringObject.THRESHOLD[0x1] ? this.setState(SpringObject.STATE.COMPRESS) : _0x4c2d7a < SpringObject.THRESHOLD[0x0] ? this.setState(SpringObject.STATE.HALF) : this.setState(SpringObject.STATE.EXTEND);
 };
@@ -4290,7 +4502,7 @@ _0x35ddf4.prototype.interaction = function() {
     if (_0x258ff9 && _0x258ff9.isTangible() && _0x258ff9.level === this.level && _0x258ff9.zone === this.zone)
         for (var _0x373060 = 0x0; _0x373060 < this.size; _0x373060++) {
             var _0x2ff265 = vec2.add(vec2.add(this.pos, _0x35ddf4.OFFSET), vec2.scale(_0x7617b0, _0x35ddf4.SPACING * _0x373060));
-            _0x1badb6.intersection(_0x258ff9.pos, _0x258ff9.dim, _0x2ff265, this.dim) && _0x258ff9.damage(this);
+            squar.intersection(_0x258ff9.pos, _0x258ff9.dim, _0x2ff265, this.dim) && _0x258ff9.damage(this);
         }
 };
 _0x35ddf4.prototype.playerCollide = function(_0x385f5f) {};
@@ -4502,7 +4714,7 @@ _0x30df09.prototype.playerCollide = function(_0x15f7e9) {
     this.dead || this.garbage || _0x15f7e9.damage(this);
 };
 _0x30df09.prototype.playerStomp = function(_0x53a4e6) {
-    this.dead || this.garbage || (this.bonk(), _0x53a4e6.bounce(), this.play("sfx/stomp.wav", 0x1, 0.04), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x1)));
+    this.dead || this.garbage || (this.bonk(), _0x53a4e6.bounce(), this.play("sfx/stomp.wav", 0x1, 0.04), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x1)));
 };
 _0x30df09.prototype.playerBump = function(_0x5a4a67) {
     this.playerCollide(_0x5a4a67);
@@ -4599,18 +4811,18 @@ _0x6c6f53.prototype.physics = function() {
     this.fallSpeed = Math.max(this.fallSpeed - _0x6c6f53.FALL_SPEED_ACCEL, -_0x6c6f53.FALL_SPEED_MAX);
     for (var _0x129f7c = vec2.add(this.pos, vec2.make(_0x3236a4, this.fallSpeed)), _0x42654a = vec2.make(this.pos.x + Math.min(0x0, _0x3236a4), this.pos.y + Math.min(0x0, this.fallSpeed)), _0x3236a4 = vec2.make(this.dim.x + Math.max(0x0, _0x3236a4), this.dim.y + Math.max(0x0, this.fallSpeed)), _0x10832b = this.game.world.getZone(this.level, this.zone).getTiles(_0x42654a, _0x3236a4), _0x42654a = vec2.make(0x1, 0x1), _0x3236a4 = [], _0x564789 = 0x0; _0x564789 < _0x10832b.length; _0x564789++) {
         var _0x1dc741 = _0x10832b[_0x564789];
-        _0x1dc741.definition.COLLIDE && (_0x1badb6.intersection(_0x1dc741.pos, _0x42654a, _0x129f7c, this.dim) || _0x1badb6.intersection(_0x1dc741.pos, _0x42654a, this.pos, this.dim)) && _0x3236a4.push(_0x1dc741);
+        _0x1dc741.definition.COLLIDE && (squar.intersection(_0x1dc741.pos, _0x42654a, _0x129f7c, this.dim) || squar.intersection(_0x1dc741.pos, _0x42654a, this.pos, this.dim)) && _0x3236a4.push(_0x1dc741);
     }
     _0x10832b = vec2.make(_0x129f7c.x, this.pos.y);
-    for (_0x564789 = 0x0; _0x564789 < _0x3236a4.length; _0x564789++) _0x1dc741 = _0x3236a4[_0x564789], _0x1badb6.intersection(_0x1dc741.pos, _0x42654a, _0x10832b, this.dim) && (_0x10832b.x = _0x10832b.x + 0.5 * this.dim.x < _0x1dc741.pos.x + 0.5 * _0x42654a.x ? _0x1dc741.pos.x - this.dim.x : _0x1dc741.pos.x + _0x42654a.x, this.kill());
+    for (_0x564789 = 0x0; _0x564789 < _0x3236a4.length; _0x564789++) _0x1dc741 = _0x3236a4[_0x564789], squar.intersection(_0x1dc741.pos, _0x42654a, _0x10832b, this.dim) && (_0x10832b.x = _0x10832b.x + 0.5 * this.dim.x < _0x1dc741.pos.x + 0.5 * _0x42654a.x ? _0x1dc741.pos.x - this.dim.x : _0x1dc741.pos.x + _0x42654a.x, this.kill());
     _0x129f7c.x = _0x10832b.x;
-    for (_0x564789 = 0x0; _0x564789 < _0x3236a4.length; _0x564789++) _0x1dc741 = _0x3236a4[_0x564789], _0x1badb6.intersection(_0x1dc741.pos, _0x42654a, _0x129f7c, this.dim) && (this.pos.y >= _0x129f7c.y ? (_0x129f7c.y = _0x1dc741.pos.y + _0x42654a.y, this.fallSpeed = _0x6c6f53.BOUNCE_SPEED) : (_0x129f7c.y = _0x1dc741.pos.y - this.dim.y, this.fallSpeed = -_0x6c6f53.BOUNCE_SPEED));
+    for (_0x564789 = 0x0; _0x564789 < _0x3236a4.length; _0x564789++) _0x1dc741 = _0x3236a4[_0x564789], squar.intersection(_0x1dc741.pos, _0x42654a, _0x129f7c, this.dim) && (this.pos.y >= _0x129f7c.y ? (_0x129f7c.y = _0x1dc741.pos.y + _0x42654a.y, this.fallSpeed = _0x6c6f53.BOUNCE_SPEED) : (_0x129f7c.y = _0x1dc741.pos.y - this.dim.y, this.fallSpeed = -_0x6c6f53.BOUNCE_SPEED));
     this.pos = _0x129f7c;
 };
 _0x6c6f53.prototype.interaction = function() {
     for (var _0x51d7a3 = 0x0; _0x51d7a3 < this.game.objects.length; _0x51d7a3++) {
         var _0x1f6129 = this.game.objects[_0x51d7a3];
-        if (_0x1f6129 !== this && _0x1f6129.pid !== this.owner && _0x1f6129.isTangible() && !(_0x1f6129 instanceof PlayerObject) && _0x1f6129.damage && _0x1f6129.level === this.level && _0x1f6129.zone === this.zone && _0x1badb6.intersection(_0x1f6129.pos, _0x1f6129.dim, this.pos, this.dim)) {
+        if (_0x1f6129 !== this && _0x1f6129.pid !== this.owner && _0x1f6129.isTangible() && !(_0x1f6129 instanceof PlayerObject) && _0x1f6129.damage && _0x1f6129.level === this.level && _0x1f6129.zone === this.zone && squar.intersection(_0x1f6129.pos, _0x1f6129.dim, this.pos, this.dim)) {
             this.owner === this.game.pid && _0x1f6129.damage(this);
             this.kill();
             break;
@@ -4709,7 +4921,7 @@ _0x1899b7.prototype.physics = function() {
 _0x1899b7.prototype.interaction = function() {
     for (var _0x554db7 = 0x0; _0x554db7 < this.game.objects.length; _0x554db7++) {
         var _0x43845d = this.game.objects[_0x554db7];
-        if (_0x43845d instanceof PlayerObject && _0x43845d.isTangible() && _0x43845d.level === this.level && _0x43845d.zone === this.zone && _0x1badb6.intersection(_0x43845d.pos, _0x43845d.dim, this.pos, this.dim)) {
+        if (_0x43845d instanceof PlayerObject && _0x43845d.isTangible() && _0x43845d.level === this.level && _0x43845d.zone === this.zone && squar.intersection(_0x43845d.pos, _0x43845d.dim, this.pos, this.dim)) {
             _0x43845d.pid === this.game.pid && _0x43845d.damage(this);
             this.kill();
             break;
@@ -4809,7 +5021,7 @@ _0x1bc0ed.prototype.physics = function() {
 _0x1bc0ed.prototype.interaction = function() {
     if (this.state === _0x1bc0ed.STATE.THROW) {
         var _0xb52b5e = this.game.getPlayer();
-        _0xb52b5e && _0xb52b5e.isTangible() && _0xb52b5e.level === this.level && _0xb52b5e.zone === this.zone && _0x1badb6.intersection(_0xb52b5e.pos, _0xb52b5e.dim, this.pos, this.dim) && _0xb52b5e.damage(this);
+        _0xb52b5e && _0xb52b5e.isTangible() && _0xb52b5e.level === this.level && _0xb52b5e.zone === this.zone && squar.intersection(_0xb52b5e.pos, _0xb52b5e.dim, this.pos, this.dim) && _0xb52b5e.damage(this);
     }
 };
 _0x1bc0ed.prototype.throw = function() {
@@ -4854,7 +5066,7 @@ function _0x2e2bc3(_0x23b738, _0x46c7a3, _0x118fd6, _0xb55197, _0x48d8ac) {
     _0x23b738 = vec2.make(0x1, 0x1);
     _0x46c7a3 = this.game.world.getZone(this.level, this.zone).getTiles(this.pos, this.dim);
     for (_0x118fd6 = 0x0; _0x118fd6 < _0x46c7a3.length; _0x118fd6++)
-        if (_0x1badb6.intersection(_0x46c7a3[_0x118fd6].pos, _0x23b738, this.pos, this.dim)) {
+        if (squar.intersection(_0x46c7a3[_0x118fd6].pos, _0x23b738, this.pos, this.dim)) {
             this.rise = !0x0;
             break;
         } this.dir = !0x1;
@@ -4890,7 +5102,7 @@ _0x2e2bc3.prototype.physics = function() {
         this.rise = !0x1;
         for (var _0x2d4761 = vec2.make(0x1, 0x1), _0x48762f = this.game.world.getZone(this.level, this.zone).getTiles(this.pos, this.dim), _0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) {
             var _0x323720 = _0x48762f[_0xae67e5];
-            if (_0x323720.definition.COLLIDE && _0x1badb6.intersection(_0x323720.pos, _0x2d4761, this.pos, this.dim)) {
+            if (_0x323720.definition.COLLIDE && squar.intersection(_0x323720.pos, _0x2d4761, this.pos, this.dim)) {
                 this.rise = !0x0;
                 break;
             }
@@ -4906,8 +5118,8 @@ _0x2e2bc3.prototype.physics = function() {
             _0x2d4761 = vec2.make(0x1, 0x1),
             _0x32139c = !0x1;
         this.grounded = !0x1;
-        for (_0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) _0x323720 = _0x48762f[_0xae67e5], _0x323720.definition.COLLIDE && _0x1badb6.intersection(_0x323720.pos, _0x2d4761, _0x17799f, this.dim) && (this.pos.x <= _0x17799f.x && _0x17799f.x + this.dim.x > _0x323720.pos.x ? (_0x17799f.x = _0x323720.pos.x - this.dim.x, _0x7b593c.x = _0x17799f.x, this.moveSpeed = 0x0, _0x32139c = !0x0) : this.pos.x >= _0x17799f.x && _0x17799f.x < _0x323720.pos.x + _0x2d4761.x && (_0x17799f.x = _0x323720.pos.x + _0x2d4761.x, _0x7b593c.x = _0x17799f.x, this.moveSpeed = 0x0, _0x32139c = !0x0));
-        for (_0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) _0x323720 = _0x48762f[_0xae67e5], _0x323720.definition.COLLIDE && _0x1badb6.intersection(_0x323720.pos, _0x2d4761, _0x7b593c, this.dim) && (this.pos.y >= _0x7b593c.y && _0x7b593c.y < _0x323720.pos.y + _0x2d4761.y ? (_0x7b593c.y = _0x323720.pos.y + _0x2d4761.y, this.grounded = !0x0) : this.pos.y <= _0x7b593c.y && _0x7b593c.y + this.dim.y > _0x323720.pos.y && (_0x7b593c.y = _0x323720.pos.y - this.dim.y, this.jumping = -0x1, this.fallSpeed = 0x0));
+        for (_0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) _0x323720 = _0x48762f[_0xae67e5], _0x323720.definition.COLLIDE && squar.intersection(_0x323720.pos, _0x2d4761, _0x17799f, this.dim) && (this.pos.x <= _0x17799f.x && _0x17799f.x + this.dim.x > _0x323720.pos.x ? (_0x17799f.x = _0x323720.pos.x - this.dim.x, _0x7b593c.x = _0x17799f.x, this.moveSpeed = 0x0, _0x32139c = !0x0) : this.pos.x >= _0x17799f.x && _0x17799f.x < _0x323720.pos.x + _0x2d4761.x && (_0x17799f.x = _0x323720.pos.x + _0x2d4761.x, _0x7b593c.x = _0x17799f.x, this.moveSpeed = 0x0, _0x32139c = !0x0));
+        for (_0xae67e5 = 0x0; _0xae67e5 < _0x48762f.length; _0xae67e5++) _0x323720 = _0x48762f[_0xae67e5], _0x323720.definition.COLLIDE && squar.intersection(_0x323720.pos, _0x2d4761, _0x7b593c, this.dim) && (this.pos.y >= _0x7b593c.y && _0x7b593c.y < _0x323720.pos.y + _0x2d4761.y ? (_0x7b593c.y = _0x323720.pos.y + _0x2d4761.y, this.grounded = !0x0) : this.pos.y <= _0x7b593c.y && _0x7b593c.y + this.dim.y > _0x323720.pos.y && (_0x7b593c.y = _0x323720.pos.y - this.dim.y, this.jumping = -0x1, this.fallSpeed = 0x0));
         this.pos = vec2.make(_0x17799f.x, _0x7b593c.y);
         _0x32139c && (this.dir = !this.dir);
     }
@@ -4917,7 +5129,7 @@ _0x2e2bc3.prototype.bounce = function() {
     this.jump = 0x0;
 };
 _0x2e2bc3.prototype.playerCollide = function(_0x25bc93) {
-    this.dead || this.garbage || (_0x25bc93.powerup(this), this.kill(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x0)));
+    this.dead || this.garbage || (_0x25bc93.powerup(this), this.kill(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x0)));
 };
 _0x2e2bc3.prototype.playerStomp = function(_0x3025ba) {
     this.playerCollide(_0x3025ba);
@@ -5331,7 +5543,7 @@ CoinObject.prototype.step = function() {
     this.sprite = this.state.SPRITE[parseInt(this.anim / CoinObject.ANIMATION_RATE) % this.state.SPRITE.length];
 };
 CoinObject.prototype.playerCollide = function(_0x143dba) {
-    this.dead || this.garbage || (_0x143dba.powerup(this), this.kill(), this.game.out.push(_0x30e075.encode(this.level, this.zone, this.oid, 0x0)));
+    this.dead || this.garbage || (_0x143dba.powerup(this), this.kill(), this.game.out.push(NET020.encode(this.level, this.zone, this.oid, 0x0)));
 };
 CoinObject.prototype.playerStomp = function(_0x423f28) {
     this.playerCollide(_0x423f28);
@@ -6028,17 +6240,17 @@ Audio.prototype.destroy = function() {
     });
 };
 "use strict";
-_0x41f345.collideTest = function(_0x24aba8) {
+td32.collideTest = function(_0x24aba8) {
     return _0x24aba8.split('').reverse().join('');
 };
-_0x41f345.state = function(_0x4f1547) {
-    return _0x4f1547[_0x41f345.collideTest("reyalPteg")]() ? 0.39 < _0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("deepSevom")] || 0x14 < _0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("gnipmuj")] || 0xf < _0x4f1547[_0x41f345.collideTest("sevil")] || 0x64 < _0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("remiTegamad")] || 0x190 < _0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("remiTrats")] || 0x0 < _0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("rewop")] && !_0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("etar")] || 0x0 < _0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("remiTrats")] && !_0x4f1547[_0x41f345.collideTest("reyalPteg")]()[_0x41f345.collideTest("etar")] || _0x41f345.onHit !== StarObject.prototype[_0x41f345.collideTest("scisyhp")] || _0x41f345.onCollide !== PlayerObject.prototype[_0x41f345.collideTest("scisyhp")] : !0x1;
+td32.state = function(_0x4f1547) {
+    return _0x4f1547[td32.collideTest("reyalPteg")]() ? 0.39 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("deepSevom")] || 0x14 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("gnipmuj")] || 0xf < _0x4f1547[td32.collideTest("sevil")] || 0x64 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTegamad")] || 0x190 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTrats")] || 0x0 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("rewop")] && !_0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("etar")] || 0x0 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTrats")] && !_0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("etar")] || td32.onHit !== StarObject.prototype[td32.collideTest("scisyhp")] || td32.onCollide !== PlayerObject.prototype[td32.collideTest("scisyhp")] : !0x1;
 };
-_0x41f345.update = function(_0x1b89a5) {
-    _0x41f345.state(_0x1b89a5) && _0x1b89a5.out.push(_0x3bdaa9.encode());
+td32.update = function(_0x1b89a5) {
+    td32.state(_0x1b89a5) && _0x1b89a5.out.push(_0x3bdaa9.encode());
 };
-_0x41f345.onHit = StarObject.prototype[_0x41f345.collideTest("scisyhp")];
-_0x41f345.onCollide = PlayerObject.prototype[_0x41f345.collideTest("scisyhp")];
+td32.onHit = StarObject.prototype[td32.collideTest("scisyhp")];
+td32.onCollide = PlayerObject.prototype[td32.collideTest("scisyhp")];
 "use strict";
 
 function Display(game, container, canvas, resource) {
@@ -6091,7 +6303,7 @@ Display.prototype.drawMap = function(_0x5eea15) {
     this.misteryAnim++;
     for (var _0x498ee4 = this.context, _0x3a22b2 = this.resource.getTexture("map"), _0x5432e0 = this.game.getZone(), _0x19d8bf = _0x5432e0.dimensions(), _0x366f4a = this.canvas.width / Display.TEXRES * 0.55 / this.camera.scale, _0x27c82d = Math.max(0x0, Math.min(_0x19d8bf.x, parseInt(this.camera.pos.x - _0x366f4a))), _0x19d8bf = Math.max(0x0, Math.min(_0x19d8bf.x, parseInt(this.camera.pos.x + _0x366f4a))), _0x366f4a = 0x0; _0x366f4a < _0x5432e0.data.length; _0x366f4a++)
         for (var _0x2d4c21 = _0x5432e0.data[_0x366f4a], _0x4fb7c0 = _0x27c82d; _0x4fb7c0 < _0x19d8bf; _0x4fb7c0++) {
-            var _0x2d62c4 = _0x41f345.decode16(_0x2d4c21[_0x4fb7c0]);
+            var _0x2d62c4 = td32.decode16(_0x2d4c21[_0x4fb7c0]);
             if (_0x2d62c4.depth === _0x5eea15) {
                 var _0x59ebb0 = 0;
                 // Mistery Box
@@ -6438,19 +6650,19 @@ function _0x5e1ced(_0x4ec59c, _0x22aa6b, _0x42b6c1) {
 }
 _0x5e1ced.prototype.update = function(_0x56c974, _0x203ebe, _0x453702, _0x9efab7, _0x1f768e, _0x1478c6, _0x16a842) {
     var _0x14b697 = this.dimensions().y - 0x1 - _0x1478c6,
-        _0x14b697 = _0x41f345.decode(this.data[_0x14b697][_0x1f768e]);
+        _0x14b697 = td32.decode(this.data[_0x14b697][_0x1f768e]);
     _0x14b697.definition.TRIGGER(_0x56c974, _0x203ebe, _0x14b697, _0x453702, _0x9efab7, _0x1f768e, _0x1478c6, _0x16a842);
 };
 _0x5e1ced.prototype.step = function() {
     for (var _0x4a391d = 0x0; _0x4a391d < this.bumped.length; _0x4a391d++) {
         var _0x4b09c3 = this.bumped[_0x4a391d],
-            _0x2c42b4 = _0x41f345.decode(this.data[_0x4b09c3.y][_0x4b09c3.x]);
-        0x0 < _0x2c42b4.bump ? this.data[_0x4b09c3.y][_0x4b09c3.x] = _0x41f345.bump(this.data[_0x4b09c3.y][_0x4b09c3.x], _0x2c42b4.bump - 0x1) : this.bumped.splice(_0x4a391d--, 0x1);
+            _0x2c42b4 = td32.decode(this.data[_0x4b09c3.y][_0x4b09c3.x]);
+        0x0 < _0x2c42b4.bump ? this.data[_0x4b09c3.y][_0x4b09c3.x] = td32.bump(this.data[_0x4b09c3.y][_0x4b09c3.x], _0x2c42b4.bump - 0x1) : this.bumped.splice(_0x4a391d--, 0x1);
     }
     for (_0x4a391d = 0x0; _0x4a391d < this.effects.length; _0x4a391d++) _0x4b09c3 = this.effects[_0x4a391d], _0x4b09c3.garbage ? this.effects.splice(_0x4a391d--, 0x1) : _0x4b09c3.step();
     for (_0x4a391d = 0x0; _0x4a391d < this.vines.length; _0x4a391d++) _0x4b09c3 = this.vines[_0x4a391d], 0x0 > _0x4b09c3.y ? this.vines.splice(_0x4a391d--, 0x1) : this.data[_0x4b09c3.y--][_0x4b09c3.x] = _0x4b09c3.td;
     for (_0x4a391d = 0x0; _0x4a391d < this.sounds.length; _0x4a391d++) this.sounds[_0x4a391d].done() && this.sounds.splice(_0x4a391d--, 0x1);
-    _0x41f345.update(this.game);
+    td32.update(this.game);
 };
 _0x5e1ced.prototype.tile = function(_0x3d68a7, _0x43d1f3) {
     _0x43d1f3 = this.dimensions().y - 0x1 - _0x43d1f3;
@@ -6458,7 +6670,7 @@ _0x5e1ced.prototype.tile = function(_0x3d68a7, _0x43d1f3) {
 };
 _0x5e1ced.prototype.bump = function(_0x711a6b, _0x38eb82) {
     var _0x9935da = this.dimensions().y - 0x1 - _0x38eb82;
-    this.data[_0x9935da][_0x711a6b] = _0x41f345.bump(this.data[_0x9935da][_0x711a6b], 0xf);
+    this.data[_0x9935da][_0x711a6b] = td32.bump(this.data[_0x9935da][_0x711a6b], 0xf);
     this.bumped.push({
         'x': _0x711a6b,
         'y': _0x9935da
@@ -6479,7 +6691,7 @@ _0x5e1ced.prototype.grow = function(_0x34397d, _0x27a117, _0x5e09da) {
 };
 _0x5e1ced.prototype.break = function(_0x4aded4, _0x3d82ec, _0x544718) {
     var _0x415636 = this.dimensions().y - 0x1 - _0x3d82ec,
-        _0x1aa33b = _0x41f345.decode16(this.data[_0x415636][_0x4aded4]);
+        _0x1aa33b = td32.decode16(this.data[_0x415636][_0x4aded4]);
     this.data[_0x415636][_0x4aded4] = _0x544718;
     this.effects.push(new _0x5296e0(vec2.make(_0x4aded4, _0x3d82ec), _0x1aa33b.index));
     this.play(_0x4aded4, _0x3d82ec, "sfx/break.wav", 1.5, 0.04);
@@ -6498,7 +6710,7 @@ _0x5e1ced.prototype.getTile = function(_0x5712b7) {
     var _0x5eee6f = this.dimensions();
     _0x5712b7 = vec2.copy(_0x5712b7);
     _0x5712b7.y = _0x5eee6f.y - _0x5712b7.y - 0x1;
-    return _0x41f345.decode(this.data[Math.max(0x0, Math.min(_0x5eee6f.y, Math.floor(_0x5712b7.y)))][Math.max(0x0, Math.min(_0x5eee6f.x, Math.floor(_0x5712b7.x)))]);
+    return td32.decode(this.data[Math.max(0x0, Math.min(_0x5eee6f.y, Math.floor(_0x5712b7.y)))][Math.max(0x0, Math.min(_0x5eee6f.x, Math.floor(_0x5712b7.x)))]);
 };
 _0x5e1ced.prototype.getTiles = function(_0x3ce841, _0x4afc27) {
     var _0x525d97 = this.dimensions(),
@@ -6510,7 +6722,7 @@ _0x5e1ced.prototype.getTiles = function(_0x3ce841, _0x4afc27) {
     _0x4afc27 = parseInt(Math.max(Math.min(Math.ceil(_0x51d112.y) + 0x1, _0x525d97.y), 0x0));
     for (_0x51d112 = []; _0x5f4edb < _0x4afc27; _0x5f4edb++)
         for (var _0x5e6b1b = _0x3ce841; _0x5e6b1b < _0x5daf64; _0x5e6b1b++) {
-            var _0x556c14 = _0x41f345.decode(this.data[_0x5f4edb][_0x5e6b1b]);
+            var _0x556c14 = td32.decode(this.data[_0x5f4edb][_0x5e6b1b]);
             _0x556c14.pos = vec2.make(_0x5e6b1b, _0x525d97.y - 0x1 - _0x5f4edb);
             _0x556c14.ind = [_0x5f4edb, _0x5e6b1b];
             _0x51d112.push(_0x556c14);
@@ -6865,14 +7077,14 @@ Game.prototype.doTouch = function(_0x52fc25) {
         else
             for (_0x174be8 = 0x0; _0x174be8 < _0x597311.length; _0x174be8++) {
                 var _0x287903 = _0x597311[_0x174be8];
-                _0x1badb6.inside(_0x182f56, _0x287903.pos, _0x287903.dim) && _0x287903.press && _0x287903.press();
+                squar.inside(_0x182f56, _0x287903.pos, _0x287903.dim) && _0x287903.press && _0x287903.press();
             }
     }
     for (_0x174be8 = 0x0; _0x174be8 < _0x52fc25.touch.length; _0x174be8++) {
         _0x182f56 = _0x52fc25.touch[_0x174be8];
         _0x258db7 = !0x1;
         for (_0x174be8 = 0x0; _0x174be8 < _0x597311.length; _0x174be8++)
-            if (_0x287903 = _0x597311[_0x174be8], _0x1badb6.inside(_0x182f56, _0x287903.pos, _0x287903.dim)) {
+            if (_0x287903 = _0x597311[_0x174be8], squar.inside(_0x182f56, _0x287903.pos, _0x287903.dim)) {
                 _0x258db7 = !0x0;
                 _0x287903.click && _0x287903.click();
                 break;
@@ -6949,7 +7161,7 @@ Game.prototype.doInput = function(_0x585e08) {
                     });
                 }
             }], _0x5b7c6b = 0x0; _0x5b7c6b < _0x585e08.mouse.length; _0x5b7c6b++)
-            for (_0x133972 = _0x585e08.mouse[_0x5b7c6b], _0x306656 = 0x0; _0x306656 < _0x42b147.length; _0x306656++) _0xa25dbe = _0x42b147[_0x306656], 0x0 === _0x133972.btn && _0x1badb6.inside(_0x133972.pos, _0xa25dbe.pos, _0xa25dbe.dim) && _0xa25dbe.click();
+            for (_0x133972 = _0x585e08.mouse[_0x5b7c6b], _0x306656 = 0x0; _0x306656 < _0x42b147.length; _0x306656++) _0xa25dbe = _0x42b147[_0x306656], 0x0 === _0x133972.btn && squar.inside(_0x133972.pos, _0xa25dbe.pos, _0xa25dbe.dim) && _0xa25dbe.click();
     }
 };
 
@@ -6992,7 +7204,7 @@ Game.prototype.doSpawn = function() {
         var zone = this.getZone(),
             initial = zone.initial;
         this.createObject(PlayerObject.ID, zone.level, zone.id, shor2.decode(initial), [this.pid, this.skin]);
-        this.out.push(NPCreatePlayerObject.encode(zone.level, zone, initial));
+        this.out.push(NET010.encode(zone.level, zone, initial));
     }
     this.updateTeam();
 };
@@ -7005,8 +7217,8 @@ Game.prototype.doMusic = function() {
 
 Game.prototype.doPush = function() {
     var _0x47ddfe = this.getPlayer();
-    _0x47ddfe && !_0x47ddfe.dead && this.out.push(_0x1ea040.encode(_0x47ddfe.level, _0x47ddfe.zone, _0x47ddfe.pos, _0x47ddfe.sprite.ID, _0x47ddfe.reverse));
-    _0x47ddfe = _0x1be292(this.out);
+    _0x47ddfe && !_0x47ddfe.dead && this.out.push(NET012.encode(_0x47ddfe.level, _0x47ddfe.zone, _0x47ddfe.pos, _0x47ddfe.sprite.ID, _0x47ddfe.reverse));
+    _0x47ddfe = MERGE_BYTE(this.out);
     this.out = [];
     app.net.sendBinary(_0x47ddfe);
 };
