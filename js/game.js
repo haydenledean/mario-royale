@@ -1102,6 +1102,7 @@ var MERGE_BYTE = function(/* Uint8Array[] */ a) {
 };
 "use strict";
 var squar = {};
+
 squar.intersection = function(_0x43a044, _0x59c3e0, _0x4eb9a3, _0x4741a0) {
     return _0x4eb9a3.x < _0x43a044.x + _0x59c3e0.x && _0x4eb9a3.x + _0x4741a0.x > _0x43a044.x && _0x4eb9a3.y < _0x43a044.y + _0x59c3e0.y && _0x4eb9a3.y + _0x4741a0.y > _0x43a044.y;
 };
@@ -5637,42 +5638,42 @@ CoinObject.prototype.draw = function(_0x157dc2) {
 GameObject.REGISTER_OBJECT(CoinObject);
 "use strict";
 
-function _0x260d28(_0x13f285, _0x12549b, _0x2d8560, _0x18e975, _0x3c4894) {
+function CheckObject(_0x13f285, _0x12549b, _0x2d8560, _0x18e975, _0x3c4894) {
     GameObject.call(this, _0x13f285, _0x12549b, _0x2d8560, _0x18e975);
     this.oid = _0x3c4894;
-    this.setState(_0x260d28.STATE.IDLE);
+    this.setState(CheckObject.STATE.IDLE);
     this.anim = 0x0;
 }
-_0x260d28.ASYNC = !0x0;
-_0x260d28.ID = 0xfe;
-_0x260d28.NAME = "CHECKMARK";
-_0x260d28.ANIMATION_RATE = 0x3;
-_0x260d28.SPRITE = {};
-_0x260d28.SPRITE_LIST = [{
+CheckObject.ASYNC = !0x0;
+CheckObject.ID = 0xfe;
+CheckObject.NAME = "CHECKMARK";
+CheckObject.ANIMATION_RATE = 0x3;
+CheckObject.SPRITE = {};
+CheckObject.SPRITE_LIST = [{
     'NAME': "IDLE",
     'ID': 0x0,
     'INDEX': 0xfe
 }];
-for (_0x1bec55 = 0x0; _0x1bec55 < _0x260d28.SPRITE_LIST.length; _0x1bec55++) _0x260d28.SPRITE[_0x260d28.SPRITE_LIST[_0x1bec55].NAME] = _0x260d28.SPRITE_LIST[_0x1bec55], _0x260d28.SPRITE[_0x260d28.SPRITE_LIST[_0x1bec55].ID] = _0x260d28.SPRITE_LIST[_0x1bec55];
-_0x260d28.STATE = {};
-_0x260d28.STATE_LIST = [{
+for (_0x1bec55 = 0x0; _0x1bec55 < CheckObject.SPRITE_LIST.length; _0x1bec55++) CheckObject.SPRITE[CheckObject.SPRITE_LIST[_0x1bec55].NAME] = CheckObject.SPRITE_LIST[_0x1bec55], CheckObject.SPRITE[CheckObject.SPRITE_LIST[_0x1bec55].ID] = CheckObject.SPRITE_LIST[_0x1bec55];
+CheckObject.STATE = {};
+CheckObject.STATE_LIST = [{
     'NAME': "IDLE",
     'ID': 0x0,
-    'SPRITE': [_0x260d28.SPRITE.IDLE]
+    'SPRITE': [CheckObject.SPRITE.IDLE]
 }];
-for (_0x1bec55 = 0x0; _0x1bec55 < _0x260d28.STATE_LIST.length; _0x1bec55++) _0x260d28.STATE[_0x260d28.STATE_LIST[_0x1bec55].NAME] = _0x260d28.STATE_LIST[_0x1bec55], _0x260d28.STATE[_0x260d28.STATE_LIST[_0x1bec55].ID] = _0x260d28.STATE_LIST[_0x1bec55];
-_0x260d28.prototype.update = function(_0x3da8eb) {};
-_0x260d28.prototype.step = function() {
+for (_0x1bec55 = 0x0; _0x1bec55 < CheckObject.STATE_LIST.length; _0x1bec55++) CheckObject.STATE[CheckObject.STATE_LIST[_0x1bec55].NAME] = CheckObject.STATE_LIST[_0x1bec55], CheckObject.STATE[CheckObject.STATE_LIST[_0x1bec55].ID] = CheckObject.STATE_LIST[_0x1bec55];
+CheckObject.prototype.update = function(_0x3da8eb) {};
+CheckObject.prototype.step = function() {
     this.anim++;
-    this.sprite = this.state.SPRITE[parseInt(this.anim / _0x260d28.ANIMATION_RATE) % this.state.SPRITE.length];
+    this.sprite = this.state.SPRITE[parseInt(this.anim / CheckObject.ANIMATION_RATE) % this.state.SPRITE.length];
 };
-_0x260d28.prototype.kill = function() {};
-_0x260d28.prototype.isTangible = GameObject.prototype.isTangible;
-_0x260d28.prototype.destroy = GameObject.prototype.destroy;
-_0x260d28.prototype.setState = function(_0x49f103) {
+CheckObject.prototype.kill = function() {};
+CheckObject.prototype.isTangible = GameObject.prototype.isTangible;
+CheckObject.prototype.destroy = GameObject.prototype.destroy;
+CheckObject.prototype.setState = function(_0x49f103) {
     _0x49f103 !== this.state && (this.state = _0x49f103, this.sprite = _0x49f103.SPRITE[0x0], this.anim = 0x0);
 };
-_0x260d28.prototype.draw = function(_0x197f04) {
+CheckObject.prototype.draw = function(_0x197f04) {
     _0x197f04.push({
         'pos': this.pos,
         'reverse': !0x1,
@@ -5680,7 +5681,7 @@ _0x260d28.prototype.draw = function(_0x197f04) {
         'mode': 0x0
     });
 };
-GameObject.REGISTER_OBJECT(_0x260d28);
+GameObject.REGISTER_OBJECT(CheckObject);
 "use strict";
 
 function _0x3db18a(_0x289121, _0x27327c, _0x2b1dd0, _0x19f16d, _0x347488, _0xbb37f7, _0x23940a, _0x457c51, _0x10fe68) {
