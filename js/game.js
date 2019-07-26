@@ -7246,8 +7246,8 @@ Game.prototype.doStep = function() {
         this.levelWarpId = undefined;
         this.resumeGameTimer();
     }
-    _0x504fb1 && this.cullSS && !vec2.equals(_0x504fb1.pos, this.cullSS) && this.out.push(_0x4152f4.encode());
-    _0x504fb1 && this.fillSS && this.fillSS !== _0x504fb1.fallSpeed && this.out.push(_0x4152f4.encode());
+    _0x504fb1 && this.cullSS && !vec2.equals(_0x504fb1.pos, this.cullSS) && this.out.push(NET015.encode());
+    _0x504fb1 && this.fillSS && this.fillSS !== _0x504fb1.fallSpeed && this.out.push(NET015.encode());
     for (_0x427bdb = 0x0; _0x427bdb < this.objects.length; _0x427bdb++) {
         var _0x617df4 = this.objects[_0x427bdb];
         _0x617df4.step();
