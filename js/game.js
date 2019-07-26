@@ -1,4 +1,4 @@
-var SKINCOUNT=53;
+var SKINCOUNT=111;
 var DEV_SKINS = [52];
 var DEFAULT_PLAYER_NAME="INFRINGIO";
 var levelSelectors = [
