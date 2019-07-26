@@ -1138,6 +1138,9 @@ function Menu() {
         'id': "profile",
         'obj': new ProfileScreen()
     }, {
+        'id': "pwdChange",
+        'obj': new PwdChangeScreen()
+    }, {
         'id': "name",
         'obj': new NameScreen()
     }, {
@@ -1351,6 +1354,7 @@ function MainAsMemberScreen() {
     this.charMusicToggle = document.getElementById("member-char-music-toggle");
     this.launchBtn = document.getElementById("mainAsMember-launch");
     this.profileBtn = document.getElementById("mainAsMember-profile");
+    this.pwdBtn = document.getElementById("mainAsMember-pwd");
     this.logoutBtn = document.getElementById("mainAsMember-logout");
     this.privateBtn = document.getElementById("mainAsMember-private");
     this.isPrivate = false;
@@ -1360,6 +1364,9 @@ function MainAsMemberScreen() {
     };
     this.profileBtn.onclick = function() {
         that.showProfile();
+    };
+    this.pwdBtn.onclick = function() {
+        that.showPwdChange();
     };
     this.logoutBtn.onclick = function() {
         that.logout();
@@ -1386,6 +1393,10 @@ function MainAsMemberScreen() {
 MainAsMemberScreen.prototype.show = function(data) {
     app.menu.hideAll();
     app.menu.background('a');
+    if (data === undefined) {
+        this.element.style.display = "block";
+        return;
+    }
     if (data.session != undefined) {
         Cookies.set("session", data.session, {
             'expires': 0x1e
@@ -1422,6 +1433,9 @@ MainAsMemberScreen.prototype.launch = function() {
 
 MainAsMemberScreen.prototype.showProfile = function() {
     app.menu.profile.show({"nickname": this.nickname, "squad": this.squad, "skin": this.skin});
+};
+MainAsMemberScreen.prototype.showPwdChange = function() {
+    app.menu.pwdChange.show();
 };
 MainAsMemberScreen.prototype.logout = function() {
     app.logout();
@@ -1643,9 +1657,9 @@ function ProfileScreen() {
     this.nicknameInput = document.getElementById("profile-nickname");
     this.squadInput = document.getElementById("profile-team");
     this.skinButtonPrefix = "profile-skin-select";
-    var profileScreen = this;
+    var that = this;
     this.saveBtn.onclick = function() {
-        profileScreen.save();
+        that.save();
     };
 }
 ProfileScreen.prototype.show = function(data) {
@@ -1676,6 +1690,58 @@ ProfileScreen.prototype.save = function() {
 ProfileScreen.prototype.onBack = function() {
     this.save();
 };
+"use strict";
+
+function PwdChangeScreen() {
+    this.element = document.getElementById("pwd");
+    this.saveBtn = document.getElementById("pwd-save");
+    this.passwordInput = document.getElementById("pwd-password-input");
+    this.passwordInput2 = document.getElementById("pwd-password2-input");
+    this.resultLabel = document.getElementById("pwdResult");
+    this.backBtn = document.getElementById("pwd-back");
+    var that = this;
+    this.saveBtn.onclick = function() {
+        that.save();
+    };
+    this.backBtn.onclick = function() {
+        that.onBack();
+    };
+}
+PwdChangeScreen.prototype.show = function(data) {
+    app.menu.hideAll();
+    app.menu.navigation("pwdChange", "pwdChange");
+    app.menu.background('a');
+    this.element.style.display = "block";
+};
+PwdChangeScreen.prototype.hide = function() {
+    this.element.style.display = "none";
+};
+PwdChangeScreen.prototype.reportError = function(message) {
+    this.resultLabel.style.color = "red";
+    this.resultLabel.innerText = message;
+};
+PwdChangeScreen.prototype.save = function() {
+    this.reportError("");
+    var pw = this.passwordInput.value;
+    var pw2 = this.passwordInput2.value;
+    if (pw.length < 8) {
+        this.reportError("Password is too short");
+        return;
+    }
+    if (pw != pw2) {
+        this.reportError("Passwords don't match");
+        return;
+    }
+    app.net.send({
+        "type": "lpc",
+        "password": pw
+    });
+    app.menu.mainAsMember.show();
+}
+PwdChangeScreen.prototype.onBack = function() {
+    app.menu.mainAsMember.show();
+};
+"use strict";
 
 function LoginScreen() {
     this.element = document.getElementById("login");

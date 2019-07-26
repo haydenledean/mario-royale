@@ -135,6 +135,9 @@
           <span id='mainAsMember-profile' class='launch'>Profile</span>
         </div>
         <div class="container-launch">
+          <span id='mainAsMember-pwd' class='launch'>Change Password</span>
+        </div>
+        <div class="container-launch">
           <span id='mainAsMember-logout' class='launch'>Logout</span>
         </div>
       </div>
@@ -150,6 +153,20 @@
             <span id='profile-save' class='launch'>Save</span>
           </div>
         </div>
+      </div>
+
+      <!-- Password change -->
+      <div id='pwd' class='container-center' style='display: none;'>
+        <div class='name'><input id='pwd-password-input' type='password' class='name-input' placeholder='New password'/></div>
+        <div class='name'><input id='pwd-password2-input' type='password' class='name-input' placeholder='New password again'/></div>
+        <div class='container-bottom'>
+          <div class='container-go'>
+            <span id='pwd-save' class='launch'>Save</span>
+            |
+            <span id='pwd-back' class='launch'>Cancel</span>
+          </div>
+        </div>
+        <div id="pwdResult" class="login-result">&nbsp;</div>
       </div>
 
       <!-- Guest mode -->
