@@ -7421,7 +7421,9 @@ Game.prototype.loop = function() {
                 this.delta = _0x441773;
             }
         }
-    } catch (_0x3d79b4) {}
+    } catch (e) {
+        console.error(e);
+    }
     var game = this;
     this.loopReq = setTimeout(function() {
         game.loop();
