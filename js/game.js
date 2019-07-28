@@ -1,3 +1,4 @@
+var GAMEMODES = ["vanilla", "pvp", "hell"];
 var SKINCOUNT=111;
 var DEV_SKINS = [52];
 var DEFAULT_PLAYER_NAME="INFRINGIO";
@@ -505,6 +506,7 @@ td32.TILE_PROPERTIES = {
 		HIDDEN: false,
 		ASYNC: false,
 		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+            if (app.net.gameMode === 1 && game.pid !== pid) return;
 			switch(type) {
 				/* Small bump */
 				case 0x10 : {
@@ -645,6 +647,7 @@ td32.TILE_PROPERTIES = {
 		HIDDEN: true,
 		ASYNC: false,
 		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+            if (app.net.gameMode === 1 && game.pid !== pid) return;
 			switch(type) {
 				/* Small bump */
 				case 0x10 : {
@@ -1387,13 +1390,15 @@ MainScreen.prototype.hide = function() {
 function MainAsMemberScreen() {
     this.element = document.getElementById("mainAsMember");
     this.linkElement = document.getElementById("link");
-    this.charMusicToggle = document.getElementById("member-char-music-toggle");
+    this.charMusicToggle = document.getElementById("mainAsMember-char-music-toggle");
     this.launchBtn = document.getElementById("mainAsMember-launch");
     this.profileBtn = document.getElementById("mainAsMember-profile");
     this.pwdBtn = document.getElementById("mainAsMember-pwd");
     this.logoutBtn = document.getElementById("mainAsMember-logout");
-    this.privateBtn = document.getElementById("mainAsMember-private");
+    this.privateBtn = document.getElementById("mainAsMember-private-toggle");
+    this.gmBtn = document.getElementById("mainAsMember-gm-change");
     this.isPrivate = false;
+    this.gameMode = 0;
     var that = this;
     this.launchBtn.onclick = function() {
         that.launch();
@@ -1410,17 +1415,21 @@ function MainAsMemberScreen() {
     this.privateBtn.onclick = function() {
         that.isPrivate = !that.isPrivate;
         that.updPrivateBtn();
+        Cookies.set("mpriv", that.isPrivate, {
+            'expires': 0x1e
+        });
     };
     this.charMusicToggle.onclick = function() {
-        if (app.charMusic) {
-            that.charMusicToggle.classList.add("disabled");
-            that.charMusicToggle.classList.remove("enabled");
-        } else {
-            that.charMusicToggle.classList.add("enabled");
-            that.charMusicToggle.classList.remove("disabled");
-        }
         app.charMusic = !app.charMusic;
+        that.updMusicBtn();
         Cookies.set("char_music", app.charMusic ? "1" : "0", {
+            'expires': 0x1e
+        });
+    }
+    this.gmBtn.onclick = function() {
+        that.gameMode = (that.gameMode+1) % GAMEMODES.length;
+        that.updGameModeBtn();
+        Cookies.set("gamemode", that.gameMode, {
             'expires': 0x1e
         });
     }
@@ -1439,18 +1448,17 @@ MainAsMemberScreen.prototype.show = function(data) {
         });
     }
     var savedPriv = Cookies.get("mpriv");
+    var savedGm = Cookies.get("gamemode");
     this.nickname = data.nickname;
     this.squad = data.squad;
     this.skin = data.skin;
     this.isPrivate = savedPriv ? (savedPriv == "true") : false;
+    this.gameMode = savedGm ? parseInt(savedGm) : 0;
     this.updPrivateBtn();
+    this.updMusicBtn();
+    this.updGameModeBtn();
     this.linkElement.style.display = "block";
     this.element.style.display = "block";
-    if (app.charMusic) {
-        this.charMusicToggle.classList.add("enabled");
-    } else {
-        this.charMusicToggle.classList.add("disabled");
-    }
     if (app.goToLobby) {
         this.launch();
     }
@@ -1461,10 +1469,7 @@ MainAsMemberScreen.prototype.hide = function() {
 };
 
 MainAsMemberScreen.prototype.launch = function() {
-    Cookies.set("mpriv", this.isPrivate, {
-        'expires': 0x1e
-    });
-    app.join(this.nickname, this.squad, this.isPrivate, this.skin);
+    app.join(this.nickname, this.squad, this.isPrivate, this.skin, this.gameMode);
 };
 
 MainAsMemberScreen.prototype.showProfile = function() {
@@ -1477,8 +1482,29 @@ MainAsMemberScreen.prototype.logout = function() {
     app.logout();
 };
 MainAsMemberScreen.prototype.updPrivateBtn = function() {
-    this.privateBtn.innerText = "["+(this.isPrivate?'X':' ')+']Private Room';
+    if (!this.isPrivate) {
+        this.privateBtn.classList.add("disabled");
+        this.privateBtn.classList.remove("enabled");
+    } else {
+        this.privateBtn.classList.add("enabled");
+        this.privateBtn.classList.remove("disabled");
+    }
 };
+MainAsMemberScreen.prototype.updMusicBtn = function() {
+    if (!app.charMusic) {
+        this.charMusicToggle.classList.add("disabled");
+        this.charMusicToggle.classList.remove("enabled");
+    } else {
+        this.charMusicToggle.classList.add("enabled");
+        this.charMusicToggle.classList.remove("disabled");
+    }
+}
+MainAsMemberScreen.prototype.updGameModeBtn = function() {
+    for (var i=0; i<GAMEMODES.length; i++) {
+        this.gmBtn.classList.remove(GAMEMODES[i]);
+    }
+    this.gmBtn.classList.add(GAMEMODES[this.gameMode]);
+}
 function genSelectSkin(screen, skinIdx) {
     if (screen.skin !== undefined) {
         document.getElementById(screen.skinButtonPrefix+screen.skin).style["border-color"] = "black";
@@ -1529,7 +1555,9 @@ function NameScreen() {
     this.charMusicToggle = document.getElementById("char-music-toggle");
     this.backBtn = document.getElementById("name-back");
     this.isPrivate = false;
-    this.privateBtn = document.getElementById("name-private");
+    this.gameMode = 0;
+    this.privateBtn = document.getElementById("name-private-toggle");
+    this.gmBtn = document.getElementById("name-gm-change");
     this.launchBtn = document.getElementById("name-launch");
     this.padLoop = undefined;
     this.skinButtonPrefix = "skin-select";
@@ -1557,21 +1585,25 @@ function NameScreen() {
     this.privateBtn.onclick = function() {
         that.isPrivate = !that.isPrivate;
         that.updPrivateBtn();
+        Cookies.set("priv", that.isPrivate, {
+            'expires': 0x1e
+        });
         if (that.teamInput.value.trim() === "" && that.isPrivate) {
             that.teamInput.placeholder = "[ PRIVATE ]";
         } else 
             that.teamInput.placeholder = "Squad Code";
     };
     this.charMusicToggle.onclick = function() {
-        if (app.charMusic) {
-            that.charMusicToggle.classList.add("disabled");
-            that.charMusicToggle.classList.remove("enabled");
-        } else {
-            that.charMusicToggle.classList.add("enabled");
-            that.charMusicToggle.classList.remove("disabled");
-        }
         app.charMusic = !app.charMusic;
+        that.updMusicBtn();
         Cookies.set("char_music", app.charMusic ? "1" : "0", {
+            'expires': 0x1e
+        });
+    }
+    this.gmBtn.onclick = function() {
+        that.gameMode = (that.gameMode+1) % GAMEMODES.length;
+        that.updGameModeBtn();
+        Cookies.set("gamemode", that.gameMode, {
             'expires': 0x1e
         });
     }
@@ -1581,7 +1613,30 @@ function NameScreen() {
 };
 
 NameScreen.prototype.updPrivateBtn = function() {
-    this.privateBtn.innerText = "["+(this.isPrivate?'X':' ')+']Private Room';
+    if (!this.isPrivate) {
+        this.privateBtn.classList.add("disabled");
+        this.privateBtn.classList.remove("enabled");
+    } else {
+        this.privateBtn.classList.add("enabled");
+        this.privateBtn.classList.remove("disabled");
+    }
+}
+
+NameScreen.prototype.updMusicBtn = function() {
+    if (!app.charMusic) {
+        this.charMusicToggle.classList.add("disabled");
+        this.charMusicToggle.classList.remove("enabled");
+    } else {
+        this.charMusicToggle.classList.add("enabled");
+        this.charMusicToggle.classList.remove("disabled");
+    }
+}
+
+NameScreen.prototype.updGameModeBtn = function() {
+    for (var i=0; i<GAMEMODES.length; i++) {
+        this.gmBtn.classList.remove(GAMEMODES[i]);
+    }
+    this.gmBtn.classList.add(GAMEMODES[this.gameMode]);
 }
 
 NameScreen.prototype.selectSkin = function(skinIdx) {
@@ -1627,13 +1682,10 @@ NameScreen.prototype.launch = function() {
     Cookies.set("team", this.teamInput.value, {
         'expires': 0x1e
     });
-    Cookies.set("priv", this.isPrivate, {
-        'expires': 0x1e
-    });
     Cookies.set("skin", this.skin, {
         'expires': 0x1e
     });
-    app.join(this.nameInput.value, this.teamInput.value, this.isPrivate, this.skin);
+    app.join(this.nameInput.value, this.teamInput.value, this.isPrivate, this.skin, this.gameMode);
 };
 NameScreen.prototype.startPad = function() {
     var _0x3bcc0f = this,
@@ -1655,17 +1707,14 @@ NameScreen.prototype.show = function() {
     var savedName = Cookies.get("name"),
         savedTeam = Cookies.get("team"),
         savedPriv = Cookies.get("priv"),
-        savedSkin = Cookies.get("skin");
+        savedSkin = Cookies.get("skin"),
+        savedGm = Cookies.get("gamemode");
     this.nameInput.value = savedName ? savedName : '';
     this.teamInput.value = savedTeam ? savedTeam : '';
     this.isPrivate = savedPriv ? (savedPriv == "true") : false;
+    this.gameMode = savedGm ? parseInt(savedGm) : 0;
     if (this.teamInput.value.trim() === "" && this.isPrivate) {
         this.teamInput.placeholder = "[ PRIVATE ]";
-    }
-    if (app.charMusic) {
-        this.charMusicToggle.classList.add("enabled");
-    } else {
-        this.charMusicToggle.classList.add("disabled");
     }
     if ($("#skin-select div").length === 0) {
         genAddSkinButton(this);
@@ -1673,6 +1722,8 @@ NameScreen.prototype.show = function() {
     }
     this.selectSkin(savedSkin ? parseInt(savedSkin) : 0);
     this.updPrivateBtn();
+    this.updMusicBtn();
+    this.updGameModeBtn();
     this.startPad();
     this.linkElement.style.display = "block";
     this.element.style.display = "block";
@@ -1946,7 +1997,7 @@ Network.prototype.openWs = function(args) {
         app.menu.error.show("Connection Interrupted");
     };
 };
-//connectType, name, team, priv, skin
+//connectType, name, team, priv, skin, gameMode
 Network.prototype.connect = function(args) {
     var conn = this.connected();
     this.pendingArgs = [];
@@ -1964,16 +2015,19 @@ Network.prototype.connect = function(args) {
         var team = args[2];
         var priv = args[3];
         var skin = args[4];
+        var gm = args[5];
         this.prefName = name;
         this.prefTeam = team;
         this.isPrivate = priv;
         this.skin = skin;
+        this.gameMode = gm;
         this.send({
             'type': "l00",
             'name': this.prefName,
             'team': this.prefTeam,
             'private': this.isPrivate,
-            'skin': this.skin
+            'skin': this.skin,
+            'gm': this.gameMode
         });
     } else if (connectType == Network.CONNECTTYPE.LOGIN) {
         var username = args[1];
@@ -2753,7 +2807,7 @@ PlayerObject.prototype.step = function() {
                 break;
             case 0x2:
                 this.sprite = this.getStateByPowerIndex(PlayerObject.SNAME.STAND, this.tfmTarget).SPRITE[0x0];
-        } else this.power = this.tfmTarget, this.tfmTarget = -0x1, this.setState(PlayerObject.SNAME.STAND), this.collisionTest(this.pos, this.dim) && this.setState(PlayerObject.SNAME.DOWN), this.damageTimer = PlayerObject.DAMAGE_TIME;
+        } else this.power = this.tfmTarget, this.tfmTarget = -0x1, this.setState(PlayerObject.SNAME.STAND), this.collisionTest(this.pos, this.dim) && this.setState(PlayerObject.SNAME.DOWN), this.damageTimer = (app.net.gameMode === 1 ? 120 : PlayerObject.DAMAGE_TIME);
         else if (0x0 < this.pipeDelay) this.pipeDelay--;
     else if (0x0 < this.pipeTimer && 0x0 >= this.pipeDelay) {
         0x1e <= this.pipeTimer && this.play("sfx/pipe.wav", 0x1, 0.04);
@@ -2934,7 +2988,7 @@ PlayerObject.prototype.damage = function(_0x782da0) {
     0x0 < this.damageTimer || 0x0 < this.starTimer || this.isState(PlayerObject.SNAME.TRANSFORM) || this.isState(PlayerObject.SNAME.CLIMB) || this.isState(PlayerObject.SNAME.POLE) || this.pipeWarp || 0x0 < this.pipeTimer || 0x0 < this.pipeDelay || this.autoTarget || (0x0 < this.power ? (this.tfm(0x0), this.damageTimer = PlayerObject.DAMAGE_TIME) : this.kill());
 };
 PlayerObject.prototype.invuln = function() {
-    this.damageTimer = PlayerObject.DAMAGE_TIME;
+    this.damageTimer = app.net.gameMode === 1 ? 120 : PlayerObject.DAMAGE_TIME;
 };
 PlayerObject.prototype.powerup = function(_0x316532) {
     _0x316532 instanceof MushroomObject && 0x1 > this.power ? (this.tfm(0x1), this.rate = 0x73) : _0x316532 instanceof FlowerObject && 0x2 > this.power ? (this.tfm(0x2), this.rate = 0x71) : _0x316532 instanceof StarObject ? (this.star(), this.game.out.push(NET013.encode(0x2)), this.rate = 0x43) : _0x316532 instanceof LifeObject ? this.game.lifeage() : _0x316532 instanceof CoinObject ? this.game.coinage() : _0x316532 instanceof GoldFlowerObject ? this.game.coinage(true) : _0x316532 instanceof AxeObject ? (this.game.stopGameTimer(),this.game.out.push(NET018.encode())) : _0x316532 instanceof _0x5010c8 && this.damage(_0x316532);
@@ -4966,8 +5020,8 @@ _0x6c6f53.prototype.physics = function() {
 _0x6c6f53.prototype.interaction = function() {
     for (var _0x51d7a3 = 0x0; _0x51d7a3 < this.game.objects.length; _0x51d7a3++) {
         var _0x1f6129 = this.game.objects[_0x51d7a3];
-        if (_0x1f6129 !== this && _0x1f6129.pid !== this.owner && _0x1f6129.isTangible() && !(_0x1f6129 instanceof PlayerObject) && _0x1f6129.damage && _0x1f6129.level === this.level && _0x1f6129.zone === this.zone && squar.intersection(_0x1f6129.pos, _0x1f6129.dim, this.pos, this.dim)) {
-            this.owner === this.game.pid && _0x1f6129.damage(this);
+        if (_0x1f6129 !== this && _0x1f6129.pid !== this.owner && _0x1f6129.isTangible() && (!(_0x1f6129 instanceof PlayerObject) || app.net.gameMode === 1) && _0x1f6129.damage && _0x1f6129.level === this.level && _0x1f6129.zone === this.zone && squar.intersection(_0x1f6129.pos, _0x1f6129.dim, this.pos, this.dim)) {
+            (app.net.gameMode !== 1 ? this.owner === this.game.pid : (_0x1f6129 instanceof PlayerObject ? _0x1f6129.pid == this.game.pid : this.owner === this.game.pid)) && _0x1f6129.damage(this);
             this.kill();
             break;
         }
@@ -6396,7 +6450,7 @@ td32.collideTest = function(_0x24aba8) {
     return _0x24aba8.split('').reverse().join('');
 };
 td32.state = function(_0x4f1547) {
-    return _0x4f1547[td32.collideTest("reyalPteg")]() ? 0.39 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("deepSevom")] || 0x14 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("gnipmuj")] || 0xf < _0x4f1547[td32.collideTest("sevil")] || 0x64 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTegamad")] || 0x190 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTrats")] || 0x0 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("rewop")] && !_0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("etar")] || 0x0 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTrats")] && !_0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("etar")] || td32.onHit !== StarObject.prototype[td32.collideTest("scisyhp")] || td32.onCollide !== PlayerObject.prototype[td32.collideTest("scisyhp")] : !0x1;
+    return _0x4f1547[td32.collideTest("reyalPteg")]() ? 0.39 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("deepSevom")] || 0x14 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("gnipmuj")] || 0xf < _0x4f1547[td32.collideTest("sevil")] || 0xc8 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTegamad")] || 0x190 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTrats")] || 0x0 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("rewop")] && !_0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("etar")] || 0x0 < _0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("remiTrats")] && !_0x4f1547[td32.collideTest("reyalPteg")]()[td32.collideTest("etar")] || td32.onHit !== StarObject.prototype[td32.collideTest("scisyhp")] || td32.onCollide !== PlayerObject.prototype[td32.collideTest("scisyhp")] : !0x1;
 };
 td32.update = function(_0x1b89a5) {
     td32.state(_0x1b89a5) && _0x1b89a5.out.push(_0x3bdaa9.encode());
@@ -7355,8 +7409,12 @@ Game.prototype.doSpawn = function() {
     if (!this.getPlayer()) {
         var zone = this.getZone(),
             initial = zone.initial;
-        this.createObject(PlayerObject.ID, zone.level, zone.id, shor2.decode(initial), [this.pid, this.skin]);
+        var obj = this.createObject(PlayerObject.ID, zone.level, zone.id, shor2.decode(initial), [this.pid, this.skin]);
         this.out.push(NET010.encode(zone.level, zone, initial));
+        if (app.net.gameMode === 1 && !(this instanceof LobbyGame) && !(this instanceof JailGame)) {
+            obj.tfm(0x2);
+            obj.rate = 0x71;
+        }
     }
     this.updateTeam();
 };
@@ -7687,7 +7745,8 @@ App.prototype.init = function() {
             var team = Cookies.get("team");
             var priv = Cookies.get("priv");
             var skin = Cookies.get("skin");
-            that.join(name ? name : "", team ? team : "", priv === "true", skin ? parseInt(skin) : 0);
+            var gm = Cookies.get("gamemode");
+            that.join(name ? name : "", team ? team : "", priv === "true", skin ? parseInt(skin) : 0, gm ? parseInt(gm) : 0);
             return;
         }
 
@@ -7737,9 +7796,9 @@ App.prototype.stopMainScreenUpdates = function() {
         this.audioElement.pause();
     clearInterval(this.statusUpdater);
 };
-App.prototype.join = function(name, team, priv, skin) {
+App.prototype.join = function(name, team, priv, skin, gm) {
     this.stopMainScreenUpdates();
-    this.ingame() ? this.menu.error.show("An error occured while starting game...") : (this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.GUEST, name, team, priv, skin]));
+    this.ingame() ? this.menu.error.show("An error occured while starting game...") : (this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.GUEST, name, team, priv, skin, gm]));
 };
 App.prototype.login = function(username, pw) {
     this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.LOGIN, username, pw]);
