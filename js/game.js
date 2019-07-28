@@ -6175,9 +6175,16 @@ function _0x415c3a(_0x180462, _0x8d00db, _0x52fdb8, _0x50d225, _0x2664ab, _0x57e
     this.path = _0x8d00db;
     this.data = _0x52fdb8;
     this.playing = this.played = this.ready = !0x1;
-    this.data.ready() ? this.create(_0x50d225, _0x2664ab, _0x57e822) : app.menu.warn.show("Attempted to instance partially loaded sound data: '" + _0x8d00db + '\x27');
+    if (this.data.ready()) {
+        this.create(_0x50d225, _0x2664ab, _0x57e822)
+    }
+    else {
+        this.partialLoad = true;
+        app.menu.warn.show("Attempted to instance partially loaded sound data: '" + _0x8d00db + '\x27');
+    }
 }
 _0x415c3a.prototype.create = function(_0x59934b, _0x3f74fb, _0x1b83d9) {
+    this.partialLoad = false;
     var _0x71d7c1 = this;
     this.source = this.context.createBufferSource();
     this.source.buffer = this.data.buffer;
@@ -6196,8 +6203,7 @@ _0x415c3a.prototype.volume = function(_0x43516c) {
     this.ready && (this.gain.gain.value = _0x43516c);
 };
 _0x415c3a.prototype.play = function() {
-    this.ready && !this.played ? (this.source.start(0x0), this.playing = !0x0) : this.played && app.menu.warn.show("Attempted to replay sound instance: '" + this.path + '\x27');
-    this.played = !0x0;
+    this.ready && !this.played ? (this.source.start(0x0), this.playing = !0x0, this.played = !0x0) : this.played && app.menu.warn.show("Attempted to replay sound instance: '" + this.path + '\x27');
 };
 _0x415c3a.prototype.stop = function() {
     this.ready && this.played && this.source.stop();
@@ -6321,8 +6327,10 @@ Audio.prototype.saveSettings = function() {
 };
 Audio.prototype.setMusic = function(_0x14a0c1, _0x478a92) {
     if (this.music) {
-        if (this.music.path === _0x14a0c1) return;
-        this.music.stop();
+        if (!(!this.music.played && this.music.data.ready() && this.music.partialLoad)) {
+            if (this.music.path === _0x14a0c1) return;
+            this.music.stop();
+        }
     }
     this.music = this.getAudio(_0x14a0c1, 0x1, 0x0, "music");
     this.music.loop(_0x478a92);
