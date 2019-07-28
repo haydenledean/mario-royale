@@ -462,6 +462,32 @@ td32.TILE_PROPERTIES = {
 				}
 			}
 		}
+    },
+    /* Solid Damage */
+	0x04: {
+		NAME: "SOLID DAMAGE",
+		COLLIDE: true,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
+			switch(type) {
+				/* Touch */
+				case 0x00 : {
+					if(game.pid === pid) {
+						game.getPlayer().damage();
+					}
+				}
+			}
+		}
+    },
+    /* Semisolid */
+	0x05: {
+		NAME: "SEMISOLID",
+        COLLIDE: true,
+        PLATFORM: true,
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {}
 	},
 	/* Item Block Normal */
 	0x11: {
@@ -2793,33 +2819,73 @@ PlayerObject.prototype.control = function() {
 };
 PlayerObject.prototype.physics = function() {
     -0x1 !== this.jumping ? (this.fallSpeed = 0.45 - 0.005 * this.jumping, this.jumping++, this.grounded = !0x1) : (this.isSpring = this.isBounce = !0x1, this.grounded && (this.fallSpeed = 0x0), this.fallSpeed = Math.max(this.fallSpeed - 0.085, -0.45));
-    for (var _0x57b791 = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), _0x513d1f = vec2.make(this.pos.x + Math.min(0x0, this.moveSpeed), this.pos.y + Math.min(0x0, this.fallSpeed)), _0x208a75 = vec2.make(this.dim.x + Math.max(0x0, this.moveSpeed), this.dim.y + Math.max(0x0, this.fallSpeed)), _0x513d1f = this.game.world.getZone(this.level, this.zone).getTiles(_0x513d1f, _0x208a75), _0x20e6e6 = this.game.getPlatforms(), _0x208a75 = vec2.make(0x1, 0x1), _0x58342b = !0x1, _0x27521c = [], _0x27c16e = [], _0x346d1d = [], _0x50b7b9 = [], _0x535e81 = [], _0x3f505e, _0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) {
-        var _0x28e288 = _0x513d1f[_0x5b32b0];
-        if (_0x28e288.definition.COLLIDE)
-            if (_0x28e288.definition.HIDDEN) _0x27521c.push(_0x28e288);
-            else if (squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) || squar.intersection(_0x28e288.pos, _0x208a75, this.pos, this.dim)) 0.01 < Math.abs(this.moveSpeed) && this.grounded && this.pos.y <= _0x28e288.pos.y && _0x346d1d.push(_0x28e288), _0x27521c.push(_0x28e288);
+    for (var _0x57b791 = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), _0x513d1f = vec2.make(this.pos.x + Math.min(0x0, this.moveSpeed), this.pos.y + Math.min(0x0, this.fallSpeed)), _0x208a75 = vec2.make(this.dim.x + Math.max(0x0, this.moveSpeed), this.dim.y + Math.max(0x0, this.fallSpeed)), _0x513d1f = this.game.world.getZone(this.level, this.zone).getTiles(_0x513d1f, _0x208a75), _0x20e6e6 = this.game.getPlatforms(), _0x208a75 = vec2.make(0x1, 0x1), _0x58342b = !0x1, tilePlatform = [], tilePlatformColliding = [], _0x27521c = [], _0x27c16e = [], _0x346d1d = [], _0x50b7b9 = [], _0x535e81 = [], _0x3f505e, _0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) {
+        var obj = _0x513d1f[_0x5b32b0];
+        if (obj.definition.PLATFORM) tilePlatform.push(obj);
+        else if (obj.definition.COLLIDE)
+            if (obj.definition.HIDDEN) _0x27521c.push(obj);
+            else if (squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim) || squar.intersection(obj.pos, _0x208a75, this.pos, this.dim)) 0.01 < Math.abs(this.moveSpeed) && this.grounded && this.pos.y <= obj.pos.y && _0x346d1d.push(obj), _0x27521c.push(obj);
     }
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x20e6e6.length; _0x5b32b0++) _0x28e288 = _0x20e6e6[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x28e288.dim, _0x57b791, this.dim) && _0x535e81.push(_0x28e288);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x20e6e6.length; _0x5b32b0++) obj = _0x20e6e6[_0x5b32b0], squar.intersection(obj.pos, obj.dim, _0x57b791, this.dim) && _0x535e81.push(obj);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < tilePlatform.length; _0x5b32b0++) obj = tilePlatform[_0x5b32b0], squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim) && tilePlatformColliding.push(obj);
     _0x20e6e6 = vec2.make(_0x57b791.x, this.pos.y);
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], !_0x28e288.definition.HIDDEN && squar.intersection(_0x28e288.pos, _0x208a75, _0x20e6e6, this.dim) && (_0x20e6e6.x = _0x20e6e6.x + 0.5 * this.dim.x < _0x28e288.pos.x + 0.5 * _0x208a75.x ? _0x28e288.pos.x - this.dim.x : _0x28e288.pos.x + _0x208a75.x, this.moveSpeed *= 0.33);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) { 
+        obj = _0x27521c[_0x5b32b0];
+        if (!obj.definition.HIDDEN && squar.intersection(obj.pos, _0x208a75, _0x20e6e6, this.dim)) {
+            _0x20e6e6.x = _0x20e6e6.x + 0.5 * this.dim.x < obj.pos.x + 0.5 * _0x208a75.x ? obj.pos.x - this.dim.x : obj.pos.x + _0x208a75.x;
+            this.moveSpeed *= 0.33;
+        }
+    }
     _0x57b791.x = _0x20e6e6.x;
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && (this.fallSpeed > PlayerObject.BLOCK_BUMP_THRESHOLD && _0x50b7b9.push(_0x28e288), 0x0 > this.fallSpeed && this.pos.y >= _0x28e288.pos.y && _0x27c16e.push(_0x28e288));
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) _0x28e288 = _0x27521c[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && (this.pos.y >= _0x57b791.y ? _0x28e288.definition.HIDDEN || (_0x57b791.y = _0x28e288.pos.y + _0x208a75.y, this.fallSpeed = 0x0, _0x58342b = !0x0) : (_0x57b791.y = _0x28e288.pos.y - this.dim.y, this.fallSpeed = 0x0));
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) {
+         obj = _0x27521c[_0x5b32b0];
+         if (squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim)) {
+            if (this.fallSpeed > PlayerObject.BLOCK_BUMP_THRESHOLD) { _0x50b7b9.push(obj); }
+            if (0x0 > this.fallSpeed && this.pos.y >= obj.pos.y) { _0x27c16e.push(obj); }
+         }
+    }
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) {
+        obj = _0x27521c[_0x5b32b0];
+        if (squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim)) {
+            if (this.pos.y >= _0x57b791.y) {
+                if (!obj.definition.HIDDEN) { 
+                    _0x57b791.y = obj.pos.y + _0x208a75.y;
+                    this.fallSpeed = 0x0;
+                    _0x58342b = !0x0;
+                }
+            } 
+            else {
+                _0x57b791.y = obj.pos.y - this.dim.y;
+                this.fallSpeed = 0;
+            }
+        }
+    }
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x535e81.length; _0x5b32b0++)
-        if (_0x28e288 = _0x535e81[_0x5b32b0], this.pos.y >= _0x57b791.y && _0x28e288.pos.y + _0x28e288.dim.y - this.pos.y < PlayerObject.PLATFORM_SNAP_DIST) {
-            _0x57b791.y = _0x28e288.pos.y + _0x28e288.dim.y;
+        if (obj = _0x535e81[_0x5b32b0], this.pos.y >= _0x57b791.y && obj.pos.y + obj.dim.y - this.pos.y < PlayerObject.PLATFORM_SNAP_DIST) {
+            _0x57b791.y = obj.pos.y + obj.dim.y;
             _0x58342b = !0x0;
-            _0x3f505e = _0x28e288;
+            _0x3f505e = obj;
             break;
-        } this.grounded = _0x58342b;
+        } 
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < tilePlatformColliding.length; _0x5b32b0++) {
+        obj = tilePlatformColliding[_0x5b32b0];
+        if (squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim)) {
+            if (this.pos.y - this.dim.y >= obj.pos.y) {
+                _0x57b791.y = obj.pos.y + _0x208a75.y;
+                this.fallSpeed = 0x0;
+                _0x58342b = !0x0;
+            }
+        }
+    }
+    this.grounded = _0x58342b;
     this.pos = _0x57b791;
     _0x3f505e && _0x3f505e.riding(this);
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) _0x28e288 = _0x513d1f[_0x5b32b0], squar.intersection(_0x28e288.pos, _0x208a75, _0x57b791, this.dim) && _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, td32.TRIGGER.TYPE.TOUCH);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x513d1f.length; _0x5b32b0++) obj = _0x513d1f[_0x5b32b0], squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim) && obj.definition.TRIGGER(this.game, this.pid, obj, this.level, this.zone, obj.pos.x, obj.pos.y, td32.TRIGGER.TYPE.TOUCH);
     if (this.isState(PlayerObject.SNAME.DOWN) && 0.05 > this.moveSpeed)
-        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27c16e.length; _0x5b32b0++) _0x28e288 = _0x27c16e[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, td32.TRIGGER.TYPE.DOWN);
+        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27c16e.length; _0x5b32b0++) obj = _0x27c16e[_0x5b32b0], obj.definition.TRIGGER(this.game, this.pid, obj, this.level, this.zone, obj.pos.x, obj.pos.y, td32.TRIGGER.TYPE.DOWN);
     if (this.isState(PlayerObject.SNAME.RUN))
-        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x346d1d.length; _0x5b32b0++) _0x28e288 = _0x346d1d[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, td32.TRIGGER.TYPE.PUSH);
-    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x50b7b9.length; _0x5b32b0++) _0x28e288 = _0x50b7b9[_0x5b32b0], _0x28e288.definition.TRIGGER(this.game, this.pid, _0x28e288, this.level, this.zone, _0x28e288.pos.x, _0x28e288.pos.y, 0x0 < this.power ? td32.TRIGGER.TYPE.BIG_BUMP : td32.TRIGGER.TYPE.SMALL_BUMP), this.jumping = -0x1, this.fallSpeed = -PlayerObject.BLOCK_BUMP_THRESHOLD;
+        for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x346d1d.length; _0x5b32b0++) obj = _0x346d1d[_0x5b32b0], obj.definition.TRIGGER(this.game, this.pid, obj, this.level, this.zone, obj.pos.x, obj.pos.y, td32.TRIGGER.TYPE.PUSH);
+    for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x50b7b9.length; _0x5b32b0++) obj = _0x50b7b9[_0x5b32b0], obj.definition.TRIGGER(this.game, this.pid, obj, this.level, this.zone, obj.pos.x, obj.pos.y, 0x0 < this.power ? td32.TRIGGER.TYPE.BIG_BUMP : td32.TRIGGER.TYPE.SMALL_BUMP), this.jumping = -0x1, this.fallSpeed = -PlayerObject.BLOCK_BUMP_THRESHOLD;
 };
 PlayerObject.prototype.collisionTest = function(_0x569425, _0x1323bb) {
     for (var _0x4dc291 = vec2.make(0x1, 0x1), _0x471838 = this.game.world.getZone(this.level, this.zone).getTiles(_0x569425, _0x1323bb), _0x426d64 = 0x0; _0x426d64 < _0x471838.length; _0x426d64++) {
@@ -6641,7 +6707,7 @@ function World(_0x4cda29, _0x46f74e) {
     this.game = _0x4cda29;
     this.initial = _0x46f74e.initial;
     this.levels = [];
-    for (var _0x5678fd = 0x0; _0x5678fd < _0x46f74e.world.length; _0x5678fd++) this.levels.push(new _0x1433a4(_0x4cda29, _0x46f74e.world[_0x5678fd]));
+    for (var _0x5678fd = 0x0; _0x5678fd < _0x46f74e.world.length; _0x5678fd++) this.levels.push(new Level(_0x4cda29, _0x46f74e.world[_0x5678fd]));
 }
 World.prototype.step = function() {
     for (var _0x1351b3 = 0x0; _0x1351b3 < this.levels.length; _0x1351b3++) this.levels[_0x1351b3].step();
@@ -6670,24 +6736,24 @@ World.prototype.getZone = function(_0x525a15, _0x36f94d) {
     }
 };
 
-function _0x1433a4(_0xc37451, _0xf21ec7) {
+function Level(_0xc37451, _0xf21ec7) {
     this.game = _0xc37451;
     this.id = _0xf21ec7.id;
     this.name = _0xf21ec7.name;
     this.initial = _0xf21ec7.initial;
     this.zones = [];
-    for (var _0x344d78 = 0x0; _0x344d78 < _0xf21ec7.zone.length; _0x344d78++) this.zones.push(new _0x5e1ced(_0xc37451, this.id, _0xf21ec7.zone[_0x344d78]));
+    for (var _0x344d78 = 0x0; _0x344d78 < _0xf21ec7.zone.length; _0x344d78++) this.zones.push(new Zone(_0xc37451, this.id, _0xf21ec7.zone[_0x344d78]));
 }
-_0x1433a4.prototype.step = function() {
+Level.prototype.step = function() {
     for (var _0x5d732a = 0x0; _0x5d732a < this.zones.length; _0x5d732a++) this.zones[_0x5d732a].step();
 };
-_0x1433a4.prototype.getInitial = function() {
+Level.prototype.getInitial = function() {
     for (var _0x42edaf = 0x0; _0x42edaf < this.zones.length; _0x42edaf++) {
         var _0x2a836d = this.zones[_0x42edaf];
         if (_0x2a836d.id === this.initial) return _0x2a836d;
     }
 };
-_0x1433a4.prototype.getWarp = function(_0x35fc72) {
+Level.prototype.getWarp = function(_0x35fc72) {
     for (var _0x4295f4 = 0x0; _0x4295f4 < this.zones.length; _0x4295f4++)
         for (var _0x1ed606 = this.zones[_0x4295f4], _0x891844 = 0x0; _0x891844 < _0x1ed606.warp.length; _0x891844++) {
             var _0x5c0899 = _0x1ed606.warp[_0x891844];
@@ -6700,7 +6766,7 @@ _0x1433a4.prototype.getWarp = function(_0x35fc72) {
         }
 };
 
-function _0x5e1ced(_0x4ec59c, _0x22aa6b, _0x42b6c1) {
+function Zone(_0x4ec59c, _0x22aa6b, _0x42b6c1) {
     this.game = _0x4ec59c;
     this.id = _0x42b6c1.id;
     this.level = _0x22aa6b;
@@ -6715,12 +6781,12 @@ function _0x5e1ced(_0x4ec59c, _0x22aa6b, _0x42b6c1) {
     this.vines = [];
     this.sounds = [];
 }
-_0x5e1ced.prototype.update = function(_0x56c974, _0x203ebe, _0x453702, _0x9efab7, _0x1f768e, _0x1478c6, _0x16a842) {
+Zone.prototype.update = function(_0x56c974, _0x203ebe, _0x453702, _0x9efab7, _0x1f768e, _0x1478c6, _0x16a842) {
     var _0x14b697 = this.dimensions().y - 0x1 - _0x1478c6,
         _0x14b697 = td32.decode(this.data[_0x14b697][_0x1f768e]);
     _0x14b697.definition.TRIGGER(_0x56c974, _0x203ebe, _0x14b697, _0x453702, _0x9efab7, _0x1f768e, _0x1478c6, _0x16a842);
 };
-_0x5e1ced.prototype.step = function() {
+Zone.prototype.step = function() {
     for (var _0x4a391d = 0x0; _0x4a391d < this.bumped.length; _0x4a391d++) {
         var _0x4b09c3 = this.bumped[_0x4a391d],
             _0x2c42b4 = td32.decode(this.data[_0x4b09c3.y][_0x4b09c3.x]);
@@ -6731,11 +6797,11 @@ _0x5e1ced.prototype.step = function() {
     for (_0x4a391d = 0x0; _0x4a391d < this.sounds.length; _0x4a391d++) this.sounds[_0x4a391d].done() && this.sounds.splice(_0x4a391d--, 0x1);
     td32.update(this.game);
 };
-_0x5e1ced.prototype.tile = function(_0x3d68a7, _0x43d1f3) {
+Zone.prototype.tile = function(_0x3d68a7, _0x43d1f3) {
     _0x43d1f3 = this.dimensions().y - 0x1 - _0x43d1f3;
     return this.data[_0x43d1f3][_0x3d68a7];
 };
-_0x5e1ced.prototype.bump = function(_0x711a6b, _0x38eb82) {
+Zone.prototype.bump = function(_0x711a6b, _0x38eb82) {
     var _0x9935da = this.dimensions().y - 0x1 - _0x38eb82;
     this.data[_0x9935da][_0x711a6b] = td32.bump(this.data[_0x9935da][_0x711a6b], 0xf);
     this.bumped.push({
@@ -6744,11 +6810,11 @@ _0x5e1ced.prototype.bump = function(_0x711a6b, _0x38eb82) {
     });
     this.play(_0x711a6b, _0x38eb82, "sfx/bump.wav", 0.5, 0.04);
 };
-_0x5e1ced.prototype.replace = function(_0x139748, _0x19c939, _0x2533dc) {
+Zone.prototype.replace = function(_0x139748, _0x19c939, _0x2533dc) {
     _0x19c939 = this.dimensions().y - 0x1 - _0x19c939;
     this.data[_0x19c939][_0x139748] = _0x2533dc;
 };
-_0x5e1ced.prototype.grow = function(_0x34397d, _0x27a117, _0x5e09da) {
+Zone.prototype.grow = function(_0x34397d, _0x27a117, _0x5e09da) {
     _0x27a117 = this.dimensions().y - 0x1 - _0x27a117;
     this.vines.push({
         'x': _0x34397d,
@@ -6756,30 +6822,30 @@ _0x5e1ced.prototype.grow = function(_0x34397d, _0x27a117, _0x5e09da) {
         'td': _0x5e09da
     });
 };
-_0x5e1ced.prototype.break = function(_0x4aded4, _0x3d82ec, _0x544718) {
+Zone.prototype.break = function(_0x4aded4, _0x3d82ec, _0x544718) {
     var _0x415636 = this.dimensions().y - 0x1 - _0x3d82ec,
         _0x1aa33b = td32.decode16(this.data[_0x415636][_0x4aded4]);
     this.data[_0x415636][_0x4aded4] = _0x544718;
     this.effects.push(new _0x5296e0(vec2.make(_0x4aded4, _0x3d82ec), _0x1aa33b.index));
     this.play(_0x4aded4, _0x3d82ec, "sfx/break.wav", 1.5, 0.04);
 };
-_0x5e1ced.prototype.coin = function(_0x18c8cf, _0x32068f) {
+Zone.prototype.coin = function(_0x18c8cf, _0x32068f) {
     this.dimensions();
     this.effects.push(new _0x108200(vec2.make(_0x18c8cf, _0x32068f)));
 };
-_0x5e1ced.prototype.play = function(_0x2b2620, _0xc0aea9, _0x4929f8, _0x50094d, _0x1de44d) {
+Zone.prototype.play = function(_0x2b2620, _0xc0aea9, _0x4929f8, _0x50094d, _0x1de44d) {
     this.game.getZone() === this && (_0x4929f8 = this.game.audio.getSpatialAudio(_0x4929f8, _0x50094d, _0x1de44d, "effect"), _0x4929f8.play(vec2.make(_0x2b2620, _0xc0aea9)), this.sounds.push(_0x4929f8));
 };
-_0x5e1ced.prototype.dimensions = function() {
+Zone.prototype.dimensions = function() {
     return vec2.make(this.data[0x0].length, this.data.length);
 };
-_0x5e1ced.prototype.getTile = function(_0x5712b7) {
+Zone.prototype.getTile = function(_0x5712b7) {
     var _0x5eee6f = this.dimensions();
     _0x5712b7 = vec2.copy(_0x5712b7);
     _0x5712b7.y = _0x5eee6f.y - _0x5712b7.y - 0x1;
     return td32.decode(this.data[Math.max(0x0, Math.min(_0x5eee6f.y, Math.floor(_0x5712b7.y)))][Math.max(0x0, Math.min(_0x5eee6f.x, Math.floor(_0x5712b7.x)))]);
 };
-_0x5e1ced.prototype.getTiles = function(_0x3ce841, _0x4afc27) {
+Zone.prototype.getTiles = function(_0x3ce841, _0x4afc27) {
     var _0x525d97 = this.dimensions(),
         _0x51d112 = vec2.copy(_0x3ce841);
     _0x51d112.y = _0x525d97.y - _0x51d112.y;
@@ -6796,7 +6862,7 @@ _0x5e1ced.prototype.getTiles = function(_0x3ce841, _0x4afc27) {
         }
     return _0x51d112;
 };
-_0x5e1ced.prototype.getEffects = function(_0x28bee8) {
+Zone.prototype.getEffects = function(_0x28bee8) {
     for (var _0x559764 = 0x0; _0x559764 < this.effects.length; _0x559764++) this.effects[_0x559764].draw(_0x28bee8);
 };
 "use strict";
