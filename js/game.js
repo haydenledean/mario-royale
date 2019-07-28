@@ -489,6 +489,15 @@ td32.TILE_PROPERTIES = {
 		ASYNC: true,
 		TRIGGER: function(game, pid, td, level, zone, x, y, type) {}
 	},
+    /* Semisolid Weak */
+	0x06: {
+		NAME: "SEMISOLID WEAK",
+        COLLIDE: true,
+        PLATFORM: "WEAK",
+		HIDDEN: false,
+		ASYNC: true,
+		TRIGGER: function(game, pid, td, level, zone, x, y, type) {}
+	},
 	/* Item Block Normal */
 	0x11: {
 		NAME: "ITEM BLOCK STANDARD",
@@ -2832,6 +2841,7 @@ PlayerObject.prototype.physics = function() {
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) { 
         obj = _0x27521c[_0x5b32b0];
         if (!obj.definition.HIDDEN && squar.intersection(obj.pos, _0x208a75, _0x20e6e6, this.dim)) {
+            obj.definition.TRIGGER(this.game, this.pid, obj, this.level, this.zone, obj.pos.x, obj.pos.y, td32.TRIGGER.TYPE.TOUCH);
             _0x20e6e6.x = _0x20e6e6.x + 0.5 * this.dim.x < obj.pos.x + 0.5 * _0x208a75.x ? obj.pos.x - this.dim.x : obj.pos.x + _0x208a75.x;
             this.moveSpeed *= 0.33;
         }
@@ -2847,6 +2857,7 @@ PlayerObject.prototype.physics = function() {
     for (_0x5b32b0 = 0x0; _0x5b32b0 < _0x27521c.length; _0x5b32b0++) {
         obj = _0x27521c[_0x5b32b0];
         if (squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim)) {
+            obj.definition.TRIGGER(this.game, this.pid, obj, this.level, this.zone, obj.pos.x, obj.pos.y, td32.TRIGGER.TYPE.TOUCH);
             if (this.pos.y >= _0x57b791.y) {
                 if (!obj.definition.HIDDEN) { 
                     _0x57b791.y = obj.pos.y + _0x208a75.y;
@@ -2870,7 +2881,7 @@ PlayerObject.prototype.physics = function() {
     for (_0x5b32b0 = 0x0; _0x5b32b0 < tilePlatformColliding.length; _0x5b32b0++) {
         obj = tilePlatformColliding[_0x5b32b0];
         if (squar.intersection(obj.pos, _0x208a75, _0x57b791, this.dim)) {
-            if (this.pos.y - this.dim.y >= obj.pos.y) {
+            if (this.pos.y - (obj.definition.PLATFORM && obj.definition.PLATFORM === "WEAK" ? this.dim : _0x208a75).y >= obj.pos.y) {
                 _0x57b791.y = obj.pos.y + _0x208a75.y;
                 this.fallSpeed = 0x0;
                 _0x58342b = !0x0;
