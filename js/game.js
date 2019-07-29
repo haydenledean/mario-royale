@@ -4801,12 +4801,13 @@ _0x4a8773.prototype.draw = function(_0x39c7cf) {
 GameObject.REGISTER_OBJECT(_0x4a8773);
 "use strict";
 
-function _0x458a57(_0x278773, _0xa84297, _0x156cd9, _0x3a6374, _0x2a748a, _0x429175) {
+function _0x458a57(_0x278773, _0xa84297, _0x156cd9, _0x3a6374, _0x2a748a, _0x429175, direction) {
     GameObject.call(this, _0x278773, _0xa84297, _0x156cd9, _0x3a6374);
     this.oid = _0x2a748a;
     this.setState(_0x458a57.STATE.IDLE);
     this.fireTimer = 0x0;
     this.delay = isNaN(parseInt(_0x429175)) ? _0x458a57.FIRE_DELAY_DEFAULT : parseInt(_0x429175);
+    this.shootDirection = isNaN(parseInt(direction)) ? 0 : parseInt(direction);
 }
 _0x458a57.ASYNC = !0x0;
 _0x458a57.ID = 0x23;
@@ -4835,7 +4836,7 @@ _0x458a57.prototype.step = function() {
 _0x458a57.prototype.sound = GameObject.prototype.sound;
 _0x458a57.prototype.fire = function() {
     this.fireTimer = 0x0;
-    this.game.createObject(_0x30df09.ID, this.level, this.zone, vec2.copy(this.pos), []);
+    this.game.createObject(_0x30df09.ID, this.level, this.zone, vec2.copy(this.pos), [this.shootDirection]);
     this.play("sfx/firework.wav", 0x1, 0.04);
 };
 _0x458a57.prototype.kill = function() {};
@@ -4849,13 +4850,14 @@ _0x458a57.prototype.play = GameObject.prototype.play;
 GameObject.REGISTER_OBJECT(_0x458a57);
 "use strict";
 
-function _0x30df09(_0x3877d1, _0x3182b8, _0xa0e13f, _0xe81bce, _0x1d56a5) {
+function _0x30df09(_0x3877d1, _0x3182b8, _0xa0e13f, _0xe81bce, _0x1d56a5, direction) {
     GameObject.call(this, _0x3877d1, _0x3182b8, _0xa0e13f, _0xe81bce);
     this.oid = _0x1d56a5;
     this.setState(_0x30df09.STATE.IDLE);
     this.bonkTimer = this.anim = 0x0;
     this.dim = vec2.make(0.8, 0.8);
     this.fallSpeed = this.moveSpeed = 0x0;
+    this.direction = direction;
 }
 _0x30df09.ASYNC = !0x0;
 _0x30df09.ID = 0x24;
@@ -4895,7 +4897,7 @@ _0x30df09.prototype.step = function() {
     this.state === _0x30df09.STATE.BONK ? this.bonkTimer++ > _0x30df09.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x30df09.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x30df09.BONK_FALL_ACCEL, -_0x30df09.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x30df09.ANIMATION_RATE) % this.state.SPRITE.length], this.physics(), this.sound());
 };
 _0x30df09.prototype.physics = function() {
-    0x0 < this.pos.x ? this.pos.x -= _0x30df09.SPEED : this.destroy();
+    0x0 < this.pos.x ? (this.direction === 0 ? this.pos.x -= _0x30df09.SPEED : this.pos.x += _0x30df09.SPEED) : this.destroy();
 };
 _0x30df09.prototype.sound = GameObject.prototype.sound;
 _0x30df09.prototype.disable = function() {
@@ -4928,7 +4930,7 @@ _0x30df09.prototype.draw = function(_0x3d4441) {
     _0x15ff87 = this.state === _0x30df09.STATE.BONK ? 0x3 : 0x0;
     _0x3d4441.push({
         'pos': vec2.subtract(this.pos, _0x30df09.SOFFSET),
-        'reverse': !0x1,
+        'reverse': this.direction !== 0,
         'index': this.sprite.INDEX,
         'mode': _0x15ff87
     });
@@ -5022,6 +5024,7 @@ _0x6c6f53.prototype.interaction = function() {
         var _0x1f6129 = this.game.objects[_0x51d7a3];
         if (_0x1f6129 !== this && _0x1f6129.pid !== this.owner && _0x1f6129.isTangible() && (!(_0x1f6129 instanceof PlayerObject) || app.net.gameMode === 1) && _0x1f6129.damage && _0x1f6129.level === this.level && _0x1f6129.zone === this.zone && squar.intersection(_0x1f6129.pos, _0x1f6129.dim, this.pos, this.dim)) {
             (app.net.gameMode !== 1 ? this.owner === this.game.pid : (_0x1f6129 instanceof PlayerObject ? _0x1f6129.pid == this.game.pid : this.owner === this.game.pid)) && _0x1f6129.damage(this);
+            if (app.net.gameMode === 1 && _0x1f6129 instanceof PlayerObject && _0x1f6129.pid == this.game.pid && _0x1f6129.dead) this.game.out.push(NET017.encode(this.owner)));
             this.kill();
             break;
         }
