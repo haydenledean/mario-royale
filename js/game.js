@@ -4836,7 +4836,7 @@ _0x458a57.prototype.step = function() {
 _0x458a57.prototype.sound = GameObject.prototype.sound;
 _0x458a57.prototype.fire = function() {
     this.fireTimer = 0x0;
-    this.game.createObject(_0x30df09.ID, this.level, this.zone, vec2.copy(this.pos), [this.shootDirection]);
+    this.game.createObject(_0x30df09.ID, this.level, this.zone, vec2.copy(this.pos), [undefined, this.shootDirection]);
     this.play("sfx/firework.wav", 0x1, 0.04);
 };
 _0x458a57.prototype.kill = function() {};
@@ -4897,7 +4897,7 @@ _0x30df09.prototype.step = function() {
     this.state === _0x30df09.STATE.BONK ? this.bonkTimer++ > _0x30df09.BONK_TIME || 0x0 > this.pos.y + this.dim.y ? this.destroy() : (this.pos = vec2.add(this.pos, vec2.make(this.moveSpeed, this.fallSpeed)), this.moveSpeed *= _0x30df09.BONK_DECEL, this.fallSpeed = Math.max(this.fallSpeed - _0x30df09.BONK_FALL_ACCEL, -_0x30df09.BONK_FALL_SPEED)) : (this.anim++, this.sprite = this.state.SPRITE[parseInt(this.anim / _0x30df09.ANIMATION_RATE) % this.state.SPRITE.length], this.physics(), this.sound());
 };
 _0x30df09.prototype.physics = function() {
-    0x0 < this.pos.x ? (this.direction === 0 ? this.pos.x -= _0x30df09.SPEED : this.pos.x += _0x30df09.SPEED) : this.destroy();
+    0x0 < this.pos.x ? (this.direction === 0 ? (this.pos.x -= _0x30df09.SPEED) : (this.pos.x += _0x30df09.SPEED)) : this.destroy();
 };
 _0x30df09.prototype.sound = GameObject.prototype.sound;
 _0x30df09.prototype.disable = function() {
