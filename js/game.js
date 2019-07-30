@@ -1,5 +1,5 @@
 var GAMEMODES = ["vanilla", "pvp", "hell"];
-var SKINCOUNT=111;
+var SKINCOUNT=176;
 var DEV_SKINS = [52];
 var DEFAULT_PLAYER_NAME="INFRINGIO";
 var levelSelectors = [
