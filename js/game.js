@@ -506,7 +506,7 @@ td32.TILE_PROPERTIES = {
 		HIDDEN: false,
 		ASYNC: false,
 		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
-            if (app.net.gameMode === 1 && game.pid !== pid) return;
+            if ((app.net.gameMode === 1 || app.net.gameMode === 2) && game.pid !== pid) return;
 			switch(type) {
 				/* Small bump */
 				case 0x10 : {
@@ -647,7 +647,7 @@ td32.TILE_PROPERTIES = {
 		HIDDEN: true,
 		ASYNC: false,
 		TRIGGER: function(game, pid, td, level, zone, x, y, type) {
-            if (app.net.gameMode === 1 && game.pid !== pid) return;
+            if ((app.net.gameMode === 1 || app.net.gameMode === 2) && game.pid !== pid) return;
 			switch(type) {
 				/* Small bump */
 				case 0x10 : {
