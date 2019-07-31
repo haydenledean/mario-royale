@@ -1397,6 +1397,7 @@ function MainAsMemberScreen() {
     this.logoutBtn = document.getElementById("mainAsMember-logout");
     this.privateBtn = document.getElementById("mainAsMember-private-toggle");
     this.gmBtn = document.getElementById("mainAsMember-gm-change");
+    this.onlineNum = document.getElementById("mainAsMember-number");
     this.isPrivate = false;
     this.gameMode = 0;
     var that = this;
@@ -1461,6 +1462,24 @@ MainAsMemberScreen.prototype.show = function(data) {
     this.element.style.display = "block";
     if (app.goToLobby) {
         this.launch();
+    } else {
+        var that = this;
+        var updateStatus = function() {
+            $.ajax({
+                'url': "status",
+                'type': "GET",
+                'timeout': 0xbb8,
+                'success': function(_0x497cbd) {
+                    if (!_0x497cbd.result) {
+                        that.onlineNum.innerHTML = _0x497cbd.active;
+                    }
+                },
+                cache: false
+            });
+        };
+    
+        updateStatus();
+        app.statusUpdater = setInterval(updateStatus, 1000);
     }
 };
 MainAsMemberScreen.prototype.hide = function() {
@@ -1485,9 +1504,23 @@ MainAsMemberScreen.prototype.updPrivateBtn = function() {
     if (!this.isPrivate) {
         this.privateBtn.classList.add("disabled");
         this.privateBtn.classList.remove("enabled");
+
+        this.launchBtn.style.color = "";
+        this.launchBtn.classList.remove("tooltip");
+        if (this.launchBtn.lastChild.nodeName == "SPAN") {
+            this.launchBtn.removeChild(this.launchBtn.lastChild);
+        }
     } else {
         this.privateBtn.classList.add("enabled");
         this.privateBtn.classList.remove("disabled");
+
+        this.launchBtn.style.color = "yellow";
+        this.launchBtn.classList.add("tooltip");
+
+        var elem = document.createElement("span");
+        elem.classList.add("tooltiptext");
+        elem.innerText = "You're joining to a private room!"
+        this.launchBtn.appendChild(elem);
     }
 };
 MainAsMemberScreen.prototype.updMusicBtn = function() {
@@ -1504,6 +1537,8 @@ MainAsMemberScreen.prototype.updGameModeBtn = function() {
         this.gmBtn.classList.remove(GAMEMODES[i]);
     }
     this.gmBtn.classList.add(GAMEMODES[this.gameMode]);
+    const capitalize = function(s) { return s.charAt(0).toUpperCase() + s.slice(1) }
+    this.gmBtn.firstElementChild.innerHTML = "Change the current game mode<br><font size='2'>Current one is: <u>" + capitalize(GAMEMODES[this.gameMode]) + "</u></font>";
 }
 function genSelectSkin(screen, skinIdx) {
     if (screen.skin !== undefined) {
@@ -1616,9 +1651,23 @@ NameScreen.prototype.updPrivateBtn = function() {
     if (!this.isPrivate) {
         this.privateBtn.classList.add("disabled");
         this.privateBtn.classList.remove("enabled");
+
+        this.launchBtn.style.color = "";
+        this.launchBtn.classList.remove("tooltip");
+        if (this.launchBtn.lastChild.nodeName == "SPAN") {
+            this.launchBtn.removeChild(this.launchBtn.lastChild);
+        }
     } else {
         this.privateBtn.classList.add("enabled");
         this.privateBtn.classList.remove("disabled");
+
+        this.launchBtn.style.color = "yellow";
+        this.launchBtn.classList.add("tooltip");
+
+        var elem = document.createElement("span");
+        elem.classList.add("tooltiptext");
+        elem.innerText = "You're joining to a private room!"
+        this.launchBtn.appendChild(elem);
     }
 }
 
@@ -1637,6 +1686,8 @@ NameScreen.prototype.updGameModeBtn = function() {
         this.gmBtn.classList.remove(GAMEMODES[i]);
     }
     this.gmBtn.classList.add(GAMEMODES[this.gameMode]);
+    const capitalize = function(s) { return s.charAt(0).toUpperCase() + s.slice(1) }
+    this.gmBtn.firstElementChild.innerHTML = "Change the current game mode<br><font size='2'>Current one is: <u>" + capitalize(GAMEMODES[this.gameMode]) + "</u></font>";
 }
 
 NameScreen.prototype.selectSkin = function(skinIdx) {
@@ -7794,13 +7845,13 @@ App.prototype.load = function(data) {
 App.prototype.ingame = function() {
     return !!this.game;
 };
-App.prototype.stopMainScreenUpdates = function() {
+App.prototype.join = function(name, team, priv, skin, gm) {
     if (this.audioElement !== undefined)
         this.audioElement.pause();
-    clearInterval(this.statusUpdater);
-};
-App.prototype.join = function(name, team, priv, skin, gm) {
-    this.stopMainScreenUpdates();
+    if (this.statusUpdater) {
+        clearInterval(this.statusUpdater);
+        this.statusUpdater = null;
+    }
     this.ingame() ? this.menu.error.show("An error occured while starting game...") : (this.menu.load.show(), this.net.connect([Network.CONNECTTYPE.GUEST, name, team, priv, skin, gm]));
 };
 App.prototype.login = function(username, pw) {
