@@ -4857,7 +4857,7 @@ function _0x30df09(_0x3877d1, _0x3182b8, _0xa0e13f, _0xe81bce, _0x1d56a5, direct
     this.bonkTimer = this.anim = 0x0;
     this.dim = vec2.make(0.8, 0.8);
     this.fallSpeed = this.moveSpeed = 0x0;
-    this.direction = direction;
+    this.direction = isNaN(parseInt(direction)) ? 0 : parseInt(direction);
 }
 _0x30df09.ASYNC = !0x0;
 _0x30df09.ID = 0x24;
