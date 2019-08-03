@@ -1,3 +1,4 @@
+console.warn("If you are not a developer do not come here and if a player told you to copy paste code here does not do it otherwise your acount can be deleted and your game will not work anymore!")
 var GAMEMODES = ["vanilla", "pvp", "hell"];
 var SKINCOUNT=176;
 var DEV_SKINS = [52];
